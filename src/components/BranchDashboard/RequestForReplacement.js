@@ -19,6 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import swal from 'sweetalert';
 import Slider from '@material-ui/core/Slider';
+import TrainersMatches from './TrainersMatch';
 
 function Copyright() {
   return (
@@ -35,7 +36,7 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -67,11 +68,30 @@ export default function SignUp() {
   const [diffData , setDiffData] = useState({dataDiffLevel:[],});
   const [langData , setLangData] = useState({dataLang:[],});
   const [popData , setPopData] = useState({dataPop:[],});
+  const [popCode, setPopCode] = useState(0);
+  const [langCode, setLangCode] = useState(0);
+  const [classCode, setClassCode] = useState(0);
+  const [diffCode, setDiffCode] = useState(0);
+
+  const [nextFlag, setNextFlag] = useState(false);
+
+  const [contactName, setContactName] = useState("");
+  const [classTypeCode, setClassTypeCode] = useState("");
+  const [city, setCity] = useState("");
+  const [fromHour, setFromHour] = useState("");
+  const [toHour, setToHour] = useState("");
+  const [replacementDate, setReplacementDate] = useState("");
+  const [classDescription, setClassDescription] = useState("");
+  const [comments, setComments] = useState("");
+  const [difficultyLevelCode, setDifficultyLevelCode] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [languageCode, setLanguageCode] = useState("");
+  const [populationCode, setPopulationCode] = useState("");
 
   const [state, setState] = useState({
     publishDateTime: new Date().toISOString(),
     contactName:'',
-    brnachCode: JSON.parse(localStorage["userDetails"]).BranchCode,
+    branchCode: JSON.parse(localStorage["userDetails"]).BranchCode,
     classTypeCode:'',
     city:'',
     fromHour:'',
@@ -138,6 +158,10 @@ export default function SignUp() {
     validate();
   }
 
+  const prevent = async (e) =>{
+    e.preventDefault();
+  }
+
 
 const validate=()=>{
     if( validateHours() &&  validateReplacementDate())
@@ -148,19 +172,19 @@ const validate=()=>{
 const Request=()=> {
 
     let request = {
-        PublishDateTime: state.publishDateTime,
-        ContactName: state.contactName,
-        BranchCode: state.brnachCode, 
-        ClassTypeCode: state.classTypeCode,
-        FromHour: state.fromHour,
-        ToHour: state.toHour,
-        ReplacementDate: state.replacementDate,
-        ClassDescription: state.classDescription,
-        Comments: state.comments,
-        DifficultyLevelCode: state.difficultyLevelCode,
-        MaxPrice: state.maxPrice,
-        LanguageCode: state.languageCode,
-        PopulationCode: state.populationCode
+        PublishDateTime: new Date().toISOString(),
+        ContactName: contactName,
+        BranchCode: JSON.parse(localStorage["userDetails"]).BranchCode,
+        ClassTypeCode: classCode,
+        FromHour: fromHour,
+        ToHour: toHour,
+        ReplacementDate: replacementDate,
+        ClassDescription: classDescription,
+        Comments: comments,
+        DifficultyLevelCode: diffCode,
+        MaxPrice: maxPrice,
+        LanguageCode: langCode,
+        PopulationCode: popCode
     }
     console.log(request);
 
@@ -172,14 +196,13 @@ const Request=()=> {
         body:JSON.stringify(request)
     })
     .then((response)=>response.json())
-    .then((res)=>swal("good job"))
+    .then((res)=>{swal("good job"); setNextFlag(true)})
     .catch((error)=>console.log(error))
-    .finally(()=>console.log('post branch'))
 }
 
 
 const validateHours=()=>{
-    if( state.FromHour< state.ToHour)
+    if( fromHour< toHour)
     return true;
     else
 {
@@ -191,7 +214,7 @@ const validateHours=()=>{
 
 const validateReplacementDate=()=>{
     let todayDate = new Date().toISOString().substr(0, 10);
-    if( state.ReplacementDate>=todayDate)
+    if( replacementDate>=todayDate)
     return true;
     else
     {
@@ -228,6 +251,7 @@ function valuetext(value) {
   return `${value}₪`;
 }
 
+if (nextFlag === false)
   return (
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
@@ -249,28 +273,24 @@ function valuetext(value) {
                 label="שם איש קשר"
                 name="contact"
                 autoComplete="contact"
-                onChange={(e) => setState({...state,contactName:e.target.value})}
+                onChange={(e) => setContactName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
               סוג שיעור
             </Grid>
             {qualData.dataQual.map(val =>
-               <button onClick={(e)=>setState({classTypeCode:val.TypeCode})} style={{margin:'2px', backgroundColor: state.classTypeCode===(val.TypeCode) ? 'lightblue': ''}} value = {val.TypeCode} key = {val.TypeCode}>{val.TypeName} </button> )}
+               <button onClick={(e)=>setClassCode(val.TypeCode)} style={{margin:'2px', backgroundColor: classCode===(val.TypeCode) ? 'lightblue': ''}} value = {val.TypeCode} key = {val.TypeCode}>{val.TypeName} </button> )}
           
           <Grid item xs={12}>
           <TextField
         id="repDate"
         label="תאריך ההחלפה"
         type="date"
-        defaultValue="01/01/2020"
         className={classes.textField}
-        onChange={(e)=>setState({replacementDate:e.target.value})}
+        onChange={(e)=>setReplacementDate(e.target.value)}
         InputLabelProps={{
           shrink: true,
-        }}
-        inputProps={{
-          step: 300, // 5 min
         }}
       />
           </Grid>
@@ -279,9 +299,8 @@ function valuetext(value) {
         id="fromHour"
         label="משעה"
         type="time"
-        defaultValue="07:30"
         //className={classes.textField}
-        onChange={(e)=>setState({fromHour:e.target.value})}
+        onChange={(e)=>setFromHour(e.target.value)}
         InputLabelProps={{
           shrink: true,
         }}
@@ -295,9 +314,8 @@ function valuetext(value) {
         id="toHour"
         label="עד שעה"
         type="time"
-        defaultValue="08:30"
         //className={classes.textField}
-        onChange={(e)=>setState({toHour:e.target.value})}
+        onChange={(e)=>setToHour(e.target.value)}
         InputLabelProps={{
           shrink: true,
         }}
@@ -314,7 +332,7 @@ function valuetext(value) {
             label="תיאור השיעור"
             name="classDesc"
             autoComplete="classDesc"
-            onChange={(e) => setState({...state,classDescription:e.target.value})}
+            onChange={(e) => setClassDescription(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -325,14 +343,14 @@ function valuetext(value) {
             label="הערות נוספות"
             name="com"
             autoComplete="com"
-            onChange={(e) => setState({...state,comments:e.target.value})}
+            onChange={(e) => setComments(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
               רמת קושי
             </Grid>
             {diffData.dataDiffLevel.map(val =>
-               <button onClick={(e)=>setState({difficultyLevelCode:val.LevelCode})} style={{margin:'2px', backgroundColor: state.difficultyLevelCode===(val.LevelCode) ? 'lightblue': ''}} value = {val.LevelCode} key = {val.LevelCode}>{val.LevelName} </button> )}
+               <button onClick={(e)=>setDiffCode(val.LevelCode)} style={{margin:'2px', backgroundColor: diffCode===(val.LevelCode) ? 'lightblue': ''}} value = {val.LevelCode} key = {val.LevelCode}>{val.LevelName} </button> )}
           
           <Grid item xs={12}>
                 מחיר לשעה
@@ -344,7 +362,7 @@ function valuetext(value) {
              valueLabelDisplay="auto"
              marks={marks}
              max={500}
-             onChange={(e) => setState({...state,maxPrice:e.value})}
+             onChange={(e) => setMaxPrice(e.value)}
              
       />
             </Grid>
@@ -352,13 +370,13 @@ function valuetext(value) {
               שפת השיעור
             </Grid>
             {langData.dataLang.map(val =>
-               <button onClick={(e)=>setState({languageCode:val.LanCode})} style={{margin:'2px', backgroundColor: state.languageCode===(val.LanCode) ? 'lightblue': ''}} value = {val.LanCode} key = {val.LanCode}>{val.LanName} </button> )}
+               <button onClick={(e)=>setLangCode(val.LanCode)} style={{margin:'2px', backgroundColor: langCode===(val.LanCode) ? 'lightblue': ''}} value = {val.LanCode} key = {val.LanCode}>{val.LanName} </button> )}
           
           <Grid item xs={12}>
               אוכלוסיית יעד
             </Grid>
             {popData.dataPop.map(val =>
-               <button onClick={(e)=>setState({populationCode:val.Code})} style={{margin:'2px', backgroundColor: state.populationCode===(val.Code) ? 'lightblue': ''}} value = {val.Code} key = {val.Code}>{val.PName} </button> )}
+               <button onClick={(e)=>setPopCode(val.Code)} style={{margin:'2px', backgroundColor: popCode===(val.Code) ? 'lightblue': ''}} value = {val.Code} key = {val.Code}>{val.PName} </button> )}
           
           </Grid>
           <Button
@@ -369,10 +387,12 @@ function valuetext(value) {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            הירשם
+            מצא מאמנים מתאימים
           </Button>
         </form>
       </div>
     </Container>
   );
+  else
+  return (<TrainersMatches/>)
 }

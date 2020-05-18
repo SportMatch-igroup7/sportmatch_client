@@ -66,7 +66,7 @@ export default function BranchProfile() {
                         <p>עיר: {branchData.AreaName}</p>
                         <p>כתובת: {branchData.Address}</p>
                         <p>טלפון: {branchData.PhoneNo}</p>                   
-                            <hr/>
+                            <hr className="divider"/>
 
                         <div className="social-links">
                         <a href={web.LinkName} target="_blank" rel="noopener noreferrer">

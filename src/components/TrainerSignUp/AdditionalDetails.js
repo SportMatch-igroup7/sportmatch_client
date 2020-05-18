@@ -233,9 +233,6 @@ fetch("http://proj.ruppin.ac.il/igroup7/proj/api/TrainerLanguage",{
 
 history.push("/TrainerMain");
 
-
-
-
 }
 
   return (

@@ -248,7 +248,7 @@ const successSignInBranch=(data)=> {
   });
   console.log(mainState.branch);
 
-  history.push("/BranchParameters");
+  history.push("/BranchMain");
   links.map(link =>{
     let branchLink = {
       BranchCode: data.BranchCode,

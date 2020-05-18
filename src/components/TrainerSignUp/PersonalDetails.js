@@ -89,8 +89,6 @@ export default function PersonalDetails({onDone = () => {}}) {
       const next = (e) => {
         handleSubmit(e);
         validate();
-        if(flag ===true)
-          onDone();
       };
 
       const validate = ()=>{
@@ -146,7 +144,7 @@ export default function PersonalDetails({onDone = () => {}}) {
             swal('הזן שם משפחה');
             return false
         }
-        if(!validateDate(state.BDate))
+        if(!validateDate(state.bDate))
         {
             swal('הוזן תאריך לידה לא תקין');
             return false
@@ -205,7 +203,19 @@ export default function PersonalDetails({onDone = () => {}}) {
             Image:state.photo
         }
         console.log(trainer);
-        ajaxCall("POST", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", JSON.stringify(trainer), successSignInTrainer, errorSignInTrainer);
+
+        fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
+          method:'POST',
+          headers:{
+              Accept:'application/json','Content-Type':'application/json',
+          },
+          body:JSON.stringify(trainer)
+      })
+      .then((response)=>response.json())
+      .then((res)=>successSignInTrainer)
+      .catch((error)=>console.log(error));
+      
+        //ajaxCall("POST", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", JSON.stringify(trainer), successSignInTrainer, errorSignInTrainer);
     }
 
 
@@ -217,11 +227,9 @@ export default function PersonalDetails({onDone = () => {}}) {
         });
         swal("success");
         console.log(data);
+        onDone();
     }
 
-    const errorSignInTrainer=(err)=> {
-        console.log(err);
-    }
     
      const fileUploaded=(filePath)=>{
         if(filePath.includes('jpg' || 'png' || 'jpeg'))

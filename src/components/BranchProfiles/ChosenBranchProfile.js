@@ -4,7 +4,7 @@ import {useHistory} from 'react-router';
 import './Profiles.css';
 
 
-export default function TrainerProfile() {
+export default function BranchProfile() {
     
     const [branchData, setBranchData] = useState([]);
     const [branchLinks, setBranchLinks] = useState([]);
@@ -13,7 +13,8 @@ export default function TrainerProfile() {
 
     useEffect(() => {
 
-        const branchCode = 22;
+        //const branchCode = JSON.parse(localStorage["userDetails"]).BranchCode;
+        const branchCode = JSON.parse(localStorage["branch"]).BranchCode;
         fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Branch/getBranch/'+branchCode+"/",{
             method:'GET',
             headers:{

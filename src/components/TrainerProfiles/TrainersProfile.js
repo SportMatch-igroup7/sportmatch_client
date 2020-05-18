@@ -17,8 +17,23 @@ import Link from '@material-ui/core/Link';
 import $ from 'jquery';
 import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert'
+import Modal from '@material-ui/core/Modal';
+import TrainerProfile from '../../components/TrainerProfiles/ChosenTrainerProfile';
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
 
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -28,12 +43,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 0, 2),
   },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
+    direction:"rtl",
   },
   card: {
     height: '100%',
@@ -45,10 +58,19 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     flexGrow: 1,
+    direction:"rtl",
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
+  },
+  paper: {
+    position: 'absolute',
+    width: 800,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
 
@@ -62,17 +84,40 @@ export default function Album() {
     trainersData:[]
   });
 
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
   useEffect(() => {
-    ajaxCall("GET", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", "", successGetTrainer, errorGetTrainer);
+
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
+      method:'GET',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+  })
+  .then((response)=>response.json())
+  .then((res)=> {console.log(res); setState({...state,trainersData:res})})
+  .catch((error)=>console.log(error))
+
+    //ajaxCall("GET", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", "", successGetTrainer, errorGetTrainer);
   },[]);
 
-  const successGetTrainer=(data)=>{
-    setState({...state,trainersData:data});
-  }
+  // const successGetTrainer=(data)=>{
+  //   setState({...state,trainersData:data});
+  // }
 
-  const errorGetTrainer=(err)=>{
-    console.log(err);
-  }
+  // const errorGetTrainer=(err)=>{
+  //   console.log(err);
+  // }
 
 
   return (
@@ -91,7 +136,7 @@ export default function Album() {
           {/* End hero unit */}
           <Grid container spacing={4}>
             {state.trainersData.map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} sm={6} md={3}>
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -107,10 +152,26 @@ export default function Album() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="primary">
+                    <Button onClick={()=>{
+                          let trainer = {
+                            TrainerCode: card.TrainerCode
+                          }
+                          localStorage["trainer"] = JSON.stringify(trainer);
+                          handleOpen();
+                    }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Button size="small" color="primary">
+                    <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                  >
+                    <div style={modalStyle} className={classes.paper}>
+                    <TrainerProfile/>
+                    </div>                  
+                  </Modal>
+                    <Button  size="small" color="primary">
                       חסום
                     </Button>
                   </CardActions>

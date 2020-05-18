@@ -1,235 +1,271 @@
-import React, { Children } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useHistory} from 'react-router';
-import clsx from 'clsx';
-import { makeStyles, useTheme, fade } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import CameraIcon from '@material-ui/icons/PhotoCamera';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import List from '@material-ui/core/List';
+import Grid from '@material-ui/core/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import MenuItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import PeopleIcon from '@material-ui/icons/People';
-import MessageIcon from '@material-ui/icons/Message';
-import InputBase from '@material-ui/core/InputBase';
-import FindReplaceIcon from '@material-ui/icons/FindReplace'
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import TrainersProfile from '../Profiles/TrainersProfile';
-import BranchesProfile from '../Profiles/BranchesProfile';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Link from '@material-ui/core/Link';
+import $ from 'jquery';
+import swal from 'sweetalert'
+import Modal from '@material-ui/core/Modal';
+import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
+import './cards.css';
 
-const drawerWidth = 240;
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: drawerWidth,
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
+  icon: {
     marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
   },
-  inputRoot: {
-    color: 'inherit',
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2, 0, 2),
   },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
+  cardGrid: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    direction:"rtl",
   },
-  title: {
-    flexGrow: 1,
-    textAlign:"left"
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerHeader: {
+  card: {
+    height: '100%',
     display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-start',
+    flexDirection: 'column',
   },
-  content: {
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+    height:"20%",
+  },
+  cardContent: {
     flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginRight: -drawerWidth,
+    direction:"rtl",
   },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: 0,
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
+  },
+  paper: {
+    position: 'absolute',
+    width: 800,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
 
-export default function PersistentDrawerRight() {
-  const history = useHistory();
+const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+export default function Album() {
   const classes = useStyles();
-  const theme = useTheme();
+  const history = useHistory();
+
+  const [state, setState] = useState({
+    trainersData:[]
+  });
+
+  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
-  const [comp, setComp] = React.useState(0);
-
-  const handleDrawerOpen = () => {
+  const handleOpen = () => {
     setOpen(true);
   };
 
-  const handleDrawerClose = () => {
+  const handleClose = () => {
     setOpen(false);
   };
 
-  const getContent = (comp) => {
-    switch (comp) {
-      case 1:
-        return <TrainersProfile/>;
-      case 2:
-        return <TrainersProfile  />;
-      case 3:
-      return <TrainersProfile />;
-      case 4:
-      return <BranchesProfile />;
-      case 5:
-        return <BranchesProfile />;
-    }
-  };
+
+  useEffect(() => {
+
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
+      method:'GET',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+  })
+  .then((response)=>response.json())
+  .then((res)=> {console.log(res); setState({...state,trainersData:res})})
+  .catch((error)=>console.log(error))
+  
+  },[]);
+
 
   return (
-    <div className={classes.root}>
+    <React.Fragment >
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap className={classes.title}>
-            SportMatch
-          </Typography>
-          <div className={classes.search}>
-            <InputBase
-              placeholder="חיפוש"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="end"
-            onClick={handleDrawerOpen}
-            className={clsx(open && classes.hide)}
-          >
-
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <div className={classes.drawerHeader} />
-        <Typography paragraph>
-        {getContent(comp)}
-        </Typography>
+      <hr/>
+      <main>
+        <Container className={classes.cardGrid} maxWidth="md">
+          {/* End hero unit */}
+          <Grid container spacing={4} className="card">
+            <Grid item xs={12}><h1>בקשות להחלפה</h1></Grid>
+            {state.trainersData.slice(0,4).map((card) => (
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
+                <Card className={classes.card}>
+                  <CardMedia
+                    className={classes.cardMedia}
+                    image={card.Image}
+                    title="Image title"
+                  />
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {card.FirstName} {card.LastName}
+                    </Typography>
+                    <Typography>
+                      {card.AboutMe}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={()=>{
+                          let trainer = {
+                            TrainerCode: card.TrainerCode
+                          }
+                          localStorage["trainer"] = JSON.stringify(trainer);
+                          handleOpen();
+                    }} size="small" color="primary">
+                      צפה
+                    </Button>
+                    <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                  >
+                    <div style={modalStyle} className={classes.paper}>
+                    <TrainerProfile/>
+                    </div>                  
+                  </Modal>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </main>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="right"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <MenuItem button onClick={(e) => setComp(1)}>
-                <ListItemIcon><AccountCircleIcon /></ListItemIcon>
-                <ListItemText primary="הפרופיל שלי" />
-            </MenuItem>
-            <Divider />
-            <MenuItem button onClick={(e) => setComp(2)}>
-                <ListItemIcon><HomeIcon /></ListItemIcon>
-                <ListItemText primary="ראשי"/>
-            </MenuItem>
-            <MenuItem button onClick={(e) => setComp(3)} >
-                <ListItemIcon><PeopleIcon /></ListItemIcon>
-                <ListItemText primary="מאגר מאמנים"/>
-            </MenuItem>
-            <MenuItem button onClick={(e) => setComp(4)} >
-                <ListItemIcon><PeopleIcon /></ListItemIcon>
-                <ListItemText primary="מאגר מועדונים"/>
-            </MenuItem>
-            <MenuItem button onClick={(e) => setComp(5)}>
-                <ListItemIcon><MessageIcon /></ListItemIcon>
-                <ListItemText primary="צור קשר"/>
-            </MenuItem>
-        </List>
-      </Drawer>
-    </div>
+      <hr/>
+
+      <CssBaseline />
+      <main>
+        <Container className={classes.cardGrid} maxWidth="md">
+          {/* End hero unit */}
+          <Grid container spacing={4} className="card">
+            <Grid item xs={12}><h1>ההחלפות שלי</h1></Grid>
+            {state.trainersData.slice(0,4).map((card) => (
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
+                <Card className={classes.card}>
+                  <CardMedia
+                    className={classes.cardMedia}
+                    image={card.Image}
+                    title="Image title"
+                  />
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {card.FirstName} {card.LastName}
+                    </Typography>
+                    <Typography>
+                      {card.AboutMe}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={()=>{
+                          let trainer = {
+                            TrainerCode: card.TrainerCode
+                          }
+                          localStorage["trainer"] = JSON.stringify(trainer);
+                          handleOpen();
+                    }} size="small" color="primary">
+                      צפה
+                    </Button>
+                    <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                  >
+                    <div style={modalStyle} className={classes.paper}>
+                    <TrainerProfile/>
+                    </div>                  
+                  </Modal>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </main>
+      <hr/>
+
+      <CssBaseline />
+      <main>
+        <Container className={classes.cardGrid} maxWidth="md">
+          {/* End hero unit */}
+          <Grid container spacing={4} className="card">
+            <Grid item xs={12}><h1>היסטוריית החלפות</h1></Grid>
+            {state.trainersData.slice(0,4).map((card) => (
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
+                <Card className={classes.card}>
+                  <CardMedia
+                    className={classes.cardMedia}
+                    image={card.Image}
+                    title="Image title"
+                  />
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {card.FirstName} {card.LastName}
+                    </Typography>
+                    <Typography>
+                      {card.AboutMe}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={()=>{
+                          let trainer = {
+                            TrainerCode: card.TrainerCode
+                          }
+                          localStorage["trainer"] = JSON.stringify(trainer);
+                          handleOpen();
+                    }} size="small" color="primary">
+                      צפה
+                    </Button>
+                    <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                  >
+                    <div style={modalStyle} className={classes.paper}>
+                    <TrainerProfile/>
+                    </div>                  
+                  </Modal>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </main>
+    </React.Fragment>
   );
 }
