@@ -18,9 +18,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import RI from '../../commons/RoundedImage';
-import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert';
-import $ from 'jquery';
 import Popper from '@material-ui/core/Popper';
 
 function Copyright() {
@@ -268,7 +266,6 @@ const successSignInBranch=(data)=> {
 .then((response)=>response.json())
 .then((res)=>console.log("success post branch links"), history.push("/BranchParameters"))
 .catch((error)=>console.log(error));
-
 }
 
 
@@ -330,7 +327,7 @@ const successSignInBranch=(data)=> {
               />
             </Grid>
             <Grid item xs={6}>
-              <InputLabel id="demo-simple-select-label">בחר עיר</InputLabel>
+              <InputLabel id="demo-simple-select-label">בחר אזור</InputLabel>
               <Select
                labelId="demo-simple-select-label"
                id="demo-simple-select"
@@ -347,7 +344,7 @@ const successSignInBranch=(data)=> {
                 required
                 fullWidth
                 name="address"
-                label={"כתובת"}
+                label={"כתובת מלאה"}
                 type="text"
                 id="address"
                 autoComplete="current-address"

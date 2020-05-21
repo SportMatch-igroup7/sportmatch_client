@@ -19,9 +19,9 @@ import swal from 'sweetalert'
 import Modal from '@material-ui/core/Modal';
 import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
 import '../TrainerDashboard/cards.css';
-import Carousel from "react-elastic-carousel";
-//import './CarStyle.css';
-
+import ReactBootstrapCarousel from "react-bootstrap-carousel";
+//import "bootstrap/dist/css/bootstrap.css";
+//import "react-bootstrap-carousel/dist/react-bootstrap-carousel.css";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -130,9 +130,8 @@ export default function Album() {
           {/* End hero unit */}
           <Grid container spacing={4} className="card">
             <Grid item xs={12}><h1>בקשות ממתינות לאישור</h1></Grid>
-            <Carousel itemsToShow={6} className="Car" width="100%">
-            {state.trainersData.slice(0,45).map((card) => (
-              <Grid item key={card.TrainerCode} >
+            {state.trainersData.slice(0,4).map((card) => (
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -171,7 +170,6 @@ export default function Album() {
                 </Card>
               </Grid>
             ))}
-            </Carousel>
           </Grid>
         </Container>
       </main>
@@ -183,9 +181,8 @@ export default function Album() {
           {/* End hero unit */}
           <Grid container spacing={4} className="card">
             <Grid item xs={12}><h1>החלפות שאישרתי</h1></Grid>
-            <Carousel itemsToShow={6} className="Car" width="100%">
             {state.trainersData.slice(0,4).map((card) => (
-              <Grid item key={card.TrainerCode} >
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -224,7 +221,6 @@ export default function Album() {
                 </Card>
               </Grid>
             ))}
-            </Carousel>
           </Grid>
         </Container>
       </main>
@@ -236,9 +232,8 @@ export default function Album() {
           {/* End hero unit */}
           <Grid container spacing={4} className="card">
             <Grid item xs={12}><h1>היסטוריית החלפות</h1></Grid>
-            <Carousel itemsToShow={6} className="Car" width="100%">
             {state.trainersData.slice(0,4).map((card) => (
-              <Grid item key={card.TrainerCode} >
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -277,7 +272,6 @@ export default function Album() {
                 </Card>
               </Grid>
             ))}
-            </Carousel>
           </Grid>
         </Container>
       </main>

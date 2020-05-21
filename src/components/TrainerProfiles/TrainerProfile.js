@@ -16,6 +16,10 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Doc from '@material-ui/icons/Assignment';
 import TextField from '@material-ui/core/TextField';
+import {FaFacebookSquare} from 'react-icons/fa';
+import {FaChrome} from 'react-icons/fa';
+import {FaInstagram} from 'react-icons/fa';
+import {FaLinkedin} from 'react-icons/fa';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -200,19 +204,19 @@ export default function TrainerProfile() {
                             <hr className="divider"/>
     
                         <div className="social-links">
-                            <a href="www.google.com" target="_blank" rel="noopener noreferrer">
-                                <i className="fa fa-facebook-square" rel="noopener noreferrer" aria-hidden="true"/>
-                            </a>
-                            <a href="www.google.com" target="_blank" rel="noopener noreferrer">
-                                <i className="fa fa-instagram-square" rel="noopener noreferrer" aria-hidden="true"/>
-                            </a>
-                            <a href="www.google.com" target="_blank" rel="noopener noreferrer">
-                                <i className="fa fa-linkedin-square" rel="noopener noreferrer" aria-hidden="true"/>
-                            </a>
-                            <a href="www.google.com" target="_blank" rel="noopener noreferrer">
-                                <i className="fa fa-linkedin-square" rel="noopener noreferrer" aria-hidden="true"/>
-                            </a>
-                        </div>  
+                        <a href={web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaChrome size={30} style={{color:"white"}}/> 
+                        </a>
+                        <a href={facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaFacebookSquare size={30} style={{color:"white"}}/>
+                        </a>
+                        <a href={instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaInstagram size={30} style={{color:"white"}}/>
+                        </a>
+                        <a href={linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaLinkedin size={30} style={{color:"white"}}/>
+                        </a>
+                        </div> 
                         <hr className="divider"/>
                         <div className="social-links" style={{direction:"rtl"}}>
                         <button onClick={changePersonalDetails}>ערוך פרטים איישים</button> 

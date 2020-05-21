@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {Grid, Cell} from 'react-mdl';
 import {useHistory} from 'react-router';
 import './Profiles.css';
+import {FaFacebookSquare} from 'react-icons/fa';
+import {FaChrome} from 'react-icons/fa';
+import {FaInstagram} from 'react-icons/fa';
+import {FaLinkedin} from 'react-icons/fa';
 
 
 export default function BranchProfile() {
@@ -43,10 +47,9 @@ export default function BranchProfile() {
         },[]);
 
 
-        console.log(branchLinks)
-        const web = branchLinks.filter((val)=>val.LinkCode === 1);
-        console.log(web)
-        const facebook = branchLinks.filter((val)=>val.LinkCode === 2);
+        console.log("links:",branchLinks)
+        const web = branchLinks.filter((val)=>val.LinkCode === 1)
+        const facebook = branchLinks.filter((val)=>val.LinkCode === 2)
         const instagram = branchLinks.filter((val)=>val.LinkCode === 3);
         const linkedin = branchLinks.filter((val)=>val.LinkCode === 4)
 
@@ -63,23 +66,23 @@ export default function BranchProfile() {
 
                         <div className="banner-text">
                         <h1>סניף {branchData.Name}</h1>
-                        <p>עיר: {branchData.AreaName}</p>
-                        <p>כתובת: {branchData.Address}</p>
+                        <p>אזור: {branchData.AreaName}</p>
+                        <p>כתובת מלאה: {branchData.Address}</p>
                         <p>טלפון: {branchData.PhoneNo}</p>                   
                             <hr className="divider"/>
 
                         <div className="social-links">
-                        <a href={web.LinkName} target="_blank" rel="noopener noreferrer">
-                            <i className="fa fa-linkedin-square" rel="noopener noreferrer" aria-hidden="true"/>
+                        <a href={web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook.LinkName} target="_blank" rel="noopener noreferrer">
-                            <i className="fa fa-linkedin-square" rel="noopener noreferrer" aria-hidden="true"/>
+                        <a href={facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram.LinkName} target="_blank" rel="noopener noreferrer">
-                            <i className="fa fa-linkedin-square" rel="noopener noreferrer" aria-hidden="true"/>
+                        <a href={instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin.LinkName} target="_blank" rel="noopener noreferrer">
-                            <i className="fa fa-linkedin-square" rel="noopener noreferrer" aria-hidden="true"/>
+                        <a href={linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div>
                         </div>

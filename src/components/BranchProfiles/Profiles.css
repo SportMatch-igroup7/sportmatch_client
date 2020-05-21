@@ -82,10 +82,8 @@
       margin: auto;
   }
 
-  .social-links i{
-      color: white;
-      font-size: 3em;
-      padding-top: 4px;
+  .social-links a{
+      padding-top: 5px;
   }
 
   .back{

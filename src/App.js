@@ -19,6 +19,10 @@ import TrainerProfile from './components/TrainerProfiles/TrainerProfile';
 import TrainerDetails from './components/TrainerProfiles/TrainerPersonalDetailsUpdate';
 import TrainerEditQual from './components/TrainerProfiles/TrainerEditQualifications';
 import TrainersMatch from './components/BranchDashboard/TrainersMatch';
+import QualT from './components/TrainerSignUp/Qualifications';
+import BM from './components/BranchDashboard/BranchMain';
+import C from './components/BranchProfiles/BranchesProfile copy';
+
 
 
 function App() {

@@ -212,7 +212,7 @@ export default function PersonalDetails({onDone = () => {}}) {
           body:JSON.stringify(trainer)
       })
       .then((response)=>response.json())
-      .then((res)=>successSignInTrainer)
+      .then((res)=>successSignInTrainer(res))
       .catch((error)=>console.log(error));
       
         //ajaxCall("POST", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", JSON.stringify(trainer), successSignInTrainer, errorSignInTrainer);
@@ -272,9 +272,11 @@ export default function PersonalDetails({onDone = () => {}}) {
         return `${value}₪`;
       }
 
-    const setPrice=(value)=>{
-      setState({...state,pricePerHour:value})
-    }
+    // const setPrice=(value)=>{
+    //   console.log(value);
+    //   setState({...state,pricePerHour:value})
+    //   //ariaValueNow
+    // }
 
   return (
     <Container component="main" maxWidth="xs" dir="rtl">
@@ -390,8 +392,7 @@ export default function PersonalDetails({onDone = () => {}}) {
              valueLabelDisplay="auto"
              marks={marks}
              max={500}
-             onChange={setPrice}
-             
+             onChange={(e) => setState({...state,pricePerHour:parseInt(e.target.ariaValueNow)})}          
       />
             </Grid>
             <Grid item xs={12}>
