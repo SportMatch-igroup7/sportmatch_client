@@ -130,8 +130,6 @@ export default function TrainerProfile() {
         },[]);
 
   
-
-
         console.log(links)
         const web = links.filter((val)=>val.LinkCode === 1);
         console.log(web)
@@ -143,10 +141,6 @@ export default function TrainerProfile() {
         return (
             <div style ={{width: '100%', margin: 'auto'}}>
                 <Grid className="branch-grid" >
-                    <Cell col={12} className="back">
-                        <CloseIcon/>
-                        
-                    </Cell>
                     <Cell col={12}>
                         <img
                         src={trainerData.Image}

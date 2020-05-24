@@ -67,8 +67,8 @@ export default function BranchProfile() {
 
                         <div className="banner-text">
                         <h1>סניף {branchData.Name}</h1>
-                        <p>עיר: {branchData.AreaName}</p>
-                        <p>כתובת: {branchData.Address}</p>
+                        <p>אזור: {branchData.AreaName}</p>
+                        <p>כתובת מלאה: {branchData.Address}</p>
                         <p>טלפון: {branchData.PhoneNo}</p>                   
                         <hr className="divider"/>
 

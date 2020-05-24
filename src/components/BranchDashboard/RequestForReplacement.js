@@ -84,9 +84,10 @@ export default function SignUp() {
   const [classDescription, setClassDescription] = useState("");
   const [comments, setComments] = useState("");
   const [difficultyLevelCode, setDifficultyLevelCode] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState(150);
   const [languageCode, setLanguageCode] = useState("");
   const [populationCode, setPopulationCode] = useState("");
+  const [requestData, setRequestData] = useState("");
 
   const [state, setState] = useState({
     publishDateTime: new Date().toISOString(),
@@ -100,7 +101,7 @@ export default function SignUp() {
     classDescription:'',
     comments:'',
     difficultyLevelCode:'',
-    maxPrice:0,
+    maxPrice:150,
     languageCode:'',
     populationCode:'',
   });
@@ -196,7 +197,7 @@ const Request=()=> {
         body:JSON.stringify(request)
     })
     .then((response)=>response.json())
-    .then((res)=>{swal("good job"); setNextFlag(true)})
+    .then((res)=>{console.log(res); setRequestData(res); setNextFlag(true)})
     .catch((error)=>console.log(error))
 }
 
@@ -362,7 +363,7 @@ if (nextFlag === false)
              valueLabelDisplay="auto"
              marks={marks}
              max={500}
-             onChange={(e) => setMaxPrice(e.value)}
+             //onChange={(e) => setMaxPrice(e.value)}
              
       />
             </Grid>
@@ -394,5 +395,5 @@ if (nextFlag === false)
     </Container>
   );
   else
-  return (<TrainersMatches/>)
+  return (<TrainersMatches req={requestData}/>)
 }

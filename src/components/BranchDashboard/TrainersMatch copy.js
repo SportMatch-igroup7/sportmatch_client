@@ -16,9 +16,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
 import Modal from '@material-ui/core/Modal';
-import BranchProfile from './ChosenBranchProfile';
-import InputBase from '@material-ui/core/InputBase';
-
+import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -66,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     position: 'absolute',
-    width: 600,
+    width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -74,20 +72,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-export default function Album() {
+export default function Album(props) {
+  console.log(props);
   const classes = useStyles();
   const history = useHistory();
 
-  const [branchCode, setBranchCode] = useState(0);
+  const [trainersData, setTrainersData] = useState([]);
 
-  const [state, setState] = useState({
-    branchData:[]
-  });
+  const [chosenTrainers, setChosenTrainers] = useState([]);
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+
+  const requestData = props.req;
 
   const handleOpen = () => {
     setOpen(true);
@@ -97,27 +95,45 @@ export default function Album() {
     setOpen(false);
   };
 
+
   useEffect(() => {
 
-    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
-      method:'GET',
-      headers:{
-          Accept:'application/json','Content-Type':'application/json',
-      },
-  })
+  //   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
+  //     method:'GET',
+  //     headers:{
+  //         Accept:'application/json','Content-Type':'application/json',
+  //     },
+  // })
+  // .then((response)=>response.json())
+  // .then((res)=> {console.log(res); setState({...state,trainersData:res})})
+  // .catch((error)=>console.log(error))
+
+  fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/GetTrainerMatchRequest/'+json.stringify(requestData)+"/",{
+    method:'GET',
+    headers:{
+        Accept:'application/json','Content-Type':'application/json',
+    },
+})
   .then((response)=>response.json())
-  .then((res)=> {console.log(res); setState({...state,branchData:res})})
+  .then((res)=> {console.log(res); setTrainersData(res)})
   .catch((error)=>console.log(error))
- 
   },[]);
 
-  const viewProfile = (branchCode) =>{
-    let branch = {
-      BranchCode: branchCode
+  const addTrainer=(Item)=>{
+    let t = chosenTrainers;
+    if(t.includes(Item))
+    {
+        t=t.filter(item=>item !== Item)
     }
-    localStorage["branch"] = JSON.stringify(branch);
-    //history.push("/BranchProfile");
+        
+    else
+    {
+        t.push(Item);   
+    }
+    setChosenTrainers(t);
+    console.log(t);  
   }
+
 
   return (
     <React.Fragment >
@@ -127,50 +143,41 @@ export default function Album() {
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
-              מאגר מועדונים
-            </Typography>
-            <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
-            <div className={classes.search}>
-            <InputBase
-              placeholder="חיפוש"
-              fullWidth
-              style={{backgroundColor:"lightblue"}}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
+             המאמנים המתאימים ביותר עבורך
             </Typography>
           </Container>
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
-        
+          <Button size="small" color="primary">
+            בחר את כולם
+          </Button>
           <Grid container spacing={4}>
-            {state.branchData.map((card) => (
-              <Grid item key={card.BranchCode} xs={6} md={3}>
-                <Card className={classes.card}>
+            {trainersData.map((card) => (
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
+                <Card className={classes.card} style={{border: chosenTrainers.includes(card.TrainerCode) ? 'solid lightgreen': ''}}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image={card.Logo}
+                    image={card.Image}
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      {card.Name} 
+                      {card.FirstName} {card.LastName}
                     </Typography>
                     <Typography>
-                      {card.Description}
+                      {card.AboutMe}
                     </Typography>
                   </CardContent>
                   <CardActions>
+                  <Button size="small" color="primary" onClick={(e)=>addTrainer(card.TrainerCode)}>
+                      בחר
+                    </Button>
                     <Button onClick={()=>{
-                          let branch = {
-                            BranchCode: card.BranchCode
+                          let trainer = {
+                            TrainerCode: card.TrainerCode
                           }
-                          localStorage["branch"] = JSON.stringify(branch);
+                          localStorage["trainer"] = JSON.stringify(trainer);
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
@@ -182,12 +189,9 @@ export default function Album() {
                     aria-describedby="simple-modal-description"
                   >
                     <div style={modalStyle} className={classes.paper}>
-                    <BranchProfile/>
+                    <TrainerProfile/>
                     </div>                  
                   </Modal>
-                    <Button  size="small" color="primary">
-                      חסום
-                    </Button>
                   </CardActions>
                 </Card>
               </Grid>

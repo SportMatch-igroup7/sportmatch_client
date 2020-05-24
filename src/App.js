@@ -22,8 +22,10 @@ import TrainersMatch from './components/BranchDashboard/TrainersMatch';
 import QualT from './components/TrainerSignUp/Qualifications';
 import BM from './components/BranchDashboard/BranchMain';
 import C from './components/BranchProfiles/BranchesProfile copy';
-
-
+import T from './components/TrainerSignUp/Qualifications';
+import Lidor from './components/Lidor';
+import L from './components/BranchDashboard/BranchMain copy';
+import Test from './components/TrainerDashboard/TrainerMainTest';
 
 function App() {
   return (

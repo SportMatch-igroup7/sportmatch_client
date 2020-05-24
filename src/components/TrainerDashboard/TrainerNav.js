@@ -27,7 +27,8 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import TrainersProfile from '../TrainerProfiles/TrainersProfile';
 import BranchesProfile from '../BranchProfiles/BranchesProfile';
 import TrainerProfile from '../TrainerProfiles/TrainerProfile';
-import TrainerMain from '../TrainerDashboard/TrainerMain';
+import TrainerMain from '../TrainerDashboard/TrainerMainTest';
+import Exit from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
 
@@ -87,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+  },
+  item:{
+    textAlign:'inherit'
   },
   drawerPaper: {
     width: drawerWidth,
@@ -194,6 +198,7 @@ export default function PersistentDrawerRight() {
         </Typography>
       </main>
       <Drawer
+        dir="rtl"
         className={classes.drawer}
         variant="persistent"
         anchor="right"
@@ -209,26 +214,31 @@ export default function PersistentDrawerRight() {
         </div>
         <Divider />
         <List>
-          <MenuItem button onClick={(e) => setComp(1)}>
+          <MenuItem className={classes.item} button onClick={(e) => setComp(1)}>
                 <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                 <ListItemText primary="הפרופיל שלי" />
             </MenuItem>
             <Divider />
-            <MenuItem button onClick={(e) => setComp(2)}>
+            <MenuItem className={classes.item} button onClick={(e) => setComp(2)}>
                 <ListItemIcon><HomeIcon /></ListItemIcon>
                 <ListItemText primary="ראשי"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(3)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(3)} >
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 <ListItemText primary="מאגר מאמנים"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(4)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(4)} >
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 <ListItemText primary="מאגר מועדונים"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(5)}>
+            <MenuItem className={classes.item} button onClick={(e) => setComp(5)}>
                 <ListItemIcon><MessageIcon /></ListItemIcon>
                 <ListItemText primary="צור קשר"/>
+            </MenuItem>
+            <Divider />
+            <MenuItem className={classes.item} button onClick={() => history.push("/")}>
+                <ListItemIcon><Exit/></ListItemIcon>
+                <ListItemText primary="התנתק"/>
             </MenuItem>
         </List>
       </Drawer>

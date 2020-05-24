@@ -29,7 +29,8 @@ import RequestForReplacement from './RequestForReplacement';
 import BranchesProfile from '../BranchProfiles/BranchesProfile';
 import BranchParameters from './BranchParameter';
 import BranchProfile from  '../BranchProfiles/BranchProfile';
-import BranchMain from './BranchMain';
+import BranchMain from './BranchMain copy';
+import Exit from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
 
@@ -85,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
   },
   hide: {
     display: 'none',
+  },
+  item:{
+    textAlign:'inherit'
   },
   drawer: {
     width: drawerWidth,
@@ -167,16 +171,7 @@ export default function PersistentDrawerRight() {
           <Typography variant="h6" noWrap className={classes.title}>
             SportMatch
           </Typography>
-          <div className={classes.search}>
-            <InputBase
-              placeholder="חיפוש"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
+         
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -200,6 +195,7 @@ export default function PersistentDrawerRight() {
         </Typography>
       </main>
       <Drawer
+        dir="rtl"
         className={classes.drawer}
         variant="persistent"
         anchor="right"
@@ -215,34 +211,39 @@ export default function PersistentDrawerRight() {
         </div>
         <Divider />
         <List>
-          <MenuItem button onClick={(e) => setComp(1)}>
+          <MenuItem className={classes.item} button onClick={(e) => setComp(1)}>
                 <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                 <ListItemText primary="הפרופיל שלי" />
             </MenuItem>
             <Divider />
-            <MenuItem button onClick={(e) => setComp(2)}>
+            <MenuItem className={classes.item} button onClick={(e) => setComp(2)}>
                 <ListItemIcon><HomeIcon /></ListItemIcon>
                 <ListItemText primary="ראשי"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(3)}>
+            <MenuItem className={classes.item} button onClick={(e) => setComp(3)}>
                 <ListItemIcon><AssignmentIcon /></ListItemIcon>
                 <ListItemText primary="ניהול פרמטרים"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(4)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(4)} >
                 <ListItemIcon><FindReplaceIcon /></ListItemIcon>
                 <ListItemText primary="צור הודעת החלפה"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(5)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(5)} >
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 <ListItemText primary="מאגר מאמנים"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(6)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(6)} >
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 <ListItemText primary="מאגר מועדונים"/>
             </MenuItem>
-            <MenuItem button onClick={(e) => setComp(7)}>
+            <MenuItem className={classes.item} button onClick={(e) => setComp(7)}>
                 <ListItemIcon><MessageIcon /></ListItemIcon>
                 <ListItemText primary="צור קשר"/>
+            </MenuItem>
+            <Divider />
+            <MenuItem className={classes.item} button onClick={() => history.push("/")}>
+                <ListItemIcon><Exit/></ListItemIcon>
+                <ListItemText primary="התנתק"/>
             </MenuItem>
         </List>
       </Drawer>
