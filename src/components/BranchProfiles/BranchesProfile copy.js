@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
 export default function Album() {
   const classes = useStyles();
   const history = useHistory();

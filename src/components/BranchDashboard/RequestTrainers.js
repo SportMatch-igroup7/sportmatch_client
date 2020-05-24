@@ -182,7 +182,7 @@ export default function Album(props) {
                     <TrainerProfile/>
                     </div>                  
                   </Modal>
-                    <Button  size="small" color="primary" style={{backgroundColor:"green"}} onClick={props.approveTrainer(matchTrainers.ReplacmentCode,card.TrainerCode )}>
+                    <Button  size="small" color="primary" style={{backgroundColor:"green"}} onClick={() => props.approveTrainer(matchTrainers.ReplacmentCode,card.TrainerCode)}>
                       אשר
                     </Button>
                     <Button  size="small" color="primary" style={{backgroundColor:"red"}}>

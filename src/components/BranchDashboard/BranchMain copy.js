@@ -158,6 +158,7 @@ export default function Album() {
       TrainerCode: trainerCode,
       RequestStatus: "approved"
     }
+    console.log(req);
     //בעיקרון כאן מה שצריך לעשות זה לשנות את הסטטוס של המאמן הזה למאושר ושל שאר המאמנים תחת ההודעה הזאת לסגור
 
   }
@@ -213,7 +214,7 @@ export default function Album() {
                     aria-describedby="simple-modal-description"
                   >
                     <div style={modalStyle} className={classes.paper}>
-                    <ReqTrainers approveTrainer={(replacmentCode, trainerCode) => approveTrainer(replacmentCode, trainerCode)} declineTrainer={(replacmentCode, trainerCode) => declineTrainer(replacmentCode, trainerCode)} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))}/>
+                    <ReqTrainers approveTrainer={approveTrainer} declineTrainer={(replacmentCode, trainerCode) => declineTrainer(replacmentCode, trainerCode)} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))}/>
                     </div>                  
                   </Modal>
                   </CardActions>
