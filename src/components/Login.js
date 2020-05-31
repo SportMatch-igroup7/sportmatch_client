@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import swal from 'sweetalert';
 import RI from '../commons/RoundedImage';
-//event listener react 
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -124,7 +124,7 @@ const checkType=(data) =>{
         Type: data.Type
         }
         localStorage["userDetails"] = JSON.stringify(branch);
-        history.push("/BranchMain");
+        history.push("/BranchNav");
     }
     else
     {
@@ -135,7 +135,7 @@ const checkType=(data) =>{
             Type: data.Type
             }
         localStorage["userDetails"] = JSON.stringify(trainer);
-        history.push("/TrainerMain");
+        history.push("/TrainerNav");
     }
         
 }

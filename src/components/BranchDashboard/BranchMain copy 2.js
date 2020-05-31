@@ -18,6 +18,7 @@ import '../TrainerDashboard/cards.css';
 import Carousel from "react-elastic-carousel";
 import Req from '../TrainerDashboard/RequestForReplacementView';
 import ReqTrainers from './RequestTrainers';
+import ChosenTrainer from '../TrainerProfiles/ChosenTrainerProfile';
 //import './CarStyle.css';
 
 
@@ -132,7 +133,7 @@ export default function Album() {
     const reqCodes = [];
   
     const arr = [...new Set(res.map((x) => {
-      if (!reqCodes.includes(x.ReplacmentCode) && x.RequestStatus != "approved") 
+      if (!reqCodes.includes(x.ReplacmentCode) && x.RequestStatus === "initial") 
       {
         request = {
           ReplacmentCode: x.ReplacmentCode,
@@ -154,21 +155,41 @@ export default function Album() {
 
   const approveTrainer = (replacmentCode, trainerCode) =>{
     let req = {
-      ReplacmentCode: replacmentCode,
+      RequestCode: replacmentCode,
       TrainerCode: trainerCode,
       RequestStatus: "approved"
     }
     console.log(req);
-    //בעיקרון כאן מה שצריך לעשות זה לשנות את הסטטוס של המאמן הזה למאושר ושל שאר המאמנים תחת ההודעה הזאת לסגור
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestTrainer/PutRequestTrainer",{
+      method:'PUT',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      body:JSON.stringify(req)
+  })
+  .then((response)=>response.json())
+  .then((res)=>console.log(res))
+  .catch((error)=>console.log(error))
 
   }
 
   const declineTrainer = (replacmentCode,trainerCode) =>{
     let req = {
-      ReplacmentCode: replacmentCode,
+      RequestCode: replacmentCode,
       TrainerCode: trainerCode,
       RequestStatus: "closed"
     }
+    console.log(req);
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestTrainer/PutRequestTrainer",{
+      method:'PUT',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      body:JSON.stringify(req)
+  })
+  .then((response)=>response.json())
+  .then((res)=>console.log(res))
+  .catch((error)=>console.log(error))
   }
 
 
@@ -214,7 +235,7 @@ export default function Album() {
                     aria-describedby="simple-modal-description"
                   >
                     <div style={modalStyle} className={classes.paper}>
-                    <ReqTrainers approveTrainer={approveTrainer} declineTrainer={(replacmentCode, trainerCode) => declineTrainer(replacmentCode, trainerCode)} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))}/>
+                    <ReqTrainers approveTrainer={approveTrainer} declineTrainer={declineTrainer} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode && val.RequestStatus === "open" && val.IsAprrovedByTrainer ==="true"))}/>
                     </div>                  
                   </Modal>
                   </CardActions>
@@ -226,14 +247,12 @@ export default function Album() {
       </main>
       <hr/>
 
-
-      <CssBaseline />
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4} className="card">
             <Grid item xs={12}><h1>החלפות שאישרתי:</h1></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory===false && card.RequestStatus == "approved")).map((card) => (
+            {requests && requests.filter((card)=>(card.IsHistory===false && card.IsAprrovedByTrainer === "true" && card.RequestStatus === "approved" )).map((card) => (
               <Grid item key={card.ReplacmentCode} >
                 <Card className={classes.card}>
                   <CardMedia
@@ -249,15 +268,16 @@ export default function Album() {
                       תאריך ההחלפה: {card.ReplacementDate}
                     </Typography>
                     <Typography>
-                      שעות ההחלפה:{card.ToHour} - {card.FromHour}  
+                      שעות ההחלפה: {card.ToHour} - {card.FromHour}  
                     </Typography>
                   </CardContent>
                   <CardActions>
                     <Button onClick={()=>{
-                          // let request = {
-                          //   TrainerCode: card.ReplacmentCode
-                          // }
-                          // localStorage["request"] = JSON.stringify(trainer);
+                          setReqCode(card.ReplacementCode);
+                          let fil=requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode && val.RequestStatus === "approved" && val.IsAprrovedByTrainer ==="true"))
+                          let trainerCode = fil[0].TrainerCode;
+                          console.log(trainerCode);
+                          localStorage["trainer"] = JSON.stringify(trainerCode);
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
@@ -269,7 +289,7 @@ export default function Album() {
                     aria-describedby="simple-modal-description"
                   >
                     <div style={modalStyle} className={classes.paper}>
-                    <ReqTrainers req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))}/>
+                    <ChosenTrainer/>
                     </div>                  
                   </Modal>
                   </CardActions>
@@ -281,14 +301,12 @@ export default function Album() {
       </main>
       <hr/>
 
-
-      <CssBaseline />
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4} className="card">
             <Grid item xs={12}><h1>היסטוריית החלפות:</h1></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory===true && card.RequestStatus == "approved")).map((card) => (
+            {requests && requests.filter((card)=>(card.IsHistory===true && card.IsApprovedByTrainer === "true" && card.RequestStatus === "approved" )).map((card) => (
               <Grid item key={card.ReplacmentCode} >
                 <Card className={classes.card}>
                   <CardMedia
@@ -304,15 +322,12 @@ export default function Album() {
                       תאריך ההחלפה: {card.ReplacementDate}
                     </Typography>
                     <Typography>
-                      שעות ההחלפה:{card.ToHour} - {card.FromHour}  
+                      שעות ההחלפה: {card.ToHour} - {card.FromHour}  
                     </Typography>
                   </CardContent>
                   <CardActions>
                     <Button onClick={()=>{
-                          // let request = {
-                          //   TrainerCode: card.ReplacmentCode
-                          // }
-                          // localStorage["request"] = JSON.stringify(trainer);
+                          setReqCode(card.ReplacementCode);
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
@@ -324,7 +339,7 @@ export default function Album() {
                     aria-describedby="simple-modal-description"
                   >
                     <div style={modalStyle} className={classes.paper}>
-                    <ReqTrainers req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))}/>
+                    <ReqTrainers approveTrainer={approveTrainer} declineTrainer={declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))}/>
                     </div>                  
                   </Modal>
                   </CardActions>
@@ -334,6 +349,10 @@ export default function Album() {
           </Grid>
         </Container>
       </main>
+
+      
+
+
       
     </React.Fragment>
   );

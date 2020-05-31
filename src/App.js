@@ -4,7 +4,7 @@ import './App.css';
 import Login from './components/Login';
 import TrainersProfile from './components/TrainerProfiles/TrainersProfile';
 import BranchSignUp from './components/BranchSignUp/BranchSignUp';
-import BranchMain from './components/BranchDashboard/BranchNav'
+import BranchNav from './components/BranchDashboard/BranchNav'
 import TrainerSignUp from './components/TrainerSignUp/TrainerReg';
 import RequestForReplacement from './components/BranchDashboard/RequestForReplacement';
 import PowerBI from './components/AdminDashboard/PowerBi';
@@ -13,7 +13,7 @@ import AAA from './components/OLD/BranchSignUp copy';
 import { StateProvider } from './store/MainStore';
 import BranchParameters from './components/BranchDashboard/BranchParameter';
 import BranchProfile from './components/BranchProfiles/BranchProfile';
-import TrainerMain from './components/TrainerDashboard/TrainerNav';
+import TrainerNav from './components/TrainerDashboard/TrainerNav';
 import BB from './components/TrainerDashboard/TrainerMain';
 import TrainerProfile from './components/TrainerProfiles/TrainerProfile';
 import TrainerDetails from './components/TrainerProfiles/TrainerPersonalDetailsUpdate';
@@ -24,8 +24,9 @@ import BM from './components/BranchDashboard/BranchMain';
 import C from './components/BranchProfiles/BranchesProfile copy';
 import T from './components/TrainerSignUp/Qualifications';
 import Lidor from './components/Lidor';
-import L from './components/BranchDashboard/BranchMain copy';
+import L from './components/BranchDashboard/BranchMain';
 import Test from './components/TrainerDashboard/TrainerMainTest';
+import ABC from './components/TrainerProfiles/TrainersProfile copy';
 
 function App() {
   return (
@@ -35,8 +36,8 @@ function App() {
         <Route exact path='/' component={Login} />
         <Route path="/BranchSignUp" component={BranchSignUp} />
         <Route path="/TrainerSignUp" component={TrainerSignUp} />
-        <Route path="/BranchMain" component={BranchMain} />
-        <Route path="/TrainerMain" component={TrainerMain} />
+        <Route path="/BranchNav" component={BranchNav} />
+        <Route path="/TrainerNav" component={TrainerNav} />
         <Route path="/RequestForReplacement" component={RequestForReplacement} />
         <Route path="/TrainersProfile" component={TrainersProfile} />
         <Route path="/BranchesProfile" component={BranchesProfile} />

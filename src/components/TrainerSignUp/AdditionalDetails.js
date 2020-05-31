@@ -231,7 +231,7 @@ fetch("http://proj.ruppin.ac.il/igroup7/proj/api/TrainerLanguage",{
 .then((res)=>console.log("success post trainer languages"))
 .catch((error)=>console.log(error));
 
-history.push("/TrainerMain");
+history.push("/TrainerNav");
 
 }
 

@@ -17,6 +17,10 @@ import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
 import '../TrainerDashboard/cards.css';
 import Carousel from "react-elastic-carousel";
 import Req from './RequestForReplacementView';
+import NewRequests from './RequestsManagement/NewRequests';
+import WaitingRequests from './RequestsManagement/WaitingRequests';
+import ApprovedRequests from './RequestsManagement/ApprovedRequests';
+import HistoricalRequests from './RequestsManagement/HistoricalRequests';
 
 //import './CarStyle.css';
 
@@ -117,6 +121,7 @@ export default function Album() {
   .then((response)=>response.json())
   .then((res)=> {console.log(res);
    setRequests(res);
+   localStorage["trainerReq"] = JSON.stringify(res);
   })
   .catch((error)=>console.log(error))
   
@@ -125,241 +130,59 @@ export default function Album() {
 
   const approveTrainer = (replacmentCode, trainerCode) =>{
     let req = {
-      ReplacmentCode: replacmentCode,
+      RequestCode: replacmentCode,
       TrainerCode: trainerCode,
-      IsAprrovedByTrainer: true
+      IsApprovedByTrainer: "true"
     }
-    //בעיקרון כאן מה שצריך לעשות זה לשנות את הסטטוס של המאמן הזה למאושר ושל שאר המאמנים תחת ההודעה הזאת לסגור
-
+    console.log(req);
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestTrainer/PutIsApprovedTrainer",{
+      method:'PUT',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      body:JSON.stringify(req)
+  })
+  .then((response)=>response.json())
+  .then((res)=> console.log(res),
+    setTimeout(() => {
+      refreshPage()
+    }, 3000))
+  .catch((error)=>console.log(error))
   }
 
   const declineTrainer = (replacmentCode,trainerCode) =>{
     let req = {
-      ReplacmentCode: replacmentCode,
+      RequestCode: replacmentCode,
       TrainerCode: trainerCode,
-      IsAprrovedByTrainer: false
+      IsApprovedByTrainer: "false",
+      RequestStatus: "closed"
     }
+    console.log(req);
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestTrainer/PutIsApprovedTrainerFalse",{
+      method:'PUT',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      body:JSON.stringify(req)
+  })
+  .then((response)=>response.json())
+  .then((res)=> console.log(res),
+    setTimeout(() => {
+      refreshPage()
+    }, 3000))
+  .catch((error)=>console.log(error))
   }
 
+  const refreshPage= () => {
+    window.location.reload(false);
+  }
 
   return (
     <React.Fragment >
-      <CssBaseline />
-      <hr/>
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>בקשות החלפה חדשות שטרם נענו:</h1></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory===false && card.IsAprrovedByTrainer == false && card.RequestStatus == "Sent")).map((card) => (
-              <Grid item key={card.ReplacmentCode} >
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.Logo}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.TypeName}
-                    </Typography>
-                    <Typography>
-                      תאריך ההחלפה: {card.ReplacementDate}
-                    </Typography>
-                    <Typography>
-                      שעות ההחלפה: {card.ToHour} - {card.FromHour}  
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={()=>{
-                          console.log("code:" ,card.ReplacementCode)
-                          setReqCode(card.ReplacementCode);
-                          console.log(reqCode);
-                          handleOpen();
-                    }} size="small" color="primary">
-                      צפה
-                    </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <Req approveTrainer={(replacmentCode, trainerCode) => approveTrainer(replacmentCode, trainerCode)} declineTrainer={(replacmentCode, trainerCode) => declineTrainer(replacmentCode, trainerCode)} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))} stage="1"/>
-                    </div>                  
-                  </Modal>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      <hr/>
-
-      <CssBaseline />
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>בקשות ממתינות לאישור מועדון:</h1></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory===false && card.IsAprrovedByTrainer == true && card.RequestStatus == "Sent")).map((card) => (
-              <Grid item key={card.ReplacmentCode} >
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.Logo}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.TypeName}
-                    </Typography>
-                    <Typography>
-                      תאריך ההחלפה: {card.ReplacementDate}
-                    </Typography>
-                    <Typography>
-                      שעות ההחלפה:{card.ToHour} - {card.FromHour}  
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={()=>{
-                          // let request = {
-                          //   TrainerCode: card.ReplacmentCode
-                          // }
-                          // localStorage["request"] = JSON.stringify(trainer);
-                          handleOpen();
-                    }} size="small" color="primary">
-                      צפה
-                    </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <Req approveTrainer={(replacmentCode, trainerCode) => approveTrainer(replacmentCode, trainerCode)} declineTrainer={(replacmentCode, trainerCode) => declineTrainer(replacmentCode, trainerCode)} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))} stage="2"/>
-                    </div>                  
-                  </Modal>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      <hr/>
-
-
-      <CssBaseline />
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>ההחלפות העתידיות שלי :</h1></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory===false && card.RequestStatus == "approved" && card.IsAprrovedByTrainer == true)).map((card) => (
-              <Grid item key={card.ReplacmentCode} >
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.Logo}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.TypeName}
-                    </Typography>
-                    <Typography>
-                      תאריך ההחלפה: {card.ReplacementDate}
-                    </Typography>
-                    <Typography>
-                      שעות ההחלפה:{card.ToHour} - {card.FromHour}  
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={()=>{
-                          // let request = {
-                          //   TrainerCode: card.ReplacmentCode
-                          // }
-                          // localStorage["request"] = JSON.stringify(trainer);
-                          handleOpen();
-                    }} size="small" color="primary">
-                      צפה
-                    </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <Req approveTrainer={(replacmentCode, trainerCode) => approveTrainer(replacmentCode, trainerCode)} declineTrainer={(replacmentCode, trainerCode) => declineTrainer(replacmentCode, trainerCode)} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))} stage="3"/>
-                    </div>                  
-                  </Modal>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      <hr/>
-
-
-      <CssBaseline />
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>היסטוריית החלפות:</h1></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory ===true && card.RequestStatus == "approved" && card.IsAprrovedByTrainer == true)).map((card) => (
-              <Grid item key={card.ReplacmentCode} >
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.Logo}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.TypeName}
-                    </Typography>
-                    <Typography>
-                      תאריך ההחלפה: {card.ReplacementDate}
-                    </Typography>
-                    <Typography>
-                      שעות ההחלפה:{card.ToHour} - {card.FromHour}  
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={()=>{
-                          // let request = {
-                          //   TrainerCode: card.ReplacmentCode
-                          // }
-                          // localStorage["request"] = JSON.stringify(trainer);
-                          handleOpen();
-                    }} size="small" color="primary">
-                      צפה
-                    </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <Req approveTrainer={(replacmentCode, trainerCode) => approveTrainer(replacmentCode, trainerCode)} declineTrainer={(replacmentCode, trainerCode) => declineTrainer(replacmentCode, trainerCode)} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))} stage="4"/>
-                    </div>                  
-                  </Modal>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
+        <NewRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <WaitingRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <ApprovedRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <HistoricalRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
       
     </React.Fragment>
   );

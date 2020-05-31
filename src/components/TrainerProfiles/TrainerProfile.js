@@ -61,8 +61,7 @@ export default function TrainerProfile() {
   
     useEffect(() => {
   
-        //const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
-        const trainerCode = 117;
+        const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
         fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/getTrainer/'+trainerCode+"/",{
             method:'GET',
             headers:{
@@ -215,10 +214,10 @@ export default function TrainerProfile() {
                         </a>
                         </div> 
                         <hr className="divider"/>
-                        <div className="social-links" style={{direction:"rtl"}}>
-                        <button onClick={changePersonalDetails}>ערוך פרטים איישים</button> 
-                        <button >ערוך הכשרות</button> 
-                        <button >ערוך נתונים נוספים</button> 
+                        <div className="social-links" style={{direction:"rtl",marginTop:'15px'}}>
+                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changePersonalDetails}>ערוך פרטים איישים</Button> 
+                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} >ערוך הכשרות</Button> 
+                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} >ערוך נתונים נוספים</Button> 
                         </div>
                     
                     </div>  
@@ -230,27 +229,3 @@ export default function TrainerProfile() {
         )
     }
 
-    // <React.Fragment >
-    //   <CssBaseline />
-    //   <main>
-    //     <Container className={classes.cardGrid} maxWidth="md">
-    //       {/* End hero unit */}
-    //       <Grid container spacing={4}>
-    //         {quals.map((card) => (
-    //           <Grid item key={card.QualificationTypeCode} xs={6} md={3}>
-    //             <Card className={classes.card}>
-    //               <CardContent className={classes.cardContent}>
-    //               <Typography gutterBottom variant="h5" component="h2">
-    //                   {card.TypeName} 
-    //                 </Typography>
-    //                 <Typography gutterBottom variant="h5" component="h2">
-    //                   שנות ניסיון: {card.YearsOfExperience} 
-    //                 </Typography>
-    //               </CardContent>
-    //             </Card>
-    //           </Grid>
-    //         ))}
-    //       </Grid>
-    //     </Container>
-    //   </main>
-    // </React.Fragment>

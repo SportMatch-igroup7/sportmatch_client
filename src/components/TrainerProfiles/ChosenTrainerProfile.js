@@ -54,6 +54,10 @@ export default function TrainerProfile() {
     const [areas, setAreas] = useState([]);
     const [quals, setQuals] = useState([]);
     const [lang, setLangs] = useState([]);
+    const [web, setWeb] = useState();
+    const [facebook, setFacebook] = useState();
+    const [instagram, setInstagram] = useState();
+    const [linkedin, setLinkedin] = useState();
 
  
   
@@ -83,7 +87,7 @@ export default function TrainerProfile() {
         })
         .then((response)=>response.json())
         .then((res)=>
-        {console.log("links:",res);setLinks(res)})
+        {console.log("links:",res);setLinks(res);setLinksPath()})
         .catch((error)=>console.log(error))
         .finally(()=>console.log('got trainer links'))
 
@@ -129,13 +133,17 @@ export default function TrainerProfile() {
   
         },[]);
 
-  
-        console.log(links)
-        const web = links.filter((val)=>val.LinkCode === 1);
-        console.log(web)
-        const facebook = links.filter((val)=>val.LinkCode === 2);
-        const instagram = links.filter((val)=>val.LinkCode === 3);
-        const linkedin = links.filter((val)=>val.LinkCode === 4)
+        const setLinksPath = () =>
+     {   
+        console.log(links);
+         if(links.length>0)
+       { 
+        setWeb(links.filter((val)=>val.LinkCode === 1));
+        setFacebook(links.filter((val)=>val.LinkCode === 2));
+        setInstagram (links.filter((val)=>val.LinkCode === 3));
+        setLinkedin (links.filter((val)=>val.LinkCode === 4));
+        }
+    }
 
 
         return (
@@ -153,8 +161,8 @@ export default function TrainerProfile() {
                         <p>גיל: {trainerData.Age}</p>      
                         <p>מייל: {trainerData.Email}</p> 
                         <p>מספר טלפון: {trainerData.Phone1}</p> 
-                        <p>אזורי עבודה: {areas.map((area)=>(`${area.AreaName}, `)) }</p> 
-                        <p>שפות: {lang.map((lang)=>(`${lang.LName}, `)) }</p>            
+                        <p>אזורי עבודה: {areas && areas.map((area)=>(`${area.AreaName}, `)) }</p> 
+                        <p>שפות: {lang && lang.map((lang)=>(`${lang.LName}, `)) }</p>            
                             <hr className="divider"/>
                         <h3>ההכשרות שלי</h3>
                         <React.Fragment   >
@@ -162,7 +170,7 @@ export default function TrainerProfile() {
                                 <Container className={classes.cardGrid} maxWidth="md">
                                 {/* End hero unit */}
                                 <Grid2 container spacing={4} className="banner-text">
-                                    {quals.map((card) => (
+                                    {quals && quals.map((card) => (
                                     <Grid2 item key={card.QualificationTypeCode} xs={6} md={3}>
                                         <Card className={classes.card}>
                                         <CardContent className={classes.cardContent}>
@@ -193,16 +201,16 @@ export default function TrainerProfile() {
                             <hr className="divider"/>
     
                             <div className="social-links">
-                        <a href={web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={web && web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook && facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram && instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin && linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div>   

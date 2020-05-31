@@ -60,34 +60,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RequestForReplacementView(props) {
-  console.log(props);
   console.log(props.req[0].ReplacmentCode);
-  console.log("stage:",props.stage);
-  const replacmentCode = props.req[0].ReplacmentCode;
-  console.log("replacementCode:",replacmentCode);
-  const trainerCode = props.req[0].TrainerCode;
-  console.log("trainerCode:",trainerCode);
   const data = props.req[0];
   const classes = useStyles();
   const history = useHistory();
-  const [branchData,setBranchData] = useState();
-const branchCode = props.req[0].BranchCode;
 
-  useEffect(() => {
-    console.log(branchCode);
-    fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Branch/getBranch/'+branchCode+"/",{
-        method:'GET',
-        headers:{
-            Accept:'application/json','Content-Type':'application/json',
-        },
-    })
-    .then((response)=>response.json())
-    .then((res)=>
-    {console.log(res);setBranchData(res)})
-    .catch((error)=>console.log(error))
-    .finally(()=>console.log('got branch details'))
-  
-  },[]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,9 +74,6 @@ const branchCode = props.req[0].BranchCode;
   const prevent = async (e) =>{
     e.preventDefault();
   }
-
-
-
 
 
 const marks = [
@@ -131,15 +105,13 @@ function valuetext(value) {
 
 const btn = () => {
   if(props.stage === "1")
-    return(
-      <Grid>    
-      <Button
+    return(    
+      `<Button
       type="submit"
       variant="contained"
       color="primary"
       className={classes.submit}
-      style={{backgroundColor:"green"}}
-      onClick={() =>props.approveTrainer(replacmentCode,trainerCode)}
+      onClick={handleSubmit}
     >
       אשר בקשה
     </Button>
@@ -149,27 +121,23 @@ const btn = () => {
       variant="contained"
       color="primary"
       className={classes.submit}
-      style={{backgroundColor:"red"}}
-      onClick={() =>props.declineTrainer(replacmentCode,trainerCode)}
+      onClick={handleSubmit}
     >
       סרב
-    </Button>
-    </Grid>);
+    </Button>`);
 
-    else if (props.stage === "2")
+    else if (props.stage != "1" && props.stage !="4")
      return (
-   <Button
+  `  <Button
       type="submit"
       variant="contained"
       color="primary"
       className={classes.submit}
-      style={{backgroundColor:"red"}}
-      onClick={() => props.declineTrainer(replacmentCode,trainerCode)}
+      onClick={handleSubmit}
     >
       סרב
-    </Button>);
+    </Button>`);
 }
-
 
   return (
     <Container component="main" maxWidth="xs" dir="rtl">
@@ -183,42 +151,6 @@ const btn = () => {
         </Typography>
         <form className={classes.form} noValidate dir="rtl">
           <Grid container spacing={2}>
-          <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                disabled={true}
-                fullWidth
-                id="contact"
-                label="שם הסניף"
-                name="contact"
-                autoComplete="contact"
-                value = {branchData && branchData.Name}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                disabled={true}
-                fullWidth
-                id="contact"
-                label="כתובת הסניף"
-                name="contact"
-                autoComplete="contact"
-                value = {branchData && branchData.Address}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                disabled={true}
-                fullWidth
-                id="contact"
-                label="טלפון"
-                name="contact"
-                autoComplete="contact"
-                value = {branchData && branchData.PhoneNo}
-              />
-            </Grid>
           <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -279,10 +211,87 @@ const btn = () => {
             />
       </Grid>
 
-     
+      <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="classDesc"
+            label="תיאור השיעור"
+            name="classDesc"
+            autoComplete="classDesc"
+            value = {data.ClassDescription}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="com"
+            label="הערות נוספות"
+            name="com"
+            autoComplete="com"
+            value = {data.Comments}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="dif"
+            label="רמת קושי"
+            name="dif"
+            autoComplete="dif"
+            value = {data.LevelName}
+          />
+        </Grid>
+
+          <Grid item xs={12}>
+                מחיר לשעה
+            <Slider
+            defaultValue={100}
+            getAriaValueText={props.MaxPrice} //check how to get the value
+            aria-labelledby="discrete-slider-custom"
+             step={10}
+             valueLabelDisplay="auto"
+             marks={marks}
+             max={500}
+             
+      />
+            </Grid>
+
+            <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="lang"
+            label="שפת השיעור"
+            name="lang"
+            autoComplete="lang"
+            value = {data.LName}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="pop"
+            label="אוכלוסיית יעד"
+            name="pop"
+            autoComplete="pop"
+            value = {data.PName}
+          />
+        </Grid>
 
           </Grid>
-{btn()}
+          {btn()}
         </form>
       </div>
     </Container>

@@ -78,6 +78,8 @@ export default function Qualifications({onDone = () => {}}) {
   const [qualCode, setQualCode] = useState(0);
   const [trainerQual, setTrainerQual] = useState([]);
   const [quals, setQuals] = useState([]);
+  const [distinctQual,setDistinctQual] = useState();
+  const [trainerQualsCode, setTrainerQualsCode] = useState();
 
   const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
 
@@ -97,7 +99,9 @@ export default function Qualifications({onDone = () => {}}) {
         })
         .then((response)=>response.json())
         .then((res)=>
-        {console.log("quals:",res);setQuals(res)})
+        {console.log("quals:",res);
+        setQuals(res);
+        getTrainerQualsCode(res)})
         .catch((error)=>console.log(error))
         .finally(()=>console.log('got trainer qual'))
 
@@ -123,6 +127,7 @@ export default function Qualifications({onDone = () => {}}) {
   .then((res)=>{console.log(res); setPopData(res)})
   .catch((error)=>console.log(error))
   .finally(()=>console.log('got pop'));
+
 
   },[]);
 
@@ -222,14 +227,20 @@ export default function Qualifications({onDone = () => {}}) {
     .catch((error)=>console.log(error));
     }
 
-  
+
+    const getTrainerQualsCode = (res) =>{
+
+      let qualCodes = res && res.map((qual)=>qual.QualificationTypeCode);
+      console.log("trainer existing quals code:",qualCodes);
+      setTrainerQualsCode(qualCodes);
+    }
 
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom style={{textAlign:"center"}}>
       הכשרות ותעודות
       </Typography>
-      <h3>ההכשרות שלי</h3>
+      <h3 style={{textAlign:"right"}}>ההכשרות שלי</h3>
                         <React.Fragment   >
                             <main>
                                 <Container className={classes.cardGrid} maxWidth="md">
@@ -251,12 +262,11 @@ export default function Qualifications({onDone = () => {}}) {
                                             required
                                             fullWidth
                                             id="qualDate"
-                                           // label="תאריך הכשרה"
                                             name="qualDate"
                                             autoComplete="qualDate"
                                             type="date"
                                             autoFocus
-                                            value={trainerQual[qualCode-1] && trainerQual[qualCode-1].FromDate}
+                                            defaultValue={trainerQual[qualCode-1] && trainerQual[qualCode-1].FromDate}
                                            // onChange={(e) => changeQualDate(e)}
                                           />
                                             </Typography>
@@ -309,57 +319,53 @@ export default function Qualifications({onDone = () => {}}) {
                             <hr className="divider"/>
 
       <Container className={classes.cardGrid} maxWidth="md">
-          <h3>הוסף הכשרות</h3>
-          <Grid container spacing={4}>
-            {qualData.map((card,key) => (
-              <Grid item key={card.TypeCode} xs={4} sm={4} md={3}>
+          <h3 style={{textAlign:"right"}}>הוסף הכשרות</h3>
+          <Grid container spacing={4} style={{direction:"rtl"}}>
+            {qualData && qualData.filter((card)=> !trainerQualsCode.includes(card.TypeCode)).map((card,key) => (
+              <Grid item key={card.TypeCode} xs={6} md={3}>
                 <Card className={classes.card}>
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom >
+                  <Typography gutterBottom variant="h5" component="h2">
                       {card.TypeName} 
-                    </Typography>
+                      <hr className="dividerQual"/>
+                  </Typography>
+                  <div>
+                  <Typography style={{color:"black", fontSize:"15px"}}>
+                    תאריך ההכשרה
+                  <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="qualDate"
+                  name="qualDate"
+                  autoComplete="qualDate"
+                  type="date"
+                  autoFocus
+                  value={trainerQual[qualCode-1] && trainerQual[qualCode-1].FromDate}
+                  onChange={(e,code) => changeQualDate(e,card.TypeCode)}
+                />
+                  </Typography>
+                  <Typography style={{color:"black", fontSize:"15px"}}>
+                  קהל יעד:
+                  <Select
+                  labelId="demo-simple-select-placeholder-label-label"
+                  id="demo-simple-select-placeholder-label"
+                  value={card.PopulationCode}
+                  onChange={(e,code) => changeQualPop(e,card.TypeCode)}
+                  displayEmpty
+                  className={classes.selectEmpty}
+                >
+                  {popData.map(val =>
+                  <MenuItem value={val.Code} key={val.Code}>{val.PName}</MenuItem>)}
+                </Select>
+                  </Typography>
+                  <Typography style={{color:"black", fontSize:"15px", display: "contents"}}>
+                  טען תעודת הכשרה
+                  <FileUploaded onFileUploaded={(filePath,code) => fileUploaded(filePath,card.TypeCode)}/>
+                  </Typography>
+                  </div>
                   </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary" onClick={(e) => handleClickPopper(e,card.TypeCode)}>
-                      בחר
-                    </Button>
-                  </CardActions>
                 </Card>
-                <Popper id={id} open={open} anchorEl={anchorEl}>
-                  <div className={classes.popper}> 
-                  <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    פרטי הכשרה -
-                    </Grid>
-                    <Grid item xs={12}>
-                    <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="qualDate"
-                label="תאריך הכשרה"
-                name="qualDate"
-                autoComplete="qualDate"
-                type="date"
-                autoFocus
-                value={trainerQual[qualCode-1] && trainerQual[qualCode-1].FromDate}
-                onChange={(e) => changeQualDate(e)}
-              />
-              </Grid>
-              <Grid item xs={12}>
-              {popData.map(val =>
-                 <button onClick={(e) => changeQualPop(e)} value = {val.Code} key = {val.Code}>{val.PName} </button> )}
-              </Grid>
-              <Grid item xs={12}>
-            <label >הוסף תעודה</label>
-            <FileUploaded onFileUploaded={(filePath) => fileUploaded(filePath)}/>
-            </Grid>
-            <Button size="small" color="primary" onClick={(e) => handleClickPopper(e,card.TypeCode)}>
-                      שמור וסגור
-                    </Button>
-            </Grid>
-            </div>
-                </Popper>
               </Grid>
             ))}
           </Grid>

@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -152,11 +152,11 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           ניהול פרמטרים
         </Typography>
-        <form className={classes.form} noValidate dir="rtl">
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+          <Grid item xs={12}>
             <h3>* סכום כל הפרמטרים חייב להיות שווה ל-100</h3>
             </Grid>
+        <form className={classes.form} noValidate dir="rtl">
+          <Grid container spacing={1}>
             {
                 paramData.map(val =>
                     <Grid item xs={12} key={val.ParameterCode}>

@@ -29,7 +29,7 @@ import RequestForReplacement from './RequestForReplacement';
 import BranchesProfile from '../BranchProfiles/BranchesProfile';
 import BranchParameters from './BranchParameter';
 import BranchProfile from  '../BranchProfiles/BranchProfile';
-import BranchMain from './BranchMain copy';
+import BranchMain from './BranchMain';
 import Exit from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
@@ -154,7 +154,7 @@ export default function PersistentDrawerRight() {
       case 6:
       return <BranchesProfile />;
       case 7:
-        return <BranchesProfile />;
+        //return <BranchesProfile />;
     }
   };
 

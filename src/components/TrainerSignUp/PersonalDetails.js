@@ -77,8 +77,9 @@ export default function PersonalDetails({onDone = () => {}}) {
         phoneNo1:'',
         phoneNo2:'',
         aboutMe:'',
-        pricePerHour:0,
       })
+
+      const [price, setPrice] = useState(0);
 
     const [flag, setFlag ] = useState(false);
 
@@ -188,7 +189,6 @@ export default function PersonalDetails({onDone = () => {}}) {
     }
 
     const SignInTrainer=()=> {
-        //const {Email, Password, FirstName, LastName, BDate, Gender, PhoneNo1, PhoneNo2, AboutMe, PricePerHour,Photo} = this.state;
         let trainer = {
             FirstName: state.firstName,
             LastName: state.lastName,
@@ -199,7 +199,7 @@ export default function PersonalDetails({onDone = () => {}}) {
             Gender: state.gender,
             Password: state.password,
             AboutMe: state.aboutMe,
-            PricePerHour: state.pricePerHour,
+            PricePerHour: price,
             Image:state.photo
         }
         console.log(trainer);
@@ -214,8 +214,6 @@ export default function PersonalDetails({onDone = () => {}}) {
       .then((response)=>response.json())
       .then((res)=>successSignInTrainer(res))
       .catch((error)=>console.log(error));
-      
-        //ajaxCall("POST", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", JSON.stringify(trainer), successSignInTrainer, errorSignInTrainer);
     }
 
 
@@ -269,14 +267,10 @@ export default function PersonalDetails({onDone = () => {}}) {
       ];
 
     const valuetext=(value) => {
+      setPrice(value);
         return `${value}₪`;
       }
 
-    // const setPrice=(value)=>{
-    //   console.log(value);
-    //   setState({...state,pricePerHour:value})
-    //   //ariaValueNow
-    // }
 
   return (
     <Container component="main" maxWidth="xs" dir="rtl">
@@ -392,7 +386,7 @@ export default function PersonalDetails({onDone = () => {}}) {
              valueLabelDisplay="auto"
              marks={marks}
              max={500}
-             onChange={(e) => setState({...state,pricePerHour:parseInt(e.target.ariaValueNow)})}          
+             //onChange={(e) => setState({...state,pricePerHour:parseInt(e.target.ariaValueNow)})}          
       />
             </Grid>
             <Grid item xs={12}>

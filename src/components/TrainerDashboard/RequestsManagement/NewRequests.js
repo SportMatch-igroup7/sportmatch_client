@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import {useHistory} from 'react-router';
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
 import Modal from '@material-ui/core/Modal';
-import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
+import TrainerProfile from '../../TrainerProfiles/ChosenTrainerProfile';
+import '../../TrainerDashboard/cards.css';
+import Req from '../RequestForReplacementView';
+
+//import './CarStyle.css';
+
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -42,8 +44,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 0, 2),
   },
   cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     direction:"rtl",
   },
   card: {
@@ -53,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardMedia: {
     paddingTop: '56.25%', // 16:9
+    height:"20%",
   },
   cardContent: {
     flexGrow: 1,
@@ -73,18 +76,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+
 export default function Album(props) {
-  console.log(props);
-  console.log(props.req);
-  const matchTrainers = props.req;
   const classes = useStyles();
   const history = useHistory();
 
-  const [state, setState] = useState({
-    trainersData:[]
-  });
+  const requests = props.req;
 
-  const [trainers, setTrainers] = useState();
+  const [reqCode, setReqCode] = useState(0);
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
@@ -98,74 +97,47 @@ export default function Album(props) {
   };
 
 
-  useEffect(() => {
-
-    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
-      method:'GET',
-      headers:{
-          Accept:'application/json','Content-Type':'application/json',
-      },
-  })
-  .then((response)=>response.json())
-  .then((res)=> {console.log(res);
-   setState({...state,trainersData:res})
-   getRelevantTrainers(res);
-  })
-  .catch((error)=>console.log(error))
-
-  },[]);
-
-  const getRelevantTrainers = (res) =>{
-    let trainersCode = matchTrainers.map(val => val.TrainerCode);
-    console.log(trainersCode);
-    let arr = [];
-    let filterTrainers = res.filter((val)=>{
-      if (trainersCode.includes(val.TrainerCode))
-        arr.push(val);
-    })
-    console.log(arr);
-    setTrainers(arr);
-  }
-
-
 
   return (
     <React.Fragment >
       <CssBaseline />
+      <hr/>
       <main>
-        {/* Hero unit */}
-        <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
-              פרטי מאמנים
-            </Typography>
-            <hr/>
-          </Container>
-        </div>
         <Container className={classes.cardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            {trainers && trainers.map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={4} >
+          {/* End hero unit */}
+          <Grid container spacing={4} className="card">
+            <Grid item xs={12}><h1>בקשות החלפה חדשות שטרם נענו:</h1></Grid>
+            {requests && requests.filter((card)=>(card.IsHistory===false && card.IsAprrovedByTrainer == "initial" && card.RequestStatus == "open")).map((card) => (
+              <Grid item key={card.ReplacmentCode} xs={6} md={4} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image={card.Image}
+                    image={card.Logo}
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.FirstName} {card.LastName}
+                  <Typography gutterBottom variant="h5" component="h2" style={{textAlign: "center"}}>
+                      {card.TypeName}
+                      <hr/>
+                    </Typography>
+                    <Typography style={{fontWeight:"bold"}}>
+                      תאריך ההחלפה:
                     </Typography>
                     <Typography>
-                      {card.AboutMe}
+                     {card.ReplacementDate}
+                    </Typography>
+                    <Typography style={{fontWeight:"bold"}}>
+                      שעות ההחלפה:
+                    </Typography>
+                    <Typography>
+                      {card.ToHour} - {card.FromHour}  
                     </Typography>
                   </CardContent>
                   <CardActions>
                     <Button onClick={()=>{
-                          let trainer = {
-                            TrainerCode: card.TrainerCode
-                          }
-                          localStorage["trainer"] = JSON.stringify(trainer);
+                          console.log("code:" ,card.ReplacementCode)
+                          setReqCode(card.ReplacementCode);
+                          console.log(reqCode);
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
@@ -177,15 +149,9 @@ export default function Album(props) {
                     aria-describedby="simple-modal-description"
                   >
                     <div style={modalStyle} className={classes.paper}>
-                    <TrainerProfile/>
+                    <Req approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))} stage="1"/>
                     </div>                  
                   </Modal>
-                    <Button  size="small" color="black" style={{backgroundColor:"green"}} onClick={() => props.approveTrainer(matchTrainers[0].ReplacmentCode,card.TrainerCode)}>
-                      אשר
-                    </Button>
-                    <Button  size="small" color="black" style={{backgroundColor:"red"}} onClick={() => props.declineTrainer(matchTrainers[0].ReplacmentCode,card.TrainerCode)}>
-                      סרב
-                    </Button>
                   </CardActions>
                 </Card>
               </Grid>
@@ -193,6 +159,8 @@ export default function Album(props) {
           </Grid>
         </Container>
       </main>
+      <hr/>
+      
     </React.Fragment>
   );
 }

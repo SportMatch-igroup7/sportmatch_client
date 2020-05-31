@@ -14,24 +14,15 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import $ from 'jquery';
+import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
-import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
+import Modal from 'react-bootstrap/Modal'
+import ModalDialog from 'react-bootstrap/ModalDialog';
+import ModalBody from 'react-bootstrap/ModalBody';
+import ModalFooter from 'react-bootstrap/ModalFooter';
+import TrainerProfile from '../../components/TrainerProfiles/ChosenTrainerProfile';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -72,11 +63,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-export default function Album(props) {
-  console.log(props);
-  console.log(props.req);
-  const matchTrainers = props.req;
+export default function Album() {
   const classes = useStyles();
   const history = useHistory();
 
@@ -84,18 +73,10 @@ export default function Album(props) {
     trainersData:[]
   });
 
-  const [trainers, setTrainers] = useState();
+  const [show, setShow] = useState(false);
 
-  const [modalStyle] = React.useState(getModalStyle);
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
 
   useEffect(() => {
@@ -107,26 +88,19 @@ export default function Album(props) {
       },
   })
   .then((response)=>response.json())
-  .then((res)=> {console.log(res);
-   setState({...state,trainersData:res})
-   getRelevantTrainers(res);
-  })
+  .then((res)=> {console.log(res); setState({...state,trainersData:res})})
   .catch((error)=>console.log(error))
 
+    //ajaxCall("GET", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", "", successGetTrainer, errorGetTrainer);
   },[]);
 
-  const getRelevantTrainers = (res) =>{
-    let trainersCode = matchTrainers.map(val => val.TrainerCode);
-    console.log(trainersCode);
-    let arr = [];
-    let filterTrainers = res.filter((val)=>{
-      if (trainersCode.includes(val.TrainerCode))
-        arr.push(val);
-    })
-    console.log(arr);
-    setTrainers(arr);
-  }
+  // const successGetTrainer=(data)=>{
+  //   setState({...state,trainersData:data});
+  // }
 
+  // const errorGetTrainer=(err)=>{
+  //   console.log(err);
+  // }
 
 
   return (
@@ -137,15 +111,15 @@ export default function Album(props) {
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
-              פרטי מאמנים
+              מאגר מאמנים
             </Typography>
-            <hr/>
           </Container>
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
+          {/* End hero unit */}
           <Grid container spacing={4}>
-            {trainers && trainers.map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={4} >
+            {state.trainersData.map((card) => (
+              <Grid item key={card.TrainerCode} xs={6} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -165,26 +139,17 @@ export default function Album(props) {
                           let trainer = {
                             TrainerCode: card.TrainerCode
                           }
+                          console.log("trainer:",trainer)
                           localStorage["trainer"] = JSON.stringify(trainer);
-                          handleOpen();
+                          handleShow();
                     }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <TrainerProfile/>
-                    </div>                  
+                    <Modal show={show} onHide={handleClose} animation={false} > 
+                    <TrainerProfile/>               
                   </Modal>
-                    <Button  size="small" color="black" style={{backgroundColor:"green"}} onClick={() => props.approveTrainer(matchTrainers[0].ReplacmentCode,card.TrainerCode)}>
-                      אשר
-                    </Button>
-                    <Button  size="small" color="black" style={{backgroundColor:"red"}} onClick={() => props.declineTrainer(matchTrainers[0].ReplacmentCode,card.TrainerCode)}>
-                      סרב
+                    <Button  size="small" color="primary">
+                      חסום
                     </Button>
                   </CardActions>
                 </Card>

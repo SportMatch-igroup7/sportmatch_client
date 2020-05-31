@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import {useHistory} from 'react-router';
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
 import Modal from '@material-ui/core/Modal';
-import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
+import ChosenTrainer from '../../TrainerProfiles/ChosenTrainerProfile';
+import '../../TrainerDashboard/cards.css';
+import Carousel from "react-elastic-carousel";
+import ReqTrainers from '../RequestTrainers';
+//import './CarStyle.css';
+
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -42,8 +44,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 0, 2),
   },
   cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     direction:"rtl",
   },
   card: {
@@ -53,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardMedia: {
     paddingTop: '56.25%', // 16:9
+    height:"20%",
   },
   cardContent: {
     flexGrow: 1,
@@ -73,18 +76,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+
 export default function Album(props) {
-  console.log(props);
-  console.log(props.req);
-  const matchTrainers = props.req;
   const classes = useStyles();
   const history = useHistory();
 
-  const [state, setState] = useState({
-    trainersData:[]
-  });
+  const branchCode = JSON.parse(localStorage["userDetails"]).BranchCode;
 
-  const [trainers, setTrainers] = useState();
+  //const requests = JSON.parse(localStorage["branchReq"]);
+  const requests = props.req;
+  
+  const [reqCode, setReqCode] = useState(0);
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
@@ -97,75 +99,54 @@ export default function Album(props) {
     setOpen(false);
   };
 
+  const [index, setIndex] = useState(0);
 
-  useEffect(() => {
-
-    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
-      method:'GET',
-      headers:{
-          Accept:'application/json','Content-Type':'application/json',
-      },
-  })
-  .then((response)=>response.json())
-  .then((res)=> {console.log(res);
-   setState({...state,trainersData:res})
-   getRelevantTrainers(res);
-  })
-  .catch((error)=>console.log(error))
-
-  },[]);
-
-  const getRelevantTrainers = (res) =>{
-    let trainersCode = matchTrainers.map(val => val.TrainerCode);
-    console.log(trainersCode);
-    let arr = [];
-    let filterTrainers = res.filter((val)=>{
-      if (trainersCode.includes(val.TrainerCode))
-        arr.push(val);
-    })
-    console.log(arr);
-    setTrainers(arr);
-  }
-
+  
+  const handleSelectCarousel = (selectedIndex, e) => {
+      setIndex(selectedIndex);
+    }; 
 
 
   return (
     <React.Fragment >
-      <CssBaseline />
       <main>
-        {/* Hero unit */}
-        <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
-              פרטי מאמנים
-            </Typography>
-            <hr/>
-          </Container>
-        </div>
         <Container className={classes.cardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            {trainers && trainers.map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={4} >
+          {/* End hero unit */}
+          <Grid container spacing={4} className="card">
+            <Grid item xs={12}><h1>היסטוריית החלפות:</h1></Grid>
+            {requests && requests.filter((card)=>(card.IsHistory===true && card.IsApprovedByTrainer === "true" && card.RequestStatus === "approved" )).map((card) => (
+              <Grid item key={card.ReplacmentCode} xs={6} sm={4} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image={card.Image}
+                    image={card.Logo}
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.FirstName} {card.LastName}
+                  <Typography gutterBottom variant="h5" component="h2" style={{textAlign: "center"}}>
+                      {card.TypeName}
+                      <hr/>
+                    </Typography>
+                    <Typography style={{fontWeight:"bold"}}>
+                      תאריך ההחלפה:
                     </Typography>
                     <Typography>
-                      {card.AboutMe}
+                     {card.ReplacementDate}
+                    </Typography>
+                    <Typography style={{fontWeight:"bold"}}>
+                      שעות ההחלפה:
+                    </Typography>
+                    <Typography>
+                      {card.ToHour} - {card.FromHour}  
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button onClick={()=>{
-                          let trainer = {
-                            TrainerCode: card.TrainerCode
-                          }
-                          localStorage["trainer"] = JSON.stringify(trainer);
+                  <Button onClick={()=>{
+                          setReqCode(card.ReplacementCode);
+                          let fil=requests.filter((val)=>(val.IsHistory===true && val.ReplacmentCode === card.ReplacmentCode && val.RequestStatus === "approved" && val.IsAprrovedByTrainer ==="true"))
+                          let trainerCode = {TrainerCode: fil[0].TrainerCode}
+                          console.log(trainerCode);
+                          localStorage["trainer"] = JSON.stringify(trainerCode);
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
@@ -177,15 +158,9 @@ export default function Album(props) {
                     aria-describedby="simple-modal-description"
                   >
                     <div style={modalStyle} className={classes.paper}>
-                    <TrainerProfile/>
+                    <ChosenTrainer/>
                     </div>                  
                   </Modal>
-                    <Button  size="small" color="black" style={{backgroundColor:"green"}} onClick={() => props.approveTrainer(matchTrainers[0].ReplacmentCode,card.TrainerCode)}>
-                      אשר
-                    </Button>
-                    <Button  size="small" color="black" style={{backgroundColor:"red"}} onClick={() => props.declineTrainer(matchTrainers[0].ReplacmentCode,card.TrainerCode)}>
-                      סרב
-                    </Button>
                   </CardActions>
                 </Card>
               </Grid>
@@ -193,6 +168,11 @@ export default function Album(props) {
           </Grid>
         </Container>
       </main>
+
+      
+
+
+      
     </React.Fragment>
   );
 }

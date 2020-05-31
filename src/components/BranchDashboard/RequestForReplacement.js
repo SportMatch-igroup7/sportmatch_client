@@ -249,7 +249,13 @@ const marks = [
 ];
 
 function valuetext(value) {
+  setMaxPrice(value);
   return `${value}₪`;
+}
+
+function price(value){
+  console.log("price:",value)
+  setMaxPrice(value);
 }
 
 if (nextFlag === false)
@@ -363,7 +369,7 @@ if (nextFlag === false)
              valueLabelDisplay="auto"
              marks={marks}
              max={500}
-             //onChange={(e) => setMaxPrice(e.value)}
+             //onChange={price}
              
       />
             </Grid>

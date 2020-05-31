@@ -98,17 +98,6 @@ export default function Album(props) {
 
   useEffect(() => {
 
-  //   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
-  //     method:'GET',
-  //     headers:{
-  //         Accept:'application/json','Content-Type':'application/json',
-  //     },
-  // })
-  // .then((response)=>response.json())
-  // .then((res)=> {console.log(res); setState({...state,trainersData:res})})
-  // .catch((error)=>console.log(error))
-
-
   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/GetTrainerMatchRequest",{
     method:'POST',
     headers:{
@@ -156,6 +145,7 @@ export default function Album(props) {
             trainer = {
             RequestCode: requestData.ReplacementCode,
             TrainerCode: val,
+            IsApprovedByTrainer: "initial",
             RequestStatus: "open"
           }
           console.log(trainer);
@@ -169,11 +159,24 @@ export default function Album(props) {
       body:JSON.stringify(list)
       })
       .then((response)=>response.json())
-      .then((res)=> console.log("הבקשה נשלחה למאמנים הנבחרים"))
+      .then((res)=> swal("הבקשה נשלחה למאמנים הנבחרים"),
+      setTimeout(() => {
+        refreshPage()
+      }, 3000))
       .catch((error)=>console.log(error));
     }
     else
       swal("לא נבחרו מאמנים");   
+  }
+
+  const allTrainers = () => {
+    let trainers = trainersData && trainersData.map((card) => (card.TrainerCode));
+    console.log(trainers);
+    setChosenTrainers(trainers);
+  }
+
+  const refreshPage= () => {
+    window.location.reload(false);
   }
 
 
@@ -191,20 +194,27 @@ export default function Album(props) {
       </div>
       <Container className={classes.cardGrid} maxWidth="md">
         {/* End hero unit */}
-        <Button size="small" color="primary">
-          בחר את כולם
-        </Button>
-        <Grid container spacing={4}>
+        <Button
+            spacing={2}
+            type="submit"
+            size="medium"
+            variant="contained"
+            style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}}
+            onClick={allTrainers}
+          >
+            בחר את כל המאמנים
+          </Button>
+        <Grid container spacing={2}>
           {trainersData && trainersData.map((card) => (
             <Grid item key={card.TrainerCode} xs={6} md={3} >
-              <Card className={classes.card} style={{border: chosenTrainers.includes(card.TrainerCode) ? 'solid lightgreen': ''}}>
+              <Card className={classes.card} style={{border: chosenTrainers.includes(card.TrainerCode) ? 'solid rgb(235, 135, 218)': ''}}>
                 <CardMedia
                   className={classes.cardMedia}
                   image={card.Image}
                   title="Image title"
                 />
                 <CardContent className={classes.cardContent}>
-                <Typography>
+                <Typography style={{backgroundColor:'rgb(235, 135, 218)', color:'white'}}>
                     אחוזי התאמה: {card.MatchRating}%
                   </Typography>
                   <Typography gutterBottom variant="h5" component="h2">
@@ -242,11 +252,12 @@ export default function Album(props) {
             </Grid>
           ))}
             <Button
+            spacing={2}
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            //className={classes.submit}
+            style={{marginTop:'15px'}}
             onClick={setRequest}
           >
             שלח הודעת החלפה
