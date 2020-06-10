@@ -40,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    direction:'rtl',
+    textAlign:'right'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -269,7 +271,7 @@ if (nextFlag === false)
         <Typography component="h1" variant="h5">
           הודעת החלפה
         </Typography>
-        <form className={classes.form} noValidate dir="rtl">
+        <form className={classes.form} noValidate dir="rtl" onSubmit={prevent}>
           <Grid container spacing={2}>
           <Grid item xs={12}>
               <TextField
@@ -287,7 +289,7 @@ if (nextFlag === false)
               סוג שיעור
             </Grid>
             {qualData.dataQual.map(val =>
-               <button onClick={(e)=>setClassCode(val.TypeCode)} style={{margin:'2px', backgroundColor: classCode===(val.TypeCode) ? 'lightblue': ''}} value = {val.TypeCode} key = {val.TypeCode}>{val.TypeName} </button> )}
+               <Button variant="outlined" color="primary" onClick={(e)=>setClassCode(val.TypeCode)} style={{margin:'2px', color:'black', backgroundColor: classCode===(val.TypeCode) ? 'rgb(235, 135, 218)': ''}} value = {val.TypeCode} key = {val.TypeCode}>{val.TypeName} </Button> )}
           
           <Grid item xs={12}>
           <TextField
@@ -357,7 +359,7 @@ if (nextFlag === false)
               רמת קושי
             </Grid>
             {diffData.dataDiffLevel.map(val =>
-               <button onClick={(e)=>setDiffCode(val.LevelCode)} style={{margin:'2px', backgroundColor: diffCode===(val.LevelCode) ? 'lightblue': ''}} value = {val.LevelCode} key = {val.LevelCode}>{val.LevelName} </button> )}
+               <Button variant="outlined" color="primary" onClick={(e)=>setDiffCode(val.LevelCode)} style={{margin:'2px', color:'black', backgroundColor: diffCode===(val.LevelCode) ? 'rgb(235, 135, 218)': ''}} value = {val.LevelCode} key = {val.LevelCode}>{val.LevelName} </Button> )}
           
           <Grid item xs={12}>
                 מחיר לשעה
@@ -377,13 +379,13 @@ if (nextFlag === false)
               שפת השיעור
             </Grid>
             {langData.dataLang.map(val =>
-               <button onClick={(e)=>setLangCode(val.LanCode)} style={{margin:'2px', backgroundColor: langCode===(val.LanCode) ? 'lightblue': ''}} value = {val.LanCode} key = {val.LanCode}>{val.LanName} </button> )}
+               <Button variant="outlined" color="primary" onClick={(e)=>setLangCode(val.LanCode)} style={{margin:'2px', color:'black', backgroundColor: langCode===(val.LanCode) ? 'rgb(235, 135, 218)': ''}} value = {val.LanCode} key = {val.LanCode}>{val.LanName} </Button> )}
           
           <Grid item xs={12}>
               אוכלוסיית יעד
             </Grid>
             {popData.dataPop.map(val =>
-               <button onClick={(e)=>setPopCode(val.Code)} style={{margin:'2px', backgroundColor: popCode===(val.Code) ? 'lightblue': ''}} value = {val.Code} key = {val.Code}>{val.PName} </button> )}
+               <Button variant="outlined" color="primary" onClick={(e)=>setPopCode(val.Code)} style={{margin:'2px', color:'black', backgroundColor: popCode===(val.Code) ? 'rgb(235, 135, 218)': ''}} value = {val.Code} key = {val.Code}>{val.PName} </Button> )}
           
           </Grid>
           <Button

@@ -17,23 +17,17 @@ import Link from '@material-ui/core/Link';
 import $ from 'jquery';
 import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
+import Modal from 'react-bootstrap/Modal';
 import TrainerProfile from '../../components/TrainerProfiles/ChosenTrainerProfile';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -59,32 +53,70 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
     direction:"rtl",
+    textAlign:'right',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
   paper: {
-    position: 'absolute',
     width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'50px',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
   },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+
 
 export default function Album() {
   const classes = useStyles();
   const history = useHistory();
+  const [search, setSearch] = useState("");
+  const [qualData, setQualData] = useState();
+  const [areaData, setAreaData] = useState();
+  const [qualName, setQualName] = React.useState([]);
+  const [areaName, setAreaName] = React.useState([]);
 
   const [state, setState] = useState({
     trainersData:[]
   });
 
-  const [modalStyle] = React.useState(getModalStyle);
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  function getStyles(qualName, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(qualName) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  const modalStyle = 
+  {
+    alignSelf:'center',
+    marginTop:'50px',
+  }
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -93,6 +125,14 @@ export default function Album() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const filterArr = (trainerData) => {
+    const SerachRes = trainerData.FirstName.includes(search) || trainerData.LastName.includes(search);
+    const QualRes = qualName.length === 0 ? true : trainerData.TrainerQuals.some(qual => qualName.includes(qual.TypeName)); 
+    const AreaRes = areaName.length === 0 ? true : trainerData.TrainerArea.some(area => areaName.includes(area.AreaName)); 
+
+    return SerachRes && QualRes && AreaRes;
   };
 
 
@@ -105,23 +145,91 @@ export default function Album() {
       },
   })
   .then((response)=>response.json())
-  .then((res)=> {console.log(res); setState({...state,trainersData:res})})
+  .then(async (res)=> {
+    const fullData = await Promise.all(res.map(async data =>{
+
+    const [TrainerArea, TrainerQuals] = await Promise.all([
+      fetch('http://proj.ruppin.ac.il/igroup7/proj/api/TrainerArea/getTrainerArea/'+data.TrainerCode+"/",{
+        method:'GET',
+        headers:{
+            Accept:'application/json','Content-Type':'application/json',
+        },
+      })
+      .then((response)=>response.json()),
+      fetch('http://proj.ruppin.ac.il/igroup7/proj/api/TrainerQualification/getTrainerQualifications/'+data.TrainerCode+"/",{
+          method:'GET',
+          headers:{
+              Accept:'application/json','Content-Type':'application/json',
+          },
+      })
+      .then((response)=>response.json())
+    ]).catch((error)=>console.log(error));
+
+    return {...data, TrainerArea, TrainerQuals};
+  }))
+
+  console.log('Full Data => ', fullData)
+   setState({...state,trainersData:fullData})
+  })
   .catch((error)=>console.log(error))
 
-    //ajaxCall("GET", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", "", successGetTrainer, errorGetTrainer);
+
+
+  fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Qualification',{
+      method:'GET',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+  })
+  .then((response)=>response.json())
+  .then((res)=>{console.log("Quals:",res); setQualData(res)})
+  .catch((error)=>console.log(error))
+
+
+  fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Area',{
+    method:'GET',
+    headers:{
+        Accept:'application/json','Content-Type':'application/json',
+    },
+})
+.then((response)=>response.json())
+.then((res)=>{console.log("Areas:",res); setAreaData([...res])})
+.catch((error)=>console.log(error))
+
+
   },[]);
 
-  // const successGetTrainer=(data)=>{
-  //   setState({...state,trainersData:data});
-  // }
+  const handleChange = (event) => {
+    console.log("event:",event.target.value)
+    setQualName(event.target.value);
+  };
 
-  // const errorGetTrainer=(err)=>{
-  //   console.log(err);
-  // }
-
+  const handleChangeMultiple = (event) => {
+    const { options } = event.target;
+    const value = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+    setQualName(value);
+  };
 
   return (
     <React.Fragment >
+
+                <Modal
+                    className={modalStyle}
+                    show={open}
+                    onHide={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                  >
+                    <div className={classes.paper}>
+                    <TrainerProfile/>
+                    </div>                  
+                  </Modal>
+
       <CssBaseline />
       <main>
         {/* Hero unit */}
@@ -130,12 +238,61 @@ export default function Album() {
             <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
               מאגר מאמנים
             </Typography>
+            <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
+            <div className={classes.search}>
+            <TextField variant='outlined'
+            fullWidth
+            lable='חיפוש לפי שם מאמן'
+            on onChange={(e) => setSearch(e.target.value)}    
+            />
+          </div>
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-mutiple-checkbox-label">הכשרות</InputLabel>
+        <Select
+          labelId="demo-mutiple-checkbox-label"
+          id="demo-mutiple-checkbox"
+          multiple
+          value={qualName}
+          onChange={(e) => setQualName(e.target.value)}
+          input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {qualData && qualData.map((qual) => (
+            <MenuItem key={qual.TypeCode} value={qual.TypeName}>
+              <Checkbox checked={qualName.indexOf(qual.TypeName) > -1} />
+              <ListItemText primary={qual.TypeName} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="demo-mutiple-checkbox-label">אזורי עבודה</InputLabel>
+        <Select
+          labelId="demo-mutiple-checkbox-label"
+          id="demo-mutiple-checkbox"
+          multiple
+          value={areaName}
+          onChange={(e) => setAreaName(e.target.value)}
+          input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {areaData && areaData.map((area) => (
+            <MenuItem key={area.AreaCode} value={area.AreaName}>
+              <Checkbox checked={areaName.indexOf(area.AreaName) > -1} />
+              <ListItemText primary={area.AreaName} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+            </Typography>
           </Container>
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {state.trainersData.map((card) => (
+            {state.trainersData.filter(filterArr).map((card) => (
               <Grid item key={card.TrainerCode} xs={6} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
@@ -144,7 +301,7 @@ export default function Album() {
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="h5" component="h2" style = {{textAlign:'center'}}>
                       {card.FirstName} {card.LastName}
                     </Typography>
                     <Typography>
@@ -161,16 +318,7 @@ export default function Album() {
                     }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <TrainerProfile/>
-                    </div>                  
-                  </Modal>
+
                     <Button  size="small" color="primary">
                       חסום
                     </Button>

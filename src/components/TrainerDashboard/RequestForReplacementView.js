@@ -279,7 +279,84 @@ const btn = () => {
             />
       </Grid>
 
-     
+      <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="classDesc"
+            label="תיאור השיעור"
+            name="classDesc"
+            autoComplete="classDesc"
+            value = {data.ClassDescription}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="com"
+            label="הערות נוספות"
+            name="com"
+            autoComplete="com"
+            value = {data.Comments}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="dif"
+            label="רמת קושי"
+            name="dif"
+            autoComplete="dif"
+            value = {data.LevelName}
+          />
+        </Grid>
+
+          <Grid item xs={12}>
+                מחיר לשעה
+            <Slider
+            defaultValue={100}
+            getAriaValueText={props.MaxPrice} //check how to get the value
+            aria-labelledby="discrete-slider-custom"
+             step={10}
+             valueLabelDisplay="auto"
+             marks={marks}
+             max={500}
+             
+      />
+            </Grid>
+
+            <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="lang"
+            label="שפת השיעור"
+            name="lang"
+            autoComplete="lang"
+            value = {data.LName}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="pop"
+            label="אוכלוסיית יעד"
+            name="pop"
+            autoComplete="pop"
+            value = {data.PName}
+          />
+        </Grid>
 
           </Grid>
 {btn()}

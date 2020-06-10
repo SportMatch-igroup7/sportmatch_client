@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
+import Modal from 'react-bootstrap/Modal';
 import TrainerProfile from '../../TrainerProfiles/ChosenTrainerProfile';
 import '../../TrainerDashboard/cards.css';
 import Req from '../RequestForReplacementView';
@@ -20,20 +20,6 @@ import Req from '../RequestForReplacementView';
 //import './CarStyle.css';
 
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -60,19 +46,23 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
     direction:"rtl",
+    textAlign:'right',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
   paper: {
-    position: 'absolute',
     width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'50px',
   },
+
+
 }));
 
 
@@ -82,30 +72,44 @@ export default function Album(props) {
   const history = useHistory();
 
   const requests = props.req;
+  const requestMap = requests && requests.filter((card)=>(card.IsHistory===false && card.RequestStatus == "approved" && card.IsAprrovedByTrainer == "true"));
 
   const [reqCode, setReqCode] = useState(0);
 
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
+  const handleOpen = (code) => {
+    console.log(code);
     setOpen(true);
+    setReqCode(code);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
+
+
   return (
     <React.Fragment >
+
+                    <Modal
+                    show={open}
+                    onHide={handleClose}
+                  >
+                    <div className={classes.paper}>
+                    <Req approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode))} stage="3"/>
+                    </div>                  
+                  </Modal>
+
       <CssBaseline />
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>ההחלפות העתידיות שלי :</h1></Grid>
+          <Grid container spacing={4}>
+            <Grid item xs={12}><h3 style={{textAlign:'center'}}>ההחלפות העתידיות שלי:</h3></Grid>
             {requests && requests.filter((card)=>(card.IsHistory===false && card.RequestStatus == "approved" && card.IsAprrovedByTrainer == "true")).map((card) => (
-              <Grid item key={card.ReplacmentCode} xs={6} md={4} >
+              <Grid item key={card.ReplacmentCode} xs={6} sm={4} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -132,24 +136,11 @@ export default function Album(props) {
                   </CardContent>
                   <CardActions>
                     <Button onClick={()=>{
-                          // let request = {
-                          //   TrainerCode: card.ReplacmentCode
-                          // }
-                          // localStorage["request"] = JSON.stringify(trainer);
-                          handleOpen();
+                      handleOpen(card.ReplacmentCode);
                     }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <Req approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests.filter((val)=>(val.ReplacmentCode === card.ReplacmentCode))} stage="3"/>
-                    </div>                  
-                  </Modal>
+
                   </CardActions>
                 </Card>
               </Grid>

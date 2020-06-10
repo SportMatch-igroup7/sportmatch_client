@@ -15,23 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
+import Modal from 'react-bootstrap/Modal';
 import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -57,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
     direction:"rtl",
+    textAlign:'right',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
@@ -82,7 +68,6 @@ export default function Album(props) {
 
   const [chosenTrainers, setChosenTrainers] = useState([]);
 
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const requestData = props.req;
@@ -182,6 +167,17 @@ export default function Album(props) {
 
   return (
     <React.Fragment >
+
+        <Modal
+          show={open}
+          onHide={handleClose}
+        >
+          <div className={classes.paper}>
+          <TrainerProfile/>
+          </div>                  
+        </Modal>
+
+
     <CssBaseline />
     <main>
       {/* Hero unit */}
@@ -214,10 +210,10 @@ export default function Album(props) {
                   title="Image title"
                 />
                 <CardContent className={classes.cardContent}>
-                <Typography style={{backgroundColor:'rgb(235, 135, 218)', color:'white'}}>
+                <Typography style={{backgroundColor:'rgb(235, 135, 218)', color:'white',textAlign:'center'}}>
                     אחוזי התאמה: {card.MatchRating}%
                   </Typography>
-                  <Typography gutterBottom variant="h5" component="h2">
+                  <Typography gutterBottom variant="h5" component="h2" style = {{textAlign:'center'}}>
                     {card.FirstName} {card.LastName}
                   </Typography>
                   <Typography>
@@ -237,16 +233,7 @@ export default function Album(props) {
                   }} size="small" color="primary">
                     צפה
                   </Button>
-                  <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="simple-modal-title"
-                  aria-describedby="simple-modal-description"
-                >
-                  <div style={modalStyle} className={classes.paper}>
-                  <TrainerProfile/>
-                  </div>                  
-                </Modal>
+
                 </CardActions>
               </Card>
             </Grid>

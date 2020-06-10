@@ -9,11 +9,8 @@ import RI from '../../commons/RoundedImage';
 import FileUploaded from '../../commons/fileUpload';
 import Container from '@material-ui/core/Container';
 import Slider from '@material-ui/core/Slider';
-import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert';
-import $ from 'jquery';
 import Button from '@material-ui/core/Button';
-import Qualification from '../OLD/Qualifications';
 import { store } from '../../store/MainStore';
 
 const useStyles = makeStyles((theme) => ({
@@ -59,12 +56,6 @@ export default function PersonalDetails({onDone = () => {}}) {
 
   const [ mainState, dispatch]  = useContext(store);
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type: 'SET_TRAINER_CODE',
-  //     value: 12345,
-  //   });
-  // }, []);
 
     const [state, setState] = useState({
         email:'',
@@ -79,7 +70,7 @@ export default function PersonalDetails({onDone = () => {}}) {
         aboutMe:'',
       })
 
-      const [price, setPrice] = useState(0);
+      const [price, setPrice] = useState(100);
 
     const [flag, setFlag ] = useState(false);
 

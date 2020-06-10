@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   item:{
-    textAlign:'inherit'
+    textAlign:'right'
   },
   drawer: {
     width: drawerWidth,

@@ -27,7 +27,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import TrainersProfile from '../TrainerProfiles/TrainersProfile';
 import BranchesProfile from '../BranchProfiles/BranchesProfile';
 import TrainerProfile from '../TrainerProfiles/TrainerProfile';
-import TrainerMain from '../TrainerDashboard/TrainerMainTest';
+import TrainerMain from './TrainerMain';
 import Exit from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 0,
   },
   item:{
-    textAlign:'inherit'
+    textAlign:'right'
   },
   drawerPaper: {
     width: drawerWidth,
@@ -165,16 +165,6 @@ export default function PersistentDrawerRight() {
           <Typography variant="h6" noWrap className={classes.title}>
             SportMatch
           </Typography>
-          <div className={classes.search}>
-            <InputBase
-              placeholder="חיפוש"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
           <IconButton
             color="inherit"
             aria-label="open drawer"

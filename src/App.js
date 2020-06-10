@@ -7,26 +7,15 @@ import BranchSignUp from './components/BranchSignUp/BranchSignUp';
 import BranchNav from './components/BranchDashboard/BranchNav'
 import TrainerSignUp from './components/TrainerSignUp/TrainerReg';
 import RequestForReplacement from './components/BranchDashboard/RequestForReplacement';
-import PowerBI from './components/AdminDashboard/PowerBi';
 import BranchesProfile from './components/BranchProfiles/BranchesProfile';
-import AAA from './components/OLD/BranchSignUp copy';
 import { StateProvider } from './store/MainStore';
 import BranchParameters from './components/BranchDashboard/BranchParameter';
 import BranchProfile from './components/BranchProfiles/BranchProfile';
 import TrainerNav from './components/TrainerDashboard/TrainerNav';
-import BB from './components/TrainerDashboard/TrainerMain';
-import TrainerProfile from './components/TrainerProfiles/TrainerProfile';
 import TrainerDetails from './components/TrainerProfiles/TrainerPersonalDetailsUpdate';
 import TrainerEditQual from './components/TrainerProfiles/TrainerEditQualifications';
-import TrainersMatch from './components/BranchDashboard/TrainersMatch';
-import QualT from './components/TrainerSignUp/Qualifications';
-import BM from './components/BranchDashboard/BranchMain';
-import C from './components/BranchProfiles/BranchesProfile copy';
-import T from './components/TrainerSignUp/Qualifications';
-import Lidor from './components/Lidor';
-import L from './components/BranchDashboard/BranchMain';
-import Test from './components/TrainerDashboard/TrainerMainTest';
-import ABC from './components/TrainerProfiles/TrainersProfile copy';
+import TrainerEditAdditional from './components/TrainerProfiles/TrainerAdditionalDetailsUpdate';
+import Calendar from './components/BranchDashboard/Calendar/Calendar';
 
 function App() {
   return (
@@ -44,6 +33,8 @@ function App() {
         <Route path="/BranchParameters" component={BranchParameters} />
         <Route path="/BranchProfile" component={BranchProfile} />
         <Route path="/TrainerDetails" component={TrainerDetails} />
+        <Route path="/TrainerEditQual" component={TrainerEditQual} />
+        <Route path="/TrainerEditAdditional" component={TrainerEditAdditional} />
       </Switch> 
       </div>
     </StateProvider>

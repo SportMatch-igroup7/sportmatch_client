@@ -64,7 +64,6 @@ export default function TrainerProfile() {
   
     useEffect(() => {
   
-        //const trainerCode = 117;
         const trainerCode = JSON.parse(localStorage["trainer"]).TrainerCode;
         fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/getTrainer/'+trainerCode+"/",{
             method:'GET',
@@ -171,7 +170,7 @@ export default function TrainerProfile() {
                                 {/* End hero unit */}
                                 <Grid2 container spacing={4} className="banner-text">
                                     {quals && quals.map((card) => (
-                                    <Grid2 item key={card.QualificationTypeCode} xs={6} md={3}>
+                                    <Grid2 item key={card.QualificationTypeCode} xs={6} md={4}>
                                         <Card className={classes.card}>
                                         <CardContent className={classes.cardContent}>
                                             <Typography gutterBottom variant="h5" component="h2">

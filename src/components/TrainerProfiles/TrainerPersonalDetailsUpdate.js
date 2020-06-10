@@ -16,6 +16,7 @@ import $ from 'jquery';
 import Button from '@material-ui/core/Button';
 import Qualification from '../OLD/Qualifications';
 import { store } from '../../store/MainStore';
+import Paper from '@material-ui/core/Paper';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -66,13 +67,15 @@ export default function PersonalDetails({onDone = () => {}}) {
 
   const [emailFlag, setEmailFlag] = useState(false);
 
+  const [price, setPrice] = useState(0);
+
 
 
 
   useEffect(() => {
 
-      //const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
-      const trainerCode = 117;
+      const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
+      //const trainerCode = 117;
       fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/getTrainer/'+trainerCode+"/",{
           method:'GET',
           headers:{
@@ -176,6 +179,7 @@ export default function PersonalDetails({onDone = () => {}}) {
     
 
     const saveChanges=()=> {
+      setTrainerData({...trainerData,PricePerHour:price});
         //const {Email, Password, FirstName, LastName, BDate, Gender, PhoneNo1, PhoneNo2, AboutMe, PricePerHour,Photo} = this.state;
         // let trainer = {
         //     FirstName: state.firstName,
@@ -198,10 +202,6 @@ export default function PersonalDetails({onDone = () => {}}) {
 
     const successSignInTrainer=(data)=> {
         localStorage["userDetails"] = JSON.stringify(data);
-        dispatch({
-          type: 'SET_TRAINER_CODE',
-          value: data.TrainerCode,
-        });
         swal("success");
         console.log(data);
         onDone();
@@ -245,12 +245,10 @@ export default function PersonalDetails({onDone = () => {}}) {
       ];
 
     const valuetext=(value) => {
+        setPrice(value);
         return `${value}₪`;
       }
 
-    const setPrice=(value)=>{
-      setTrainerData({...trainerData,PricePerHour:value})
-    }
 
     const check = () =>{
       console.log(trainerData);
@@ -261,13 +259,15 @@ export default function PersonalDetails({onDone = () => {}}) {
     }
 
   return (
-    <Container component="main" maxWidth="xs" dir="rtl">
-    <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+    <Container component="main" maxWidth="xs" dir="rtl" >
+    <main className={classes.layout}>
+      <Paper className={classes.paper}>
+      <Typography variant="h5" gutterBottom style={{textAlign:'center',fontWeight:'bold'}}>
         עריכת פרטים אישיים
+        <hr/>
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+      <Grid container spacing={2} >
+        <Grid item xs={12} style={{textAlign:'center'}}>
         <img
           src={trainerData.Image}
           alt="avatar"
@@ -302,7 +302,7 @@ export default function PersonalDetails({onDone = () => {}}) {
                 onChange={(e) => setTrainerData({...trainerData,Password:e.target.value})}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{textAlign:'right'}}>
             <label >טען תמונה חדשה</label>
             <FileUploaded onFileUploaded={(filePath) => fileUploaded(filePath)}/>
             </Grid>
@@ -336,7 +336,8 @@ export default function PersonalDetails({onDone = () => {}}) {
             <TextField
              id="date"
             label="תאריך לידה"
-             type="date"
+            fullWidth
+            type="date"
             defaultValue={trainerData.DateOfBirth}
             onChange={(e) => setTrainerData({...trainerData,DateOfBirth:e.target.value})}
             InputLabelProps={{
@@ -377,7 +378,7 @@ export default function PersonalDetails({onDone = () => {}}) {
                 onChange={(e) => setTrainerData({...trainerData,Phone2:e.target.value})}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}style={{textAlign:'right'}}>
                 מחיר לשעה
             <Slider
             defaultValue={trainerData.PricePerHour}
@@ -387,7 +388,7 @@ export default function PersonalDetails({onDone = () => {}}) {
              valueLabelDisplay="auto"
              marks={marks}
              max={500}
-             onChange={setPrice}
+            // onChange={setPrice}
              
       />
             </Grid>
@@ -422,7 +423,8 @@ export default function PersonalDetails({onDone = () => {}}) {
                     שמור שינויים
                   </Button>
                   </div>
-    </React.Fragment>
+          </Paper>
+    </main>
     </Container>
   );
 }

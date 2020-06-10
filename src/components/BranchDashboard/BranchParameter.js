@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
   lable:{
     fontSize:'15px',
     fontWeight:'bold',
+    textAlign:'right',
   },
 }));
 
@@ -153,14 +154,14 @@ export default function SignUp() {
           ניהול פרמטרים
         </Typography>
           <Grid item xs={12}>
-            <h3>* סכום כל הפרמטרים חייב להיות שווה ל-100</h3>
+            <h6>* סכום כל הפרמטרים חייב להיות שווה ל-100</h6>
             </Grid>
         <form className={classes.form} noValidate dir="rtl">
           <Grid container spacing={1}>
             {
                 paramData.map(val =>
                     <Grid item xs={12} key={val.ParameterCode}>
-                      <lable className={classes.lable}>{val.ParameterName1}</lable>
+                      <p className={classes.lable}>{val.ParameterName1}</p>
                     <TextField
                       variant="outlined"
                       type="number"

@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
+import Modal from 'react-bootstrap/Modal';
 import TrainerProfile from '../../TrainerProfiles/ChosenTrainerProfile';
 import '../../TrainerDashboard/cards.css';
 import Carousel from "react-elastic-carousel";
@@ -20,20 +20,6 @@ import ReqTrainers from '../RequestTrainers';
 //import './CarStyle.css';
 
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -60,18 +46,20 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
     direction:"rtl",
+    textAlign:'right',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
   paper: {
-    position: 'absolute',
     width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'50px',
   },
 }));
 
@@ -89,7 +77,6 @@ export default function Album(props) {
   
   const [reqCode, setReqCode] = useState(0);
 
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -110,13 +97,34 @@ export default function Album(props) {
 
   return (
     <React.Fragment >
+
+    <Modal
+      show={open}
+      onHide={handleClose}
+    >
+      <div className={classes.paper} dir="rtl" style = {{textAlign:'right'}} >
+      <Button
+          spacing={2}
+          type="submit"
+          size="medium"
+          variant="contained"
+          style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}}
+          onClick={()=>props.deleteRequest(reqCode)}
+        >
+          מחק הודעת החלפה
+        </Button>
+      <ReqTrainers approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode && val.RequestStatus === "open" && val.IsAprrovedByTrainer ==="true"))}/>
+      </div>                  
+    </Modal>
+
+
       <CssBaseline />
       <hr/>
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>בקשות ממתינות לאישור:</h1></Grid>
+          <Grid container spacing={4}>
+            <Grid item xs={12}><h3 style={{textAlign:'center'}}>בקשות ממתינות לאישור:</h3></Grid>
             {distinctReq && distinctReq.filter((card)=>(card.IsHistory===false )).map((card) => (
               <Grid item key={card.ReplacmentCode} xs={6} sm={4} md={3} >
                 <Card className={classes.card}>
@@ -152,26 +160,7 @@ export default function Album(props) {
                     }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper} dir="rtl">
-                    <Button
-                        spacing={2}
-                        type="submit"
-                        size="medium"
-                        variant="contained"
-                        style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}}
-                        onClick={()=>props.deleteRequest(card.ReplacmentCode)}
-                      >
-                        מחק הודעת החלפה
-                      </Button>
-                    <ReqTrainers approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests.filter((val)=>(val.ReplacmentCode === reqCode && val.RequestStatus === "open" && val.IsAprrovedByTrainer ==="true"))}/>
-                    </div>                  
-                  </Modal>
+                  
                   </CardActions>
                 </Card>
               </Grid>
@@ -184,3 +173,5 @@ export default function Album(props) {
     </React.Fragment>
   );
 }
+
+

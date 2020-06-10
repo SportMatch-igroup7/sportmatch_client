@@ -12,30 +12,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
-import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
 import '../TrainerDashboard/cards.css';
 import Carousel from "react-elastic-carousel";
 import OpenRequests from './RequestsManagement/OpenRequests';
 import ApprovedRequests from './RequestsManagement/ApprovedRequests';
 import HistoricalRequests from './RequestsManagement/HistoricalRequests';
-//import './CarStyle.css';
 
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -91,7 +73,6 @@ export default function Album() {
   
   const [reqCode, setReqCode] = useState(0);
 
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -175,7 +156,7 @@ export default function Album() {
     .then((res)=> console.log(res),
     setTimeout(() => {
       refreshPage()
-    }, 3000))
+    }, 1000))
   .catch((error)=>console.log(error))
   }
 
@@ -197,7 +178,7 @@ export default function Album() {
   .then((res)=> console.log(res),
     setTimeout(() => {
       refreshPage()
-    }, 3000))
+    }, 2000))
   .catch((error)=>console.log(error))
   }
 
@@ -217,7 +198,27 @@ export default function Album() {
   .then((res)=> console.log(res),
     setTimeout(() => {
       refreshPage()
-    }, 3000))
+    }, 2000))
+  .catch((error)=>console.log(error))
+  }
+
+  const reopenRequest = (replacmentCode) =>{
+    let req = {
+      RequestCode: replacmentCode,
+      IsApprovedByTrainer: 'initial',
+      RequestStatus: "open"
+    }
+    console.log(req);
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestTrainer/ReopenRequest",{
+      method:'PUT',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      body:JSON.stringify(req)
+  })
+  .then((response)=>response.json())
+  .then((res)=> console.log(res),
+    )
   .catch((error)=>console.log(error))
   }
 
@@ -225,7 +226,7 @@ export default function Album() {
   return (
     <React.Fragment >
         <OpenRequests req={requests} distinctReq={distinctReq} approveTrainer={approveTrainer} declineTrainer={declineTrainer} deleteRequest={deleteRequest} />
-        <ApprovedRequests req={requests}/>
+        <ApprovedRequests req={requests} reopenRequest={reopenRequest}/>
         <HistoricalRequests req={requests}/>
     </React.Fragment>
   );

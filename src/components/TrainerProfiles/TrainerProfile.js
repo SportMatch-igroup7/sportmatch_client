@@ -144,6 +144,16 @@ export default function TrainerProfile() {
             history.push("/TrainerDetails");
         }
 
+        const updateQualifications = ()=>
+        {
+            history.push("/TrainerEditQual");
+        }
+
+        const updateAdditionalDetails = ()=>
+        {
+            history.push("/TrainerEditAdditional");
+        }
+
 
         return (
             <div style ={{width: '100%', margin: 'auto'}}>
@@ -216,8 +226,8 @@ export default function TrainerProfile() {
                         <hr className="divider"/>
                         <div className="social-links" style={{direction:"rtl",marginTop:'15px'}}>
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changePersonalDetails}>ערוך פרטים איישים</Button> 
-                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} >ערוך הכשרות</Button> 
-                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} >ערוך נתונים נוספים</Button> 
+                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateQualifications} >ערוך הכשרות</Button> 
+                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateAdditionalDetails} >ערוך נתונים נוספים</Button> 
                         </div>
                     
                     </div>  

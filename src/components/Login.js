@@ -20,7 +20,7 @@ import RI from '../commons/RoundedImage';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -53,7 +53,6 @@ export default function SignIn({props = ""}) {
     validate();
   }
 
-  //setState({...state, password: 'dfdsfds'});
 
   const validate = ()=>{
     const { email, password } = state;
@@ -102,9 +101,6 @@ export default function SignIn({props = ""}) {
         checkPassword(data);
 }
 
-// const errorGetUser=(err)=>{
-//     console.log(err);
-// }
 
 const checkPassword=(data)=> {
     console.log(data.Password)
@@ -196,7 +192,7 @@ const branchRegistration=()=>{
           </Button>
           <Grid container>
             <Grid item>
-							<h4>עדיין לא רשום? הירשם כעת </h4>
+							<h6 style={{fontWeight:'bold'}}>עדיין לא רשום? הירשם כעת </h6>
             </Grid>
           </Grid>
           <Grid container>

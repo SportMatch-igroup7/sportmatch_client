@@ -12,28 +12,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
+import Modal from 'react-bootstrap/Modal';
 import ChosenTrainer from '../../TrainerProfiles/ChosenTrainerProfile';
 import '../../TrainerDashboard/cards.css';
 import Carousel from "react-elastic-carousel";
 import ReqTrainers from '../RequestTrainers';
 //import './CarStyle.css';
 
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -60,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
     direction:"rtl",
+    textAlign:'right',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
@@ -88,7 +74,6 @@ export default function Album(props) {
   
   const [reqCode, setReqCode] = useState(0);
 
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -109,12 +94,23 @@ export default function Album(props) {
 
   return (
     <React.Fragment >
-      <main>
+
+                  <Modal
+                    show={open}
+                    onHide={handleClose}
+                  >
+                    <div className={classes.paper}>
+                    <ChosenTrainer/>
+                    </div>                  
+                  </Modal>
+
+
+                  <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>היסטוריית החלפות:</h1></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory===true && card.IsApprovedByTrainer === "true" && card.RequestStatus === "approved" )).map((card) => (
+          <Grid container spacing={4}>
+            <Grid item xs={12}><h3 style={{textAlign:'center'}}>היסטוריית החלפות:</h3></Grid>
+            {requests && requests.filter((card)=>(card.IsHistory===true && card.IsAprrovedByTrainer === "true" && card.RequestStatus === "approved" )).map((card) => (
               <Grid item key={card.ReplacmentCode} xs={6} sm={4} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
@@ -151,16 +147,7 @@ export default function Album(props) {
                     }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <ChosenTrainer/>
-                    </div>                  
-                  </Modal>
+
                   </CardActions>
                 </Card>
               </Grid>
@@ -168,7 +155,6 @@ export default function Album(props) {
           </Grid>
         </Container>
       </main>
-
       
 
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useHistory} from 'react-router';
+import TextField from '@material-ui/core/TextField';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -15,25 +16,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
-import Modal from '@material-ui/core/Modal';
+import Modal from 'react-bootstrap/Modal';
 import BranchProfile from './ChosenBranchProfile';
-import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -59,22 +46,24 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
     direction:"rtl",
+    textAlign:'right',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
   paper: {
-    position: 'absolute',
-    width: 600,
+    width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'50px',
   },
+
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
   const classes = useStyles();
@@ -86,7 +75,6 @@ export default function Album() {
     branchData:[]
   });
 
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -108,6 +96,7 @@ export default function Album() {
   .then((response)=>response.json())
   .then((res)=> {console.log(res); setState({...state,branchData:res})})
   .catch((error)=>console.log(error))
+  
  
   },[]);
 
@@ -121,6 +110,16 @@ export default function Album() {
 
   return (
     <React.Fragment >
+
+                    <Modal
+                    show={open}
+                    onHide={handleClose}
+                  >
+                    <div className={classes.paper}>
+                    <BranchProfile/>
+                    </div>                  
+                  </Modal>
+
       <CssBaseline />
       <main>
         {/* Hero unit */}
@@ -131,15 +130,9 @@ export default function Album() {
             </Typography>
             <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
             <div className={classes.search}>
-            <InputBase
-              placeholder="חיפוש"
-              fullWidth
-              style={{backgroundColor:"lightblue"}}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
+            <TextField variant='outlined'
+            fullWidth
+            lable='חיפוש לפי שם סניף'     
             />
           </div>
             </Typography>
@@ -158,7 +151,7 @@ export default function Album() {
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="h5" component="h2" style={{textAlign:'center'}}>
                       {card.Name} 
                     </Typography>
                     <Typography>
@@ -175,16 +168,7 @@ export default function Album() {
                     }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <BranchProfile/>
-                    </div>                  
-                  </Modal>
+
                     <Button  size="small" color="primary">
                       חסום
                     </Button>
@@ -198,3 +182,15 @@ export default function Album() {
     </React.Fragment>
   );
 }
+
+
+{/* <InputBase
+placeholder="חיפוש"
+fullWidth
+style={{backgroundColor:"lightblue"}}
+classes={{
+  root: classes.inputRoot,
+  input: classes.inputInput,
+}}
+inputProps={{ 'aria-label': 'search' }}
+/> */}

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {useHistory} from 'react-router';
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -17,7 +14,16 @@ import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
 import Modal from '@material-ui/core/Modal';
 import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
-import './cards.css';
+import '../TrainerDashboard/cards.css';
+import Carousel from "react-elastic-carousel";
+import Req from './RequestForReplacementView';
+import NewRequests from './RequestsManagement/NewRequests';
+import WaitingRequests from './RequestsManagement/WaitingRequests';
+import ApprovedRequests from './RequestsManagement/ApprovedRequests';
+import HistoricalRequests from './RequestsManagement/HistoricalRequests';
+
+//import './CarStyle.css';
+
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -75,13 +81,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+
 export default function Album() {
   const classes = useStyles();
   const history = useHistory();
 
-  const [state, setState] = useState({
-    trainersData:[]
-  });
+  const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
+
+  const [requests, setRequests] = useState();
+ 
+  const [reqCode, setReqCode] = useState(0);
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
@@ -94,176 +103,87 @@ export default function Album() {
     setOpen(false);
   };
 
+  const [index, setIndex] = useState(0);
+
+  
+  const handleSelectCarousel = (selectedIndex, e) => {
+      setIndex(selectedIndex);
+    };
 
   useEffect(() => {
 
-    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestDetails/getTrainerRequests/" + trainerCode + '/',{
       method:'GET',
       headers:{
           Accept:'application/json','Content-Type':'application/json',
       },
   })
   .then((response)=>response.json())
-  .then((res)=> {console.log(res); setState({...state,trainersData:res})})
+  .then((res)=> {console.log(res);
+   setRequests(res);
+   localStorage["trainerReq"] = JSON.stringify(res);
+  })
   .catch((error)=>console.log(error))
   
   },[]);
 
 
+  const approveTrainer = (replacmentCode, trainerCode) =>{
+    let req = {
+      RequestCode: replacmentCode,
+      TrainerCode: trainerCode,
+      IsApprovedByTrainer: "true"
+    }
+    console.log(req);
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestTrainer/PutIsApprovedTrainer",{
+      method:'PUT',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      body:JSON.stringify(req)
+  })
+  .then((response)=>response.json())
+  .then((res)=> console.log(res),
+    setTimeout(() => {
+      refreshPage()
+    }, 2000))
+  .catch((error)=>console.log(error))
+  }
+
+  const declineTrainer = (replacmentCode,trainerCode) =>{
+    let req = {
+      RequestCode: replacmentCode,
+      TrainerCode: trainerCode,
+      IsApprovedByTrainer: "false",
+      RequestStatus: "closed"
+    }
+    console.log(req);
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestTrainer/PutIsApprovedTrainerFalse",{
+      method:'PUT',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      body:JSON.stringify(req)
+  })
+  .then((response)=>response.json())
+  .then((res)=> console.log(res),
+    setTimeout(() => {
+      refreshPage()
+    }, 2000))
+  .catch((error)=>console.log(error))
+  }
+
+  const refreshPage= () => {
+    window.location.reload(false);
+  }
+
   return (
     <React.Fragment >
-      <CssBaseline />
-      <hr/>
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>בקשות להחלפה</h1></Grid>
-            {state.trainersData.slice(0,4).map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={3} >
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.Image}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.FirstName} {card.LastName}
-                    </Typography>
-                    <Typography>
-                      {card.AboutMe}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={()=>{
-                          let trainer = {
-                            TrainerCode: card.TrainerCode
-                          }
-                          localStorage["trainer"] = JSON.stringify(trainer);
-                          handleOpen();
-                    }} size="small" color="primary">
-                      צפה
-                    </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <TrainerProfile/>
-                    </div>                  
-                  </Modal>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      <hr/>
-
-      <CssBaseline />
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>ההחלפות שלי</h1></Grid>
-            {state.trainersData.slice(0,4).map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={3} >
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.Image}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.FirstName} {card.LastName}
-                    </Typography>
-                    <Typography>
-                      {card.AboutMe}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={()=>{
-                          let trainer = {
-                            TrainerCode: card.TrainerCode
-                          }
-                          localStorage["trainer"] = JSON.stringify(trainer);
-                          handleOpen();
-                    }} size="small" color="primary">
-                      צפה
-                    </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <TrainerProfile/>
-                    </div>                  
-                  </Modal>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      <hr/>
-
-      <CssBaseline />
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={4} className="card">
-            <Grid item xs={12}><h1>היסטוריית החלפות</h1></Grid>
-            {state.trainersData.slice(0,4).map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={3} >
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.Image}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.FirstName} {card.LastName}
-                    </Typography>
-                    <Typography>
-                      {card.AboutMe}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={()=>{
-                          let trainer = {
-                            TrainerCode: card.TrainerCode
-                          }
-                          localStorage["trainer"] = JSON.stringify(trainer);
-                          handleOpen();
-                    }} size="small" color="primary">
-                      צפה
-                    </Button>
-                    <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                  >
-                    <div style={modalStyle} className={classes.paper}>
-                    <TrainerProfile/>
-                    </div>                  
-                  </Modal>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
+        <NewRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <WaitingRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <ApprovedRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <HistoricalRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+      
     </React.Fragment>
   );
 }

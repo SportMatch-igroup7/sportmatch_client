@@ -51,9 +51,11 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
+    textAlign:'right'
   },
   stepper: {
     padding: theme.spacing(3, 0, 5),
+    direction:'rtl',
   },
   buttons: {
     display: 'flex',
@@ -89,9 +91,6 @@ export default function Checkout() {
     }
   };
 
-//   const handleBack = () => {
-//     setActiveStep(activeStep - 1);
-//   };
 
   const [state, setState] = useState({
     email:'',

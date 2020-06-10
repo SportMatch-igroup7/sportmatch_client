@@ -17,11 +17,9 @@ import Link from '@material-ui/core/Link';
 import $ from 'jquery';
 import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert'
-import Modal from 'react-bootstrap/Modal'
-import ModalDialog from 'react-bootstrap/ModalDialog';
-import ModalBody from 'react-bootstrap/ModalBody';
-import ModalFooter from 'react-bootstrap/ModalFooter';
+import Modal from 'react-bootstrap/Modal';
 import TrainerProfile from '../../components/TrainerProfiles/ChosenTrainerProfile';
+import TextField from '@material-ui/core/TextField';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -48,35 +46,48 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
     direction:"rtl",
+    textAlign:'right',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
   paper: {
-    position: 'absolute',
     width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'50px',
   },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
   const classes = useStyles();
   const history = useHistory();
+  const [search, setSearch] = useState("");
 
   const [state, setState] = useState({
     trainersData:[]
   });
 
-  const [show, setShow] = useState(false);
+  const modalStyle = 
+  {
+    alignSelf:'center',
+    marginTop:'50px',
+  }
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
 
   useEffect(() => {
@@ -91,20 +102,25 @@ export default function Album() {
   .then((res)=> {console.log(res); setState({...state,trainersData:res})})
   .catch((error)=>console.log(error))
 
-    //ajaxCall("GET", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", "", successGetTrainer, errorGetTrainer);
+  
+
   },[]);
-
-  // const successGetTrainer=(data)=>{
-  //   setState({...state,trainersData:data});
-  // }
-
-  // const errorGetTrainer=(err)=>{
-  //   console.log(err);
-  // }
-
 
   return (
     <React.Fragment >
+
+                <Modal
+                    className={modalStyle}
+                    show={open}
+                    onHide={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                  >
+                    <div className={classes.paper}>
+                    <TrainerProfile/>
+                    </div>                  
+                  </Modal>
+
       <CssBaseline />
       <main>
         {/* Hero unit */}
@@ -113,12 +129,21 @@ export default function Album() {
             <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
               מאגר מאמנים
             </Typography>
+            <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
+            <div className={classes.search}>
+            <TextField variant='outlined'
+            fullWidth
+            lable='חיפוש לפי שם מאמן'
+            on onChange={(e) => setSearch(e.target.value)}    
+            />
+          </div>
+            </Typography>
           </Container>
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {state.trainersData.map((card) => (
+            {state.trainersData.filter((card) => (card.FirstName.includes(search) || card.LastName.includes(search) )).map((card) => (
               <Grid item key={card.TrainerCode} xs={6} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
@@ -127,7 +152,7 @@ export default function Album() {
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="h5" component="h2" style = {{textAlign:'center'}}>
                       {card.FirstName} {card.LastName}
                     </Typography>
                     <Typography>
@@ -139,15 +164,12 @@ export default function Album() {
                           let trainer = {
                             TrainerCode: card.TrainerCode
                           }
-                          console.log("trainer:",trainer)
                           localStorage["trainer"] = JSON.stringify(trainer);
-                          handleShow();
+                          handleOpen();
                     }} size="small" color="primary">
                       צפה
                     </Button>
-                    <Modal show={show} onHide={handleClose} animation={false} > 
-                    <TrainerProfile/>               
-                  </Modal>
+
                     <Button  size="small" color="primary">
                       חסום
                     </Button>
