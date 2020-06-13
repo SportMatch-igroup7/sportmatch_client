@@ -242,7 +242,7 @@ export default function Album() {
             <div className={classes.search}>
             <TextField variant='outlined'
             fullWidth
-            lable='חיפוש לפי שם מאמן'
+            label='&#x1F50D;'
             on onChange={(e) => setSearch(e.target.value)}    
             />
           </div>
@@ -317,10 +317,6 @@ export default function Album() {
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
-                    </Button>
-
-                    <Button  size="small" color="primary">
-                      חסום
                     </Button>
                   </CardActions>
                 </Card>

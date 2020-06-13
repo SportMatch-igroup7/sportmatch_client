@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
-    border: 'dotted rgb(235, 135, 218)'
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -58,12 +57,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     width: 200,
   },
-  text: {
-    fontSize:'20px',
-    textAlign:'right',
-    paddingRight: '1em',
-    direction:'rtl'
-  }
 }));
 
 export default function RequestForReplacementView(props) {
@@ -98,22 +91,54 @@ const branchCode = props.req[0].BranchCode;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //validate();
   }
 
   const prevent = async (e) =>{
     e.preventDefault();
   }
 
+
+
+
+
+const marks = [
+  {
+    value: 0,
+    label: '0₪',
+  },
+  {
+      value: 100,
+      label: '100₪',
+    },
+  {
+    value: 250,
+    label: '250₪',
+  },
+  {
+    value: 400,
+    label: '400₪',
+  },
+  {
+    value: 500,
+    label: '500₪',
+  },
+];
+
+function valuetext(value) {
+  return `${value}₪`;
+}
+
 const btn = () => {
   if(props.stage === "1")
     return(
-      <Grid style={{textAlign:'right',paddingRight: '1em'}}>    
+      <Grid>    
       <Button
       type="submit"
       variant="contained"
       color="primary"
       className={classes.submit}
-      style={{backgroundColor:"green",margin:'2px'}}
+      style={{backgroundColor:"green"}}
       onClick={() =>props.approveTrainer(replacmentCode,trainerCode)}
     >
       אשר בקשה
@@ -124,7 +149,7 @@ const btn = () => {
       variant="contained"
       color="primary"
       className={classes.submit}
-      style={{backgroundColor:"red",margin:'2px'}}
+      style={{backgroundColor:"red"}}
       onClick={() =>props.declineTrainer(replacmentCode,trainerCode)}
     >
       סרב
@@ -133,7 +158,6 @@ const btn = () => {
 
     else if (props.stage === "2")
      return (
-    <Grid style={{textAlign:'right',paddingRight: '1em'}}>
    <Button
       type="submit"
       variant="contained"
@@ -143,8 +167,7 @@ const btn = () => {
       onClick={() => props.declineTrainer(replacmentCode,trainerCode)}
     >
       סרב
-    </Button>
-    </Grid>);
+    </Button>);
 }
 
 
@@ -159,57 +182,183 @@ const btn = () => {
           הודעת החלפה
         </Typography>
         <form className={classes.form} noValidate dir="rtl">
-          <Grid container spacing={2} className={classes.text}>
+          <Grid container spacing={2}>
           <Grid item xs={12}>
-          <p>שם הסניף: {branchData && branchData.Name}</p>
+              <TextField
+                variant="outlined"
+                disabled={true}
+                fullWidth
+                id="contact"
+                label="שם הסניף"
+                name="contact"
+                autoComplete="contact"
+                value = {branchData && branchData.Name}
+              />
             </Grid>
             <Grid item xs={12}>
-            <p>כתובת הסניף: {branchData && branchData.Address}</p>
+              <TextField
+                variant="outlined"
+                disabled={true}
+                fullWidth
+                id="contact"
+                label="כתובת הסניף"
+                name="contact"
+                autoComplete="contact"
+                value = {branchData && branchData.Address}
+              />
             </Grid>
             <Grid item xs={12}>
-            <p>טלפון: {branchData && branchData.PhoneNo}</p>
+              <TextField
+                variant="outlined"
+                disabled={true}
+                fullWidth
+                id="contact"
+                label="טלפון"
+                name="contact"
+                autoComplete="contact"
+                value = {branchData && branchData.PhoneNo}
+              />
             </Grid>
           <Grid item xs={12}>
-          <p>שם איש קשר: {data.ContactName}</p>
+              <TextField
+                variant="outlined"
+                disabled={true}
+                fullWidth
+                id="contact"
+                label="שם איש קשר"
+                name="contact"
+                autoComplete="contact"
+                value = {data.ContactName}
+              />
             </Grid>
 
             <Grid item xs={12}>
-            <p>סוג שיעור: {data.TypeName}</p>
+              <TextField
+                variant="outlined"
+                disabled={true}
+                fullWidth
+                id="classType"
+                label="סוג שיעור"
+                name="classType"
+                autoComplete="classType"
+                value = {data.TypeName}
+              />
             </Grid>
 
           <Grid item xs={12}>
-          <p>תאריך ההחלפה: {data.ReplacementDate}</p>
+          <TextField
+              id="repDate"
+              disabled={true}
+              label="תאריך ההחלפה"
+              type="date"
+              className={classes.textField}
+              //onChange={(e)=>setReplacementDate(e.target.value)}
+              value = {data.ReplacementDate}
+      />
           </Grid>
 
           <Grid item xs={6}>
-          <p>משעה: {data.FromHour}</p>
+          <TextField
+              id="fromHour"
+              disabled={true}
+              label="משעה"
+              type="time"
+              //className={classes.textField}
+              value = {data.FromHour}
+            />
           </Grid>
 
           <Grid item xs={6}>
-          <p>עד שעה: {data.ToHour}</p>
+          <TextField
+              id="toHour"
+              disabled={true}
+              label="עד שעה"
+              type="time"
+              //className={classes.textField}
+              value = {data.ToHour}
+            />
       </Grid>
 
       <Grid item xs={12}>
-      <p>תיאור השיעור: {data.ClassDescription}</p>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="classDesc"
+            label="תיאור השיעור"
+            name="classDesc"
+            autoComplete="classDesc"
+            value = {data.ClassDescription}
+          />
         </Grid>
 
         <Grid item xs={12}>
-        <p>הערות נוספות: {data.Comments}</p>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="com"
+            label="הערות נוספות"
+            name="com"
+            autoComplete="com"
+            value = {data.Comments}
+          />
         </Grid>
 
         <Grid item xs={12}>
-        <p>רמת קושי: {data.LevelName}</p>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="dif"
+            label="רמת קושי"
+            name="dif"
+            autoComplete="dif"
+            value = {data.LevelName}
+          />
         </Grid>
 
           <Grid item xs={12}>
-          <p>שפת השיעור: {data.LName}</p>
-          </Grid>
+                מחיר לשעה
+            <Slider
+            defaultValue={100}
+            getAriaValueText={props.MaxPrice} //check how to get the value
+            aria-labelledby="discrete-slider-custom"
+             step={10}
+             valueLabelDisplay="auto"
+             marks={marks}
+             max={500}
+             
+      />
+            </Grid>
+
+            <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="lang"
+            label="שפת השיעור"
+            name="lang"
+            autoComplete="lang"
+            value = {data.LName}
+          />
+        </Grid>
 
         <Grid item xs={12}>
-        <p>אוכלוסיית יעד: {data.PName}</p>
+          <TextField
+            variant="outlined"
+            disabled={true}
+            fullWidth
+            id="pop"
+            label="אוכלוסיית יעד"
+            name="pop"
+            autoComplete="pop"
+            value = {data.PName}
+          />
         </Grid>
 
-        </Grid>
+          </Grid>
 {btn()}
         </form>
       </div>

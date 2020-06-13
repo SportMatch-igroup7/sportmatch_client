@@ -6,16 +6,14 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import RI from '../../commons/RoundedImage';
-import FileUploaded from '../../commons/fileUpload';
+import RI from '../../../commons/RoundedImage';
+import FileUploaded from '../../../commons/fileUpload';
 import Container from '@material-ui/core/Container';
 import Slider from '@material-ui/core/Slider';
-import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert';
 import $ from 'jquery';
 import Button from '@material-ui/core/Button';
-import Qualification from '../OLD/Qualifications';
-import { store } from '../../store/MainStore';
+import { store } from '../../../store/MainStore';
 import Paper from '@material-ui/core/Paper';
 
 
@@ -195,8 +193,20 @@ export default function PersonalDetails({onDone = () => {}}) {
         //     Image:state.photo
         // }
         console.log(trainerData);
-        console.log(JSON.stringify(trainerData));
-        //ajaxCall("POST", "http://proj.ruppin.ac.il/igroup7/proj/api/Trainer", JSON.stringify(trainerData), successSignInTrainer, errorSignInTrainer);
+        fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/UpdateTrainerPersonalDetails",{
+          method:'PUT',
+          headers:{
+              Accept:'application/json','Content-Type':'application/json',
+          },
+          body:JSON.stringify(trainerData)
+      })
+      .then((response)=>response.json())
+      .then((res)=>{console.log("success update trainer details");
+      setTimeout(() => {
+        history.push("/TrainerNav");
+      }, 3000)})
+      .catch((error)=>console.log(error));
+        
     }
 
 
@@ -221,28 +231,7 @@ export default function PersonalDetails({onDone = () => {}}) {
                 swal("הועלתה תמונה בפורמט לא תקין, אנא נסה שנית")
     }
 
-    const marks = [
-        {
-          value: 0,
-          label: '0₪',
-        },
-        {
-            value: 100,
-            label: '100₪',
-          },
-        {
-          value: 250,
-          label: '250₪',
-        },
-        {
-          value: 400,
-          label: '400₪',
-        },
-        {
-          value: 500,
-          label: '500₪',
-        },
-      ];
+   
 
     const valuetext=(value) => {
         setPrice(value);
@@ -254,9 +243,36 @@ export default function PersonalDetails({onDone = () => {}}) {
       console.log(trainerData);
     }
 
+    const refreshPage= () => {
+      window.location.reload(false);
+    }
+
     const back = () =>{
       history.goBack()
     }
+
+    const marks = [
+      {
+        value: 0,
+        label: '0₪',
+      },
+      {
+          value: 100,
+          label: '100₪',
+        },
+      {
+        value: 250,
+        label: '250₪',
+      },
+      {
+        value: 400,
+        label: '400₪',
+      },
+      {
+        value: 500,
+        label: '500₪',
+      },
+    ];
 
   return (
     <Container component="main" maxWidth="xs" dir="rtl" >

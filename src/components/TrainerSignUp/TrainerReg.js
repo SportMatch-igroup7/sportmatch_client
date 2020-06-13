@@ -51,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
-    textAlign:'right'
+    textAlign:'right',
+    direction: 'rtl'
   },
   stepper: {
     padding: theme.spacing(3, 0, 5),

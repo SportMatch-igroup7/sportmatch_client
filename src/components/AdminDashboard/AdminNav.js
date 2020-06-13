@@ -19,18 +19,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import PeopleIcon from '@material-ui/icons/People';
-import MessageIcon from '@material-ui/icons/Message';
-import InputBase from '@material-ui/core/InputBase';
-import FindReplaceIcon from '@material-ui/icons/FindReplace'
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import TrainersProfile from '../TrainerProfiles/TrainersProfile';
-import BranchesProfile from '../BranchProfiles/BranchesProfile';
-import TrainerProfile from '../TrainerProfiles/TrainerProfile';
-import TrainerMain from './TrainerMain';
 import Exit from '@material-ui/icons/ExitToApp';
-import Calendar from './Calendar/Calendar';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import BusinessIcon from '@material-ui/icons/Business';
+import SportsIcon from '@material-ui/icons/Sports';
+import BI from './PowerBi';
 
 const drawerWidth = 240;
 
@@ -87,12 +79,12 @@ const useStyles = makeStyles((theme) => ({
   hide: {
     display: 'none',
   },
+  item:{
+    textAlign:'right'
+  },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-  },
-  item:{
-    textAlign:'right'
   },
   drawerPaper: {
     width: drawerWidth,
@@ -142,17 +134,11 @@ export default function PersistentDrawerRight() {
   const getContent = (comp) => {
     switch (comp) {
       case 1:
-        return <TrainerProfile/>;
+        return <BI/>;
       case 2:
-        return <TrainerMain/>;
+        return "";
       case 3:
-        return <Calendar/>;
-      case 4:
-      return <TrainersProfile />;
-      case 5:
-      return <BranchesProfile />;
-      case 6:
-        return <BranchesProfile />;
+      return "";
     }
   };
 
@@ -169,6 +155,7 @@ export default function PersistentDrawerRight() {
           <Typography variant="h6" noWrap className={classes.title}>
             SportMatch
           </Typography>
+         
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -210,28 +197,16 @@ export default function PersistentDrawerRight() {
         <List>
           <MenuItem className={classes.item} button onClick={(e) => setComp(1)}>
                 <ListItemIcon><AccountCircleIcon /></ListItemIcon>
-                <ListItemText primary="הפרופיל שלי" />
+                <ListItemText primary="דוח שימושיות" />
             </MenuItem>
             <Divider />
             <MenuItem className={classes.item} button onClick={(e) => setComp(2)}>
-                <ListItemIcon><HomeIcon /></ListItemIcon>
-                <ListItemText primary="ניהול הודעות החלפה"/>
+                <ListItemIcon><BusinessIcon /></ListItemIcon>
+                <ListItemText primary="ניהול חברות"/>
             </MenuItem>
             <MenuItem className={classes.item} button onClick={(e) => setComp(3)}>
-                <ListItemIcon><CalendarTodayIcon/></ListItemIcon>
-                <ListItemText primary="יומן הודעות החלפה"/>
-            </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(4)} >
-                <ListItemIcon><PeopleIcon /></ListItemIcon>
-                <ListItemText primary="מאגר מאמנים"/>
-            </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(5)} >
-                <ListItemIcon><PeopleIcon /></ListItemIcon>
-                <ListItemText primary="מאגר מועדונים"/>
-            </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(6)}>
-                <ListItemIcon><MessageIcon /></ListItemIcon>
-                <ListItemText primary="צור קשר"/>
+                <ListItemIcon><SportsIcon /></ListItemIcon>
+                <ListItemText primary="ניהול הכשרות"/>
             </MenuItem>
             <Divider />
             <MenuItem className={classes.item} button onClick={() => history.push("/")}>

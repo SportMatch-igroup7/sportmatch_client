@@ -6,14 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import RI from '../../commons/RoundedImage';
-import FileUploaded from '../../commons/fileUpload';
+import RI from '../../../commons/RoundedImage';
+import FileUploaded from '../../../commons/fileUpload';
 import Container from '@material-ui/core/Container';
 import swal from 'sweetalert';
 import Button from '@material-ui/core/Button';
-import { store } from '../../store/MainStore';
-import ReactCardFlip from 'react-card-flip';
-import QualificationForm from '../OLD/QualificationForm';
+import { store } from '../../../store/MainStore';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -206,6 +204,16 @@ export default function Qualifications({onDone = () => {}}) {
         }, 3000)
     };
 
+    const validatQualtDate=(date)=>{
+      let todayDate = new Date().toISOString().substr(0, 10);
+      if( date<=todayDate)
+      return true;
+      else
+      {
+          swal("תאריך ההכשרה אינו תקין");
+          return false;
+      } 
+  }
 
     const updateQualDate= (e,code) =>{
       setIsChanged(true);
@@ -213,7 +221,9 @@ export default function Qualifications({onDone = () => {}}) {
       let check = quals;
       console.log(e.target.value);
       let isExists = false;
-      if(check.length == 0)
+      if(validatQualtDate(e.target.value) === true)
+      {
+        if(check.length == 0)
         setQuals([...quals,{TrainerCode: trainerCode, QualificationTypeCode:qualCode, FromDate: e.target.value}])
       else
     {  check.map(val => {if (val.QualificationTypeCode == qualCode){
@@ -223,9 +233,11 @@ export default function Qualifications({onDone = () => {}}) {
       else
       setQuals([...quals,{TrainerCode: trainerCode, QualificationTypeCode:qualCode, FromDate: e.target.value}])
     })}
-    if ( isExists ===true)
-    setQuals([...check]);
-    console.log(check);
+        if ( isExists ===true)
+        setQuals([...check]);
+        console.log(check);
+      }
+     
     }
 
     const updateQualPop= (e,code) =>{
@@ -275,7 +287,9 @@ export default function Qualifications({onDone = () => {}}) {
       let check = trainerQual;
       console.log(e.target.value);
       let isExists = false;
-      if(check.length == 0)
+      if(validatQualtDate(e.target.value) === true)
+      {
+        if(check.length == 0)
         setTrainerQual([...trainerQual,{TrainerCode: trainerCode, QualificationTypeCode:qualCode, FromDate: e.target.value}])
       else
     {  check.map(val => {if (val.QualificationTypeCode == qualCode){
@@ -284,10 +298,11 @@ export default function Qualifications({onDone = () => {}}) {
         }
       else
       setTrainerQual([...trainerQual,{TrainerCode: trainerCode, QualificationTypeCode:qualCode, FromDate: e.target.value}])
-    })}
-    if ( isExists ===true)
-    setTrainerQual([...check]);
-    console.log(check);
+      })}
+      if ( isExists ===true)
+      setTrainerQual([...check]);
+      console.log(check);
+      }
     }
 
     const changeQualPop= (e,code) =>{

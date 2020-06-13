@@ -5,9 +5,9 @@ import { Card, CardBody, CardHeader, CardTitle } from 'reactstrap';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+//import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import bootstrapPlugin from '@fullcalendar/bootstrap';
+//import bootstrapPlugin from '@fullcalendar/bootstrap';
 
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
@@ -16,12 +16,13 @@ import '@fullcalendar/list/main.css';
 import '@fullcalendar/bootstrap/main.css';
 
 class Calendar extends Component {
+
     calendarPlugins = [
-        interactionPlugin,
+        //interactionPlugin,
         dayGridPlugin,
         timeGridPlugin,
         listPlugin,
-        bootstrapPlugin
+       // bootstrapPlugin
     ];
 
     calendarHeader = {
@@ -60,10 +61,12 @@ class Calendar extends Component {
         events: [],
     };
 
+
+
     componentDidMount() {
 
-        let branchCode = JSON.parse(localStorage["userDetails"]).BranchCode;
-        fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestDetails/getBranchRequests/" + branchCode + '/',{
+        const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
+        fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestDetails/getTrainerRequests/" + trainerCode + '/',{
             method:'GET',
             headers:{
                 Accept:'application/json','Content-Type':'application/json',
@@ -75,78 +78,52 @@ class Calendar extends Component {
         this.makeEvents(res);
         })
         .catch((error)=>console.log(error))
-
-        /* initialize the external events */
-        // new Draggable(this.refs.externalEventsList, {
-        //     itemSelector: '.fce-event',
-        //     eventData: function(eventEl) {
-        //         return {
-        //             title: eventEl.innerText.trim()
-        //         };
-        //     }
-        // });
     }
 
     makeEvents (res) {
 
         let events = [];
-        let distinctReq = [];
-        let reqCodes = [];
-        let request = "";
 
-        const arr = [...new Set(res && res.map((x) => {
-                  if (!reqCodes.includes(x.ReplacmentCode) && x.RequestStatus === "open") 
-                  {
-                    request = {
-                      ReplacmentCode: x.ReplacmentCode,
-                      Logo: x.Logo,
-                      TypeName: x.TypeName,
-                      ReplacementDate: x.ReplacementDate,
-                      FromHour: x.FromHour,
-                      ToHour: x.ToHour,
-                      IsHistory: x.IsHistory,
-                    }
-                    reqCodes.push(x.ReplacmentCode)
-                    distinctReq.push(request)
-                  }
-                }))]
-
-
-        //new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate())
-
-            distinctReq&& distinctReq.filter((event)=>(event.IsHistory===false )).map(event =>{
-            //console.log(new Date(event.ReplacementDate.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")))
-            let e = {
-                title: event.TypeName,
-                start: event.ReplacementDate,
-                end: event.ReplacementDate,
-                backgroundColor: '#f56954',
-                borderColor: '#f56954',
-                code: event.ReplacmentCode
-            }
-            events.push(e);
+        res && res.filter((event)=>(event.IsHistory===false && event.IsAprrovedByTrainer == "initial" && event.RequestStatus == "open")).map(event =>{
+        let e = {
+            title: 'החלפה חדשה',
+            start: new Date(event.ReplacementDate),
+            end: new Date(event.ReplacementDate),
+            backgroundColor: '#f56954',
+            borderColor: '#f56954',
+        }
+        events.push(e);
         });
 
-         res && res.filter((event)=>(event.IsHistory===false && event.IsAprrovedByTrainer === "true" && event.RequestStatus === "approved" )).map((event) =>{
+        res && res.filter((event)=>(event.IsHistory===false && event.IsAprrovedByTrainer == "true" && event.RequestStatus == "open")).map(event =>{
             let e = {
-                title: event.TypeName,
-                start: event.ReplacementDate,
-                end: event.ReplacementDate,
+                title: 'ממתינה לאישור',
+                start: new Date(event.ReplacementDate),
+                end: new Date(event.ReplacementDate),
+                backgroundColor: '#0073b7',
+                borderColor: '#0073b7',
+            }
+            events.push(e);
+            });
+
+         res && res.filter((event)=>(event.IsHistory===false && event.RequestStatus == "approved" && event.IsAprrovedByTrainer == "true")).map((event) =>{
+            let e = {
+                title: 'החלפה מאושרת',
+                start: new Date(event.ReplacementDate),
+                end: new Date(event.ReplacementDate),
                 backgroundColor:'#00a65a',
-                borderColor: '#00a65a',
-                code: event.ReplacmentCode
+                borderColor: '#00a65a'
             }
             events.push(e);
         });
 
-         res && res.filter((event)=>(event.IsHistory===true && event.IsAprrovedByTrainer === "true" && event.RequestStatus === "approved" )).map((event) =>{
+         res && res.filter((event)=>(event.IsHistory ===true && event.RequestStatus == "approved" && event.IsAprrovedByTrainer == "true")).map((event) =>{
             let e = {
-                title: event.TypeName,
-                start: event.ReplacementDate,
-                end: event.ReplacementDate,
+                title: 'החלפה היסטורית ',
+                start: new Date(event.ReplacementDate),
+                end: new Date(event.ReplacementDate),
                 backgroundColor: '#f39c12', 
-                borderColor: '#f39c12',
-                code: event.ReplacmentCode
+                borderColor: '#f39c12'
             }
             events.push(e);
 
@@ -177,11 +154,6 @@ class Calendar extends Component {
                 date: date.dateStr
             }
         });
-    };
-
-    eventClicked = event => {
-        console.log(event);
-       // console.log(event.def)//.extendedProps.code);
     };
 
     // add event directly into calendar
@@ -244,19 +216,11 @@ class Calendar extends Component {
     };
 
     render() {
-     //   const { externalEvents, selectedEvent } = this.state;
+        const { externalEvents, selectedEvent } = this.state;
         return (
             <ContentWrapper>
-                <div className="calendar-app" style={{textAlign:'right'}} >
-                    <div>
-                    <h6 style={{textAlign:'right'}}>
-                        <lable style={{color:'#00a65a'}}> #החלפה פתוחה</lable>
-                        <lable style={{color: '#f56954'}}>#החלפה מאושרת</lable>
-                        <lable style={{color: '#f39c12'}}>#החלפה היסטורית</lable>
-                    </h6>
-                    </div>
-                    
-                    <div className="row" >
+                <div className="calendar-app">
+                    <div className="row">
                             <Card className="card-default">
                                 <CardBody style={{backgroundColor:'white'}}>
                                     {/* START calendar */}
@@ -271,7 +235,6 @@ class Calendar extends Component {
                                         deepChangeDetection={true}
                                         dateClick={this.dayClick}
                                         eventReceive={this.handleEventReceive}
-                                        eventClick={this.eventClicked}
                                         >
                                     </FullCalendar>
                                 </CardBody>

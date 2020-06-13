@@ -12,10 +12,13 @@ import { StateProvider } from './store/MainStore';
 import BranchParameters from './components/BranchDashboard/BranchParameter';
 import BranchProfile from './components/BranchProfiles/BranchProfile';
 import TrainerNav from './components/TrainerDashboard/TrainerNav';
-import TrainerDetails from './components/TrainerProfiles/TrainerPersonalDetailsUpdate';
-import TrainerEditQual from './components/TrainerProfiles/TrainerEditQualifications';
-import TrainerEditAdditional from './components/TrainerProfiles/TrainerAdditionalDetailsUpdate';
-import Calendar from './components/BranchDashboard/Calendar/Calendar';
+import TrainerDetails from './components/TrainerProfiles/ProfileUpdate/TrainerPersonalDetailsUpdate';
+import TrainerEditQual from './components/TrainerProfiles/ProfileUpdate/TrainerEditQualifications';
+import TrainerEditAdditional from './components/TrainerProfiles/ProfileUpdate/TrainerAdditionalDetailsUpdate';
+import AdminNav from './components/AdminDashboard/AdminNav';
+import Chat from './components/Chat/ChatNew copy';
+import BranchUpdateProfile from './components/BranchProfiles/BranchProfileUpdate';
+
 
 function App() {
   return (
@@ -35,6 +38,8 @@ function App() {
         <Route path="/TrainerDetails" component={TrainerDetails} />
         <Route path="/TrainerEditQual" component={TrainerEditQual} />
         <Route path="/TrainerEditAdditional" component={TrainerEditAdditional} />
+        <Route path="/AdminNav" component={AdminNav} />
+        <Route path = "/BranchUpdateProfile" component={BranchUpdateProfile}/>
       </Switch> 
       </div>
     </StateProvider>

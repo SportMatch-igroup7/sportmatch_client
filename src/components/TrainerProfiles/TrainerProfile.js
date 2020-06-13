@@ -225,7 +225,7 @@ export default function TrainerProfile() {
                         </div> 
                         <hr className="divider"/>
                         <div className="social-links" style={{direction:"rtl",marginTop:'15px'}}>
-                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changePersonalDetails}>ערוך פרטים איישים</Button> 
+                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changePersonalDetails}>ערוך פרטים אישיים</Button> 
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateQualifications} >ערוך הכשרות</Button> 
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateAdditionalDetails} >ערוך נתונים נוספים</Button> 
                         </div>

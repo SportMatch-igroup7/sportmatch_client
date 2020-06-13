@@ -6,11 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import RI from '../../commons/RoundedImage';
-import FileUploaded from '../../commons/fileUpload';
-import Container from '@material-ui/core/Container';
-import {ajaxCall} from '../../commons/ajaxCall';
-import swal from 'sweetalert';
-import $ from 'jquery';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
@@ -237,20 +232,21 @@ history.push("/TrainerNav");
 
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h5" gutterBottom style={{textAlign:'center',fontWeight:'bold'}}>
         פרטים נוספים
+        <hr/>
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{direction:'rtl',textAlign:'right'}}>
               <Grid item xs={6}>
-              <lable>שפות</lable> <br/><br/>
+              <p style={{textAlign:'center'}}>שפות</p>
               {
-                langData && langData.map(val => <button style={{margin:'2px'}} value = {val.LanCode} key = {val.LanCode} onClick={(e)=>addLanguage(val.LanCode)} style={{margin:'2px', backgroundColor: trainerLang.includes(val.LanCode) ? 'lightblue': ''}}>{val.LanName} </button> )
+                langData && langData.map(val => <Button variant="outlined" color="primary" style={{margin:'2px'}} value = {val.LanCode} key = {val.LanCode} onClick={(e)=>addLanguage(val.LanCode)} style={{margin:'2px', backgroundColor: trainerLang.includes(val.LanCode) ? 'rgb(235, 135, 218)': ''}}>{val.LanName} </Button> )
               }
             </Grid>
               <Grid item xs={6}>
-                <lable>אזורי עבודה</lable><br/><br/>
+              <p style={{textAlign:'center'}}>אזורי עבודה</p>
               {
-                areaData && areaData.map(val => <button style={{margin:'2px'}} value = {val.AreaCode} key = {val.AreaCode} onClick={(e)=>addArea(val.AreaCode)} style={{margin:'2px', backgroundColor: trainerArea.includes(val.AreaCode) ? 'lightblue': ''}}>{val.AreaName} </button> )
+                areaData && areaData.map(val => <Button variant="outlined" color="primary" style={{margin:'2px'}} value = {val.AreaCode} key = {val.AreaCode} onClick={(e)=>addArea(val.AreaCode)} style={{margin:'2px', backgroundColor: trainerArea.includes(val.AreaCode) ? 'rgb(235, 135, 218)': ''}}>{val.AreaName} </Button> )
               }
             </Grid>
             <Grid item xs={12}>

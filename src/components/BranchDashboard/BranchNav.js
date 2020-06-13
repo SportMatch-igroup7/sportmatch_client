@@ -31,6 +31,9 @@ import BranchParameters from './BranchParameter';
 import BranchProfile from  '../BranchProfiles/BranchProfile';
 import BranchMain from './BranchMain';
 import Exit from '@material-ui/icons/ExitToApp';
+import Calendar from './Calendar/Calendar';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import Chat from '../Chat/ChatNew copy';
 
 const drawerWidth = 240;
 
@@ -146,15 +149,17 @@ export default function PersistentDrawerRight() {
       case 2:
         return <BranchMain/>;
       case 3:
-        return <BranchParameters />;
+      return <Calendar/>;
       case 4:
-      return <RequestForReplacement />;
+        return <BranchParameters />;
       case 5:
-      return <TrainersProfile />;
+      return <RequestForReplacement />;
       case 6:
-      return <BranchesProfile />;
+      return <TrainersProfile />;
       case 7:
-        //return <BranchesProfile />;
+        return <BranchesProfile />;
+      case 8:
+        return <Chat/>
     }
   };
 
@@ -218,27 +223,31 @@ export default function PersistentDrawerRight() {
             <Divider />
             <MenuItem className={classes.item} button onClick={(e) => setComp(2)}>
                 <ListItemIcon><HomeIcon /></ListItemIcon>
-                <ListItemText primary="ראשי"/>
+                <ListItemText primary="ניהול הודעות החלפה"/>
             </MenuItem>
             <MenuItem className={classes.item} button onClick={(e) => setComp(3)}>
+                <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
+                <ListItemText primary="יומן הודעות החלפה"/>
+            </MenuItem>
+            <MenuItem className={classes.item} button onClick={(e) => setComp(4)}>
                 <ListItemIcon><AssignmentIcon /></ListItemIcon>
                 <ListItemText primary="ניהול פרמטרים"/>
             </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(4)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(5)} >
                 <ListItemIcon><FindReplaceIcon /></ListItemIcon>
                 <ListItemText primary="צור הודעת החלפה"/>
             </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(5)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(6)} >
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 <ListItemText primary="מאגר מאמנים"/>
             </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(6)} >
+            <MenuItem className={classes.item} button onClick={(e) => setComp(7)} >
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 <ListItemText primary="מאגר מועדונים"/>
             </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(7)}>
+            <MenuItem className={classes.item} button onClick={(e) => setComp(8)}>
                 <ListItemIcon><MessageIcon /></ListItemIcon>
-                <ListItemText primary="צור קשר"/>
+                <ListItemText primary="צ'אט"/>
             </MenuItem>
             <Divider />
             <MenuItem className={classes.item} button onClick={() => history.push("/")}>

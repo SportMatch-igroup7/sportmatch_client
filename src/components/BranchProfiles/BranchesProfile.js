@@ -19,6 +19,13 @@ import swal from 'sweetalert'
 import Modal from 'react-bootstrap/Modal';
 import BranchProfile from './ChosenBranchProfile';
 import SearchIcon from '@material-ui/icons/Search';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
 
 
 
@@ -61,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
     alignSelf:'center',
     marginTop:'50px',
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  },
 
 }));
 
@@ -70,12 +82,23 @@ export default function Album() {
   const history = useHistory();
 
   const [branchCode, setBranchCode] = useState(0);
-
-  const [state, setState] = useState({
-    branchData:[]
-  });
+  const [search, setSearch] = useState("");
+  const [areaData, setAreaData] = useState();
+  const [branchData,setBranchData]= useState([]);
+  const [areaName, setAreaName] = React.useState([]);
 
   const [open, setOpen] = React.useState(false);
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -94,8 +117,18 @@ export default function Album() {
       },
   })
   .then((response)=>response.json())
-  .then((res)=> {console.log(res); setState({...state,branchData:res})})
+  .then((res)=> {console.log(res); setBranchData(res)})
   .catch((error)=>console.log(error))
+
+  fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Area',{
+    method:'GET',
+    headers:{
+        Accept:'application/json','Content-Type':'application/json',
+    },
+})
+.then((response)=>response.json())
+.then((res)=>{console.log("Areas:",res); setAreaData([...res])})
+.catch((error)=>console.log(error))
   
  
   },[]);
@@ -107,6 +140,13 @@ export default function Album() {
     localStorage["branch"] = JSON.stringify(branch);
     //history.push("/BranchProfile");
   }
+
+  const filterArr = (branch) => {
+    const SerachRes = branch.Name.includes(search);
+    const AreaRes = areaName.length === 0 ? true : areaName.includes(branch.AreaName) 
+
+     return SerachRes && AreaRes;
+  };
 
   return (
     <React.Fragment >
@@ -132,9 +172,30 @@ export default function Album() {
             <div className={classes.search}>
             <TextField variant='outlined'
             fullWidth
-            lable='חיפוש לפי שם סניף'     
-            />
+            label='&#x1F50D;'
+            on onChange={(e) => setSearch(e.target.value)}
+            ></TextField>
           </div>
+          <FormControl className={classes.formControl}>
+        <InputLabel id="demo-mutiple-checkbox-label">אזורי עבודה</InputLabel>
+        <Select
+          labelId="demo-mutiple-checkbox-label"
+          id="demo-mutiple-checkbox"
+          multiple
+          value={areaName}
+          onChange={(e) => setAreaName(e.target.value)}
+          input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {areaData && areaData.map((area) => (
+            <MenuItem key={area.AreaCode} value={area.AreaName}>
+              <Checkbox checked={areaName.indexOf(area.AreaName) > -1} />
+              <ListItemText primary={area.AreaName} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
             </Typography>
           </Container>
         </div>
@@ -142,7 +203,7 @@ export default function Album() {
           {/* End hero unit */}
         
           <Grid container spacing={4}>
-            {state.branchData.map((card) => (
+            {branchData.filter(filterArr).map((card) => (
               <Grid item key={card.BranchCode} xs={6} md={3}>
                 <Card className={classes.card}>
                   <CardMedia
@@ -167,10 +228,6 @@ export default function Album() {
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
-                    </Button>
-
-                    <Button  size="small" color="primary">
-                      חסום
                     </Button>
                   </CardActions>
                 </Card>

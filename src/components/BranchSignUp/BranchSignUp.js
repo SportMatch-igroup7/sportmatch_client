@@ -20,6 +20,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import RI from '../../commons/RoundedImage';
 import swal from 'sweetalert';
 import Popper from '@material-ui/core/Popper';
+import '../TrainerProfiles/Profiles.css';
 
 function Copyright() {
   return (
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    textAlign:'right'
   },
   popper: {
     border: '1px solid',
@@ -247,6 +249,7 @@ const SignInBranch=()=> {
 const successSignInBranch=(data)=> {
   let links = linksPath;
   let linksToDB = [];
+  let paramsToDB = [];
    swal("success");
   console.log(data);
   setState({...state,branchCodeFromDB : data.BranchCode})
@@ -280,18 +283,20 @@ params.map(param => {
     ParameterCode: param.Pcode,
     ParameterWeight: params.length
   }
-  console.log("branchParam:", branchParam)
+  paramsToDB.push(branchParam)
+});
+
+console.log("branchParam:", paramsToDB)
   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/BranchParameter",{
   method:'POST',
   headers:{
       Accept:'application/json','Content-Type':'application/json',
   },
-  body:JSON.stringify(branchParam)
+  body:JSON.stringify(paramsToDB)
 })
 .then((response)=>response.json())
 .then((res)=>console.log("success post branch parameters"), history.push("/BranchNav"))
 .catch((error)=>console.log(error));
-})
 }
 
 
@@ -305,6 +310,7 @@ params.map(param => {
         </Avatar>
         <Typography component="h1" variant="h5">
           הרשמת מועדון
+          <hr/>
         </Typography>
         <form className={classes.form} noValidate dir="rtl">
           <Grid container spacing={2}>

@@ -6,12 +6,14 @@ import {FaFacebookSquare} from 'react-icons/fa';
 import {FaChrome} from 'react-icons/fa';
 import {FaInstagram} from 'react-icons/fa';
 import {FaLinkedin} from 'react-icons/fa';
+import Button from '@material-ui/core/Button';
 
 
 export default function BranchProfile() {
     
     const [branchData, setBranchData] = useState([]);
     const [branchLinks, setBranchLinks] = useState([]);
+    const history = useHistory();
 
 
 
@@ -53,6 +55,11 @@ export default function BranchProfile() {
         const instagram = branchLinks.filter((val)=>val.LinkCode === 3);
         const linkedin = branchLinks.filter((val)=>val.LinkCode === 4)
 
+        const changeBranchDetails = ()=>
+        {
+            history.push("/BranchUpdateProfile");
+        }
+
 
         return (
             <div style ={{width: '100%', margin: 'auto'}}>
@@ -85,6 +92,7 @@ export default function BranchProfile() {
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div>
+                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changeBranchDetails}>ערוך פרופיל</Button> 
                         </div>
                         
                     </Cell>

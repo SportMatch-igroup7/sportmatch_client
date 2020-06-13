@@ -12,6 +12,7 @@ import Slider from '@material-ui/core/Slider';
 import swal from 'sweetalert';
 import Button from '@material-ui/core/Button';
 import { store } from '../../store/MainStore';
+import '../TrainerProfiles/Profiles.css';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -214,7 +215,6 @@ export default function PersonalDetails({onDone = () => {}}) {
           type: 'SET_TRAINER_CODE',
           value: data.TrainerCode,
         });
-        swal("success");
         console.log(data);
         onDone();
     }
@@ -266,8 +266,9 @@ export default function PersonalDetails({onDone = () => {}}) {
   return (
     <Container component="main" maxWidth="xs" dir="rtl">
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+    <Typography variant="h5" gutterBottom style={{textAlign:'center',fontWeight:'bold'}}>
         פרטים אישיים
+        <hr/>
       </Typography>
       <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -329,7 +330,6 @@ export default function PersonalDetails({onDone = () => {}}) {
              id="date"
             label="תאריך לידה"
              type="date"
-            defaultValue="2017-05-24"
             onChange={(e) => setState({...state,bDate:e.target.value})}
             InputLabelProps={{
             shrink: true,

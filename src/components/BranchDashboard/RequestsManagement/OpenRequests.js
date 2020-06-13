@@ -17,6 +17,7 @@ import TrainerProfile from '../../TrainerProfiles/ChosenTrainerProfile';
 import '../../TrainerDashboard/cards.css';
 import Carousel from "react-elastic-carousel";
 import ReqTrainers from '../RequestTrainers';
+import Badge from '@material-ui/core/Badge';
 //import './CarStyle.css';
 
 
@@ -73,6 +74,7 @@ export default function Album(props) {
 
   const requests = props.req;
   const distinctReq = props.distinctReq;
+  const [badgeCounter, setBadgeCounter] = useState(0);
 
   
   const [reqCode, setReqCode] = useState(0);
@@ -93,6 +95,10 @@ export default function Album(props) {
   const handleSelectCarousel = (selectedIndex, e) => {
       setIndex(selectedIndex);
     };
+
+  const bedgeNum = (num) => {
+    
+  }
 
 
   return (

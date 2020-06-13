@@ -12,7 +12,6 @@ import swal from 'sweetalert';
 import Button from '@material-ui/core/Button';
 import { store } from '../../store/MainStore';
 import ReactCardFlip from 'react-card-flip';
-import QualificationForm from '../OLD/QualificationForm';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -130,13 +129,26 @@ export default function Qualifications({onDone = () => {}}) {
 
     };
 
+    const validatQualtDate=(date)=>{
+      let todayDate = new Date().toISOString().substr(0, 10);
+      if( date<=todayDate)
+      return true;
+      else
+      {
+          swal("תאריך ההכשרה אינו תקין");
+          return false;
+      } 
+  }
+
 
     const changeQualDate= (e,code) =>{
       let qualCode= code;
       let check = trainerQual;
       console.log(e.target.value);
       let isExists = false;
-      if(check.length == 0)
+      if (validatQualtDate(e.target.value) === true)
+      {
+        if(check.length == 0)
         setTrainerQual([...trainerQual,{TrainerCode: trainerCode, QualificationTypeCode:qualCode, FromDate: e.target.value}])
       else
     {  check.map(val => {if (val.QualificationTypeCode == qualCode){
@@ -145,10 +157,11 @@ export default function Qualifications({onDone = () => {}}) {
         }
       else
       setTrainerQual([...trainerQual,{TrainerCode: trainerCode, QualificationTypeCode:qualCode, FromDate: e.target.value}])
-    })}
-    if ( isExists ===true)
-    setTrainerQual([...check]);
-    console.log(check);
+       })}
+        if ( isExists ===true)
+        setTrainerQual([...check]);
+        console.log(check);
+        }
     }
 
     const changeQualPop= (e,code) =>{
@@ -208,10 +221,11 @@ export default function Qualifications({onDone = () => {}}) {
 
   return (
     <React.Fragment >
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h5" gutterBottom style={{textAlign:'center',fontWeight:'bold'}}>
       הכשרות ותעודות
+      <hr/>
       </Typography>
-      <Container className={classes.cardGrid} maxWidth="md">
+      <Container className={classes.cardGrid} maxWidth="md" style={{textAlign:'right',direction:'rtl'}}>
           {/* End hero unit */}
           <Grid container spacing={4}>
             {qualData.map((card,key) => (

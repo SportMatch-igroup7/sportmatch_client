@@ -17,7 +17,6 @@ import swal from 'sweetalert';
 import RI from '../commons/RoundedImage';
 
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
@@ -122,6 +121,8 @@ const checkType=(data) =>{
         localStorage["userDetails"] = JSON.stringify(branch);
         history.push("/BranchNav");
     }
+    else if(data.Type == 'Admin')
+      history.push("/AdminNav");
     else
     {
         console.log('Trainer');

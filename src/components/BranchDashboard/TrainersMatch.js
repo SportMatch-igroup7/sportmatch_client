@@ -49,12 +49,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-    position: 'absolute',
     width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'50px',
   },
 }));
 
@@ -190,6 +191,7 @@ export default function Album(props) {
       </div>
       <Container className={classes.cardGrid} maxWidth="md">
         {/* End hero unit */}
+        <div style={{textAlign:'right'}}>
         <Button
             spacing={2}
             type="submit"
@@ -200,6 +202,7 @@ export default function Album(props) {
           >
             בחר את כל המאמנים
           </Button>
+          </div>
         <Grid container spacing={2}>
           {trainersData && trainersData.map((card) => (
             <Grid item key={card.TrainerCode} xs={6} md={3} >

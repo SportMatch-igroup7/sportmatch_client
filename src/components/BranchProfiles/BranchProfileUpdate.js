@@ -60,6 +60,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  const [branchData, setBranchData] = useState([]);
+  const [branchLinks, setBranchLinks] = useState([]);
   const classes = useStyles();
   const history = useHistory();
   const [ mainState, dispatch]  = useContext(store);
@@ -95,6 +97,8 @@ export default function SignUp() {
     parametersCode : [],
     isFlippedLink:false,
   });
+
+  const branchCode = JSON.parse(localStorage["userDetails"]).BranchCode;
 
   useEffect(() =>{
     console.log(linksPath);
@@ -144,10 +148,38 @@ export default function SignUp() {
         .then((response)=>response.json())
         .then((res)=>{console.log("parameters:",res); setParams([...res])})
         .catch((error)=>console.log(error))
-  },[]);
+
+        fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Branch/getBranch/'+branchCode+"/",{
+            method:'GET',
+            headers:{
+                Accept:'application/json','Content-Type':'application/json',
+            },
+        })
+        .then((response)=>response.json())
+        .then((res)=>
+        {  console.log("the res is: "+JSON.stringify(res));
+            setBranchData(res)
+            setState({
+                email: res.Email,
+                password:res.Password,
+                company:res.Company,
+                branchName:res.Name,
+                 /*city:res.Email,*/
+                address:res.Address,
+                phoneNum:res.PhoneNo,
+                description:res.Description,
+              /*  branchCodeFromDB:res.Email,
+                numOfParameters : res.Email,
+                parametersCode : res.Email,
+                isFlippedLink:res.Email,*/
+              }) 
+        })
+        .catch((error)=>{console.log("this is error: "+error)})
+        }
+  ,[]);
 
 
-  const handleSubmit = async (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     validate();
   }
@@ -175,33 +207,34 @@ export default function SignUp() {
 const validate = ()=>{
     const email = state.email;
     const password = state.password;
-    let e = validateEmail(email);
+   // let e = validateEmail(email);
     let p = validatePassword(password);
-    console.log(e,p);
-    if(!e)
-        swal("הוכנס אימייל לא חוקי");
+    //console.log(e,p);
+    //if(!e)
+      //  swal("הוכנס אימייל לא חוקי");
     if(!p)
         swal ("אורך הסיסמה המינימלי הוא 6 תווים")    
-    if(e === true && p === true) //&& this.validateDetails()=== true)
+    if( p === true) //&& this.validateDetails()=== true) //
     {
-      fetch('http://proj.ruppin.ac.il/igroup7/proj/api/User/getUser/'+email+"/",{
-            method:'GET',
-            headers:{
-                Accept:'application/json','Content-Type':'application/json',
-            },
-        })
-        .then((response)=>response.json())
-        .then((res)=>
-        successGetUser(res))
-        .catch((error)=>console.log(error))
-        .finally(()=>console.log('got users'))
+    //   fetch('http://proj.ruppin.ac.il/igroup7/proj/api/User/getUser/'+email+"/",{
+    //         method:'GET',
+    //         headers:{
+    //             Accept:'application/json','Content-Type':'application/json',
+    //         },
+    //     })
+    //     .then((response)=>response.json())
+    //     .then((res)=>
+    //     successGetUser(res))
+    //     .catch((error)=>console.log(error))
+    //     .finally(()=>console.log('got users'))
+    SignInBranch();
     }
 }
 
-const validateEmail=(email)=> {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-  }
+// const validateEmail=(email)=> {
+//     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//     return re.test(email);
+//   }
 
 const validatePassword=(password)=>{
     if (password.length >=6)
@@ -210,12 +243,12 @@ const validatePassword=(password)=>{
     return false;
 }
 
-const successGetUser=(data)=>{
-  if (data.Code)
-      swal("האימייל כבר קיים במערכת");
-  else
-      SignInBranch();
-}
+// const successGetUser=(data)=>{
+//   if (data.Code)
+//       swal("האימייל כבר קיים במערכת");
+//   else
+//       SignInBranch();
+// }
 
 
 const SignInBranch=()=> {
@@ -230,18 +263,25 @@ const SignInBranch=()=> {
       AreaCode: state.city
   }
   console.log(branch);
-
-   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
-        method:'POST',
-        headers:{
-            Accept:'application/json','Content-Type':'application/json',
-        },
-        body:JSON.stringify(branch)
-    })
+//first update
+//    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
+//         method:'POST',
+//         headers:{
+//             Accept:'application/json','Content-Type':'application/json',
+//         },
+//         body:JSON.stringify(branch)
+//     })
+fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
+    method:'PUT',
+    headers:{
+        Accept:'application/json','Content-Type':'application/json',
+    },
+    body:JSON.stringify(branch)
+})
     .then((response)=>response.json())
     .then((res)=>successSignInBranch(res))
     .catch((error)=>console.log(error))
-    .finally(()=>console.log('post branch'))
+    .finally(()=>console.log('update branch'))
 }
 
 const successSignInBranch=(data)=> {
@@ -250,7 +290,8 @@ const successSignInBranch=(data)=> {
    swal("success");
   console.log(data);
   setState({...state,branchCodeFromDB : data.BranchCode})
-  localStorage["userDetails"] = JSON.stringify(data);
+  
+  //localStorage["userDetails"] = JSON.stringify(data);
 
   links.map(link =>{
     let branchLink = {
@@ -281,13 +322,13 @@ params.map(param => {
     ParameterWeight: params.length
   }
   console.log("branchParam:", branchParam)
-  fetch("http://proj.ruppin.ac.il/igroup7/proj/api/BranchParameter",{
+ /* fetch("http://proj.ruppin.ac.il/igroup7/proj/api/BranchParameter",{
   method:'POST',
   headers:{
       Accept:'application/json','Content-Type':'application/json',
   },
   body:JSON.stringify(branchParam)
-})
+})*/
 .then((response)=>response.json())
 .then((res)=>console.log("success post branch parameters"), history.push("/BranchNav"))
 .catch((error)=>console.log(error));
@@ -300,23 +341,28 @@ params.map(param => {
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+      <img
+                        src={branchData.Logo}
+                        alt="avatar"
+                        className="avatar-img"
+                        />
+
         <Typography component="h1" variant="h5">
-          הרשמת מועדון
+          עריכת פרופיל מועדון
         </Typography>
         <form className={classes.form} noValidate dir="rtl">
           <Grid container spacing={2}>
           <Grid item xs={12}>
+         
               <TextField
                 variant="outlined"
-                required
                 fullWidth
                 id="email"
-                label="אימייל"
-                name="email"
+                label={state.email}
+                name="email" 
+                placeholder={state.email}
                 autoComplete="email"
+                disabled="true"
                 onChange={(e) => setState({...state,email:e.target.value})}
               />
             </Grid>
@@ -326,6 +372,7 @@ params.map(param => {
                 required
                 fullWidth
                 name="password"
+                placeholder={state.password}
                 label="סיסמה"
                 type="password"
                 id="password"
@@ -333,14 +380,7 @@ params.map(param => {
                 onChange={(e) => setState({...state,password:e.target.value})}
               />
             </Grid>
-            <Grid item xs={12}>
-              בחר חברה
-            </Grid>
-            { companyData.dataCompany && companyData.dataCompany.map(val =>
-                <Grid item xs={3} className="pic">
-                <RI action={(e) => setState({...state,company:val.CompanyNo})} value={val.CompanyNo} image={val.Logo} key = {val.CompanyNo} width="60" height="60" size="8" color={state.company===(val.CompanyNo) ? '#6666ff': "lightgray"}/>
-                </Grid>)
-              }
+           
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -349,6 +389,7 @@ params.map(param => {
                 id="branchName"
                 label="שם הסניף"
                 name="branchName"
+                placeholder={state.branchName}
                 autoComplete="branchName"
                 onChange={(e) => setState({...state,branchName:e.target.value})}
               />
@@ -359,6 +400,7 @@ params.map(param => {
                labelId="demo-simple-select-label"
                id="demo-simple-select"
                value={state.city}
+               placeholder={branchData.AreaName}
               onChange={(e) => setState({...state,city:e.target.value})}
         >
               {areaData.dataArea && areaData.dataArea.map(area =>
@@ -371,6 +413,7 @@ params.map(param => {
                 required
                 fullWidth
                 name="address"
+                placeholder={state.address}
                 label={"כתובת מלאה"}
                 type="text"
                 id="address"
@@ -386,6 +429,7 @@ params.map(param => {
                 required
                 fullWidth
                 name="phone"
+                placeholder={state.phoneNum}
                 label="מספר טלפון"
                 type="text"
                 id="phone"
@@ -401,6 +445,7 @@ params.map(param => {
                 id="desc"
                 label="תיאור הסניף"
                 name="desc"
+                placeholder={state.description}
                 autoComplete="desc"
                 onChange={(e) => setState({...state,description:e.target.value})}
               />
@@ -435,15 +480,12 @@ params.map(param => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
+            onClick={handleSave}
           >
-            הירשם
+            שמור
           </Button>
           <Grid container justify="flex-end" style={{direction: "initial"}} >
             <Grid item >
-              <Link href='/' variant="body2">
-                כבר רשום? לחץ כאן כדי להתחבר
-              </Link>
             </Grid>
           </Grid>
         </form>
