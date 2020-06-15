@@ -82,6 +82,7 @@ export default function SignUp() {
   const [linksPath, setLinkPath] = useState([]);
   const [linkCode, setLinkCode] = useState(0);
   const [params, setParams] = useState([]);
+  const [links,setLinks] =useState([]);
 
   const [state, setState] = useState({
     email:'',
@@ -175,6 +176,21 @@ export default function SignUp() {
               }) 
         })
         .catch((error)=>{console.log("this is error: "+error)})
+
+
+        fetch('http://proj.ruppin.ac.il/igroup7/proj/api/LinksTo/getLinks/'+branchCode+"/",{
+          method:'GET',
+          headers:{
+              Accept:'application/json','Content-Type':'application/json',
+          },
+      })
+      .then((response)=>response.json())
+      .then((res)=>
+      {console.log(res);setLinks(res)})
+      .catch((error)=>console.log(error))
+      .finally(()=>console.log('got branch links'))
+
+
         }
   ,[]);
 
@@ -186,20 +202,20 @@ export default function SignUp() {
 
   const changePath = (e) =>{
     console.log(linkCode);
-    let check = linksPath;
+    let check = links;
     let isExists = false;
     if(check.length == 0)
-      setLinkPath([...linksPath,{linkCode:linkCode, path: e.target.value}])
+      setLinks([...links,{linkCode:linkCode, path: e.target.value}])
     else
   {  check.map(val => {if (val.linkCode == linkCode){
       val.path = e.target.value
       isExists = true;
       }
     else
-    setLinkPath([...linksPath,{linkCode:linkCode, path: e.target.value}])
+    setLinks([...links,{linkCode:linkCode, path: e.target.value}])
   })}
   if ( isExists ===true)
-  setLinkPath([...check]);
+  setLinks([...check]);
   console.log(check);
   }
 
@@ -285,7 +301,7 @@ fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
 }
 
 const successSignInBranch=(data)=> {
-  let links = linksPath;
+  let links = links;
   let linksToDB = [];
    swal("success");
   console.log(data);
@@ -465,7 +481,7 @@ params.map(param => {
                 label="הכנס קישור"
                 name="link"
                 autoComplete="link"
-                value={linksPath[linkCode-1] && linksPath[linkCode-1].path}
+                value={links[linkCode-1] && links[linkCode-1].path}
                 onChange={(e) => changePath(e,val.LinkCode)}
               />
             </Grid>
