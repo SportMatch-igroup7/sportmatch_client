@@ -215,7 +215,7 @@ export default function PersistentDrawerRight() {
           </IconButton>
         </div>
         <Divider />
-        <List>
+        <List onClick={handleDrawerClose}>
           <MenuItem className={classes.item} button onClick={(e) => setComp(1)}>
                 <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                 <ListItemText primary="הפרופיל שלי" />

@@ -7,7 +7,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 //import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-//import bootstrapPlugin from '@fullcalendar/bootstrap';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
 
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
@@ -22,7 +22,7 @@ class Calendar extends Component {
         dayGridPlugin,
         timeGridPlugin,
         listPlugin,
-       // bootstrapPlugin
+        bootstrapPlugin
     ];
 
     calendarHeader = {
@@ -86,9 +86,10 @@ class Calendar extends Component {
 
         res && res.filter((event)=>(event.IsHistory===false && event.IsAprrovedByTrainer == "initial" && event.RequestStatus == "open")).map(event =>{
         let e = {
-            title: 'החלפה חדשה',
-            start: new Date(event.ReplacementDate),
-            end: new Date(event.ReplacementDate),
+           // title: 'החלפה חדשה',
+            title: event.TypeName,
+            start: event.ReplacementDate,
+            end: event.ReplacementDate,
             backgroundColor: '#f56954',
             borderColor: '#f56954',
         }
@@ -97,20 +98,22 @@ class Calendar extends Component {
 
         res && res.filter((event)=>(event.IsHistory===false && event.IsAprrovedByTrainer == "true" && event.RequestStatus == "open")).map(event =>{
             let e = {
-                title: 'ממתינה לאישור',
-                start: new Date(event.ReplacementDate),
-                end: new Date(event.ReplacementDate),
-                backgroundColor: '#0073b7',
-                borderColor: '#0073b7',
+                //title: 'ממתינה לאישור',
+                title: event.TypeName,
+                start: event.ReplacementDate,
+                end: event.ReplacementDate,
+                backgroundColor: '#f39c12',
+                borderColor: '#f39c12',
             }
             events.push(e);
             });
 
          res && res.filter((event)=>(event.IsHistory===false && event.RequestStatus == "approved" && event.IsAprrovedByTrainer == "true")).map((event) =>{
             let e = {
-                title: 'החלפה מאושרת',
-                start: new Date(event.ReplacementDate),
-                end: new Date(event.ReplacementDate),
+               // title: 'החלפה מאושרת',
+                title: event.TypeName,
+                start: event.ReplacementDate,
+                end: event.ReplacementDate,
                 backgroundColor:'#00a65a',
                 borderColor: '#00a65a'
             }
@@ -119,11 +122,12 @@ class Calendar extends Component {
 
          res && res.filter((event)=>(event.IsHistory ===true && event.RequestStatus == "approved" && event.IsAprrovedByTrainer == "true")).map((event) =>{
             let e = {
-                title: 'החלפה היסטורית ',
-                start: new Date(event.ReplacementDate),
-                end: new Date(event.ReplacementDate),
-                backgroundColor: '#f39c12', 
-                borderColor: '#f39c12'
+               // title: 'החלפה היסטורית ',
+                title: event.TypeName,
+                start: event.ReplacementDate,
+                end: event.ReplacementDate,
+                backgroundColor: '#0073b7', 
+                borderColor: '#0073b7'
             }
             events.push(e);
 
@@ -220,6 +224,17 @@ class Calendar extends Component {
         return (
             <ContentWrapper>
                 <div className="calendar-app">
+
+                     <div>
+                    <h6 style={{textAlign:'right'}}>
+                        <lable style={{backgroundColor:'#f56954',margin:'5px'}}>החלפה חדשה</lable>
+                        <lable style={{backgroundColor: '#f39c12',margin:'5px'}}>החלפה ממתינה לאישור</lable>
+                        <lable style={{backgroundColor: '#00a65a',margin:'5px'}}>החלפה מאושרת</lable>
+                        <lable style={{backgroundColor: '#0073b7',margin:'5px'}}>החלפה היסטורית</lable>
+                        
+                    </h6>
+                    </div>
+
                     <div className="row">
                             <Card className="card-default">
                                 <CardBody style={{backgroundColor:'white'}}>

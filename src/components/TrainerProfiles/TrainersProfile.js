@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 0, 2),
+    border: 'dotted rgb(63, 81, 181)'
   },
   cardGrid: {
     paddingTop: theme.spacing(8),

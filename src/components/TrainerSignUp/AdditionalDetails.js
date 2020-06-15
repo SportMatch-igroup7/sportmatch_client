@@ -193,8 +193,8 @@ const checkOut=()=>{
   console.log("areas:",areasToDB);
   console.log("lang:",langsToDB);
 
-  fetch("http://proj.ruppin.ac.il/igroup7/proj/api/LinksTrainer",{
-    method:'POST',
+  fetch("http://proj.ruppin.ac.il/igroup7/proj/api/LinksTrainer/UpdateLinksTrainer",{
+    method:'PUT',
     headers:{
         Accept:'application/json','Content-Type':'application/json',
     },

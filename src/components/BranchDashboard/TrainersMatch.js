@@ -204,7 +204,7 @@ export default function Album(props) {
           </Button>
           </div>
         <Grid container spacing={2}>
-          {trainersData && trainersData.map((card) => (
+          {trainersData && trainersData.sort((a, b) => a.MatchRating > b.MatchRating ? 1 : -1).map((card) => (
             <Grid item key={card.TrainerCode} xs={6} md={3} >
               <Card className={classes.card} style={{border: chosenTrainers.includes(card.TrainerCode) ? 'solid rgb(235, 135, 218)': ''}}>
                 <CardMedia

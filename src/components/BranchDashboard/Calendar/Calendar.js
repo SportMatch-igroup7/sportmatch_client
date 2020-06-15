@@ -1,11 +1,13 @@
 import React, { Component, useState, useEffect } from 'react';
 import ContentWrapper from './ContentWeapper';
 import { Card, CardBody, CardHeader, CardTitle } from 'reactstrap';
+import Modal from 'react-bootstrap/Modal';
+import { makeStyles } from '@material-ui/core/styles';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+//import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 
@@ -15,9 +17,13 @@ import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
 import '@fullcalendar/bootstrap/main.css';
 
+import Req from './RequestForReplacementView';
+
+
+
 class Calendar extends Component {
     calendarPlugins = [
-        interactionPlugin,
+       // interactionPlugin,
         dayGridPlugin,
         timeGridPlugin,
         listPlugin,
@@ -44,6 +50,15 @@ class Calendar extends Component {
         'purple'
     ];
 
+
+     handleOpen = () => {
+        this.setState({open: true});
+      };
+    
+      handleClose = () => {
+        this.setState({open: false});
+      };
+
     state = {
         selectedEvent: null,
         evRemoveOnDrop: false,
@@ -58,6 +73,8 @@ class Calendar extends Component {
         ],
         requests: '',
         events: [],
+        eventCode:0,
+        open:false,
     };
 
     componentDidMount() {
@@ -75,16 +92,6 @@ class Calendar extends Component {
         this.makeEvents(res);
         })
         .catch((error)=>console.log(error))
-
-        /* initialize the external events */
-        // new Draggable(this.refs.externalEventsList, {
-        //     itemSelector: '.fce-event',
-        //     eventData: function(eventEl) {
-        //         return {
-        //             title: eventEl.innerText.trim()
-        //         };
-        //     }
-        // });
     }
 
     makeEvents (res) {
@@ -120,9 +127,10 @@ class Calendar extends Component {
                 title: event.TypeName,
                 start: event.ReplacementDate,
                 end: event.ReplacementDate,
-                backgroundColor: '#f56954',
-                borderColor: '#f56954',
-                code: event.ReplacmentCode
+                backgroundColor: '#00a65a',
+                borderColor: '#00a65a',
+                code: event.ReplacmentCode,
+                textAlign:'center'
             }
             events.push(e);
         });
@@ -132,8 +140,8 @@ class Calendar extends Component {
                 title: event.TypeName,
                 start: event.ReplacementDate,
                 end: event.ReplacementDate,
-                backgroundColor:'#00a65a',
-                borderColor: '#00a65a',
+                backgroundColor:'#f56954',
+                borderColor: '#f56954',
                 code: event.ReplacmentCode
             }
             events.push(e);
@@ -171,17 +179,12 @@ class Calendar extends Component {
         });
     }
 
-    dayClick = date => {
-        this.setState({
-            selectedEvent: {
-                date: date.dateStr
-            }
-        });
-    };
-
     eventClicked = event => {
-        console.log(event);
-       // console.log(event.def)//.extendedProps.code);
+        console.log("code:",event.event._def.extendedProps.code);
+        let code = event.event._def.extendedProps.code
+        this.setState({eventCode: code});
+        this.handleOpen();
+
     };
 
     // add event directly into calendar
@@ -247,12 +250,25 @@ class Calendar extends Component {
      //   const { externalEvents, selectedEvent } = this.state;
         return (
             <ContentWrapper>
+
+        <Modal
+          show={this.state.open}
+          onHide={this.handleClose}
+        >
+            <Modal.Body>
+            <div dir="rtl" style = {{textAlign:'right'}} >
+            <Req req={this.state.requests && this.state.requests.filter(val => val.ReplacmentCode === this.state.eventCode)}/>
+            </div>
+            </Modal.Body>               
+        </Modal>
+
+
                 <div className="calendar-app" style={{textAlign:'right'}} >
                     <div>
                     <h6 style={{textAlign:'right'}}>
-                        <lable style={{color:'#00a65a'}}> #החלפה פתוחה</lable>
-                        <lable style={{color: '#f56954'}}>#החלפה מאושרת</lable>
-                        <lable style={{color: '#f39c12'}}>#החלפה היסטורית</lable>
+                        <lable style={{backgroundColor:'#00a65a',margin:'5px'}}>החלפה פתוחה</lable>
+                        <lable style={{backgroundColor: '#f56954',margin:'5px'}}>החלפה מאושרת</lable>
+                        <lable style={{backgroundColor: '#f39c12',margin:'5px'}}>החלפה היסטורית</lable>
                     </h6>
                     </div>
                     

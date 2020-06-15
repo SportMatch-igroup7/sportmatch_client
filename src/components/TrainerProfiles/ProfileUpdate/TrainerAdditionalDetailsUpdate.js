@@ -182,22 +182,22 @@ const handleSubmit = async (e) => {
 }
 
 const changePath = (e) =>{
-  console.log(linkCode);
-  let check = linksPath;
+  console.log("linkCode:",linkCode);
+  let check = links;
   let isExists = false;
   if(check.length == 0)
-    setLinkPath([...linksPath,{linkCode:linkCode, path: e.target.value}])
+    setLinks([...links,{LinkCode:linkCode, TrainerCode:trainerCode, Link: e.target.value}])
   else
-{  check.map(val => {if (val.linkCode == linkCode){
-    val.path = e.target.value
+{  check.map(val => {if (val.LinkCode == linkCode){
+    val.Link = e.target.value
     isExists = true;
     }
   else
-  setLinkPath([...linksPath,{linkCode:linkCode, path: e.target.value}])
+  setLinks([...links,{LinkCode:linkCode, TrainerCode:trainerCode, Link: e.target.value}])
 })}
 if ( isExists ===true)
-setLinkPath([...check]);
-console.log(check);
+setLinks([...check]);
+console.log("links:",check);
 }
 
 const addArea=(Item)=>{
@@ -233,7 +233,6 @@ const addLanguage=(Item)=>{
 }
 
 const checkOut=()=>{
-  let links = linksPath;
   let linksToDB = [];
   let areas = areasCode;
   let areasToDB = [];
@@ -242,9 +241,9 @@ const checkOut=()=>{
 
   links.map(link =>{
     let trainerLinks = {
-      LinkCode: link.linkCode,
+      LinkCode: link.LinkCode,
       TrainerCode: trainerCode,
-      Link: link.path,
+      Link: link.Link,
       
     }
     linksToDB.push(trainerLinks)
@@ -265,9 +264,9 @@ const checkOut=()=>{
     }
     langsToDB.push(trainerLangs)
   });
-  console.log("links:",linksToDB);
   console.log("areas:",areasToDB);
   console.log("lang:",langsToDB);
+  console.log("links:",linksToDB);
 
   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/LinksTrainer/UpdateLinksTrainer",{
     method:'PUT',
@@ -357,7 +356,7 @@ const next = (e) => {
                 label="הכנס קישור"
                 name="link"
                 autoComplete="link"
-                value={linksPath[linkCode-1] && linksPath[linkCode-1].path}
+                value={links[linkCode-1] && links[linkCode-1].Link}
                 onChange={(e) => changePath(e,val.LinkCode)}
               />
             </Grid>
