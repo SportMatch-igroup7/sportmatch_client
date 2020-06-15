@@ -36,10 +36,11 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    textAlign:'right'
   },
   popper: {
     border: '1px solid',
@@ -365,6 +366,7 @@ params.map(param => {
 
         <Typography component="h1" variant="h5">
           עריכת פרופיל מועדון
+          <hr/>
         </Typography>
         <form className={classes.form} noValidate dir="rtl">
           <Grid container spacing={2}>
