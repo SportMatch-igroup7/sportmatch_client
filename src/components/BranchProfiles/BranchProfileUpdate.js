@@ -166,7 +166,7 @@ export default function SignUp() {
                 password:res.Password,
                 company:res.Company,
                 branchName:res.Name,
-                 /*city:res.Email,*/
+                city:res.AreaCode,
                 address:res.Address,
                 phoneNum:res.PhoneNo,
                 description:res.Description,
