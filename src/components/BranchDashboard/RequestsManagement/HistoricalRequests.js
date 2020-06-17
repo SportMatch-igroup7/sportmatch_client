@@ -61,6 +61,15 @@ const useStyles = makeStyles((theme) => ({
     alignSelf:'center',
     marginTop:'50px',
   },
+    paper2: {
+    //width: 800,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'80px',
+  },
 }));
 
 
@@ -139,8 +148,8 @@ export default function Album(props) {
                     show={open2}
                     onHide={handleClose2}
                   >
-                    <div className={classes.paper}>
-                    <Rating requestCode = {reqCode} trainerCode={chosenTrainerCode} />
+                    <div className={classes.paper2}>
+                    <Rating requestCode = {reqCode} trainerCode={chosenTrainerCode} close={handleClose2} />
                     </div>                  
                   </Modal >
                   <main>

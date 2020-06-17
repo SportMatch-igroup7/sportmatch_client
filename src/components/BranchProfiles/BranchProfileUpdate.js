@@ -319,16 +319,17 @@ const successSignInBranch=(data)=> {
     linksToDB.push(branchLink)
   })
   console.log(linksToDB);
-  fetch("http://proj.ruppin.ac.il/igroup7/proj/api/LinksTo",{
-    method:'POST',
-    headers:{
-        Accept:'application/json','Content-Type':'application/json',
-    },
-    body:JSON.stringify(linksToDB)
-})
-.then((response)=>response.json())
-.then((res)=>console.log("success post branch links"))
-.catch((error)=>console.log(error));
+  //aviya
+//   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/LinksTo",{
+//     method:'POST',
+//     headers:{
+//         Accept:'application/json','Content-Type':'application/json',
+//     },
+//     body:JSON.stringify(linksToDB)
+// })
+// .then((response)=>response.json())
+// .then((res)=>console.log("success post branch links"))
+// .catch((error)=>console.log(error));
 
 console.log("params:",params);
 

@@ -51,9 +51,11 @@ const handleSave = async (e) => {
       TrainerCode : trainerCode,
       IsRated : "true"
 };
-   //שליחה לקונטרולר
-    //ajaxCall("Put", "../api/RequestTrainer/PutRequestTrainerRate", JSON.stringify(RequestTrainer), successSignInBranch, errorSignInBranch);
 
+
+   //שליחה לקונטרולר
+   //await ajaxCall("Put", "../api/RequestTrainer/PutRequestTrainerRate", JSON.stringify(RequestTrainer), successSignInBranch, errorSignInBranch);
+    props.close();
   }
 
   const handleCancel = async (e) => {
@@ -88,8 +90,8 @@ const handleSave = async (e) => {
     <div class="row">
     <Button  type="submit" fullWidth variant="contained" color="primary" 
     className={classes.submit} onClick={handleSave}> שמור </Button>
-     <Button  type="submit" fullWidth variant="contained" color="primary" 
-    className={classes.submit} onClick={handleCancel}> בטל </Button>
+     {/* <Button  type="submit" fullWidth variant="contained" color="primary" 
+    className={classes.submit} onClick={handleCancel}> בטל </Button> */}
     </div>
     </div>
   );
