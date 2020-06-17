@@ -211,7 +211,7 @@ const addArea=(Item)=>{
   {
       newArea.push(Item);   
   }
-  setAreasCode(newArea);
+  setAreasCode([...newArea]);
   console.log(newArea);
  
 }
@@ -227,7 +227,7 @@ const addLanguage=(Item)=>{
   {
       newLang.push(Item);   
   }
-  setLangsCode(newLang);
+  setLangsCode([...newLang]);
   console.log(newLang);
  
 }

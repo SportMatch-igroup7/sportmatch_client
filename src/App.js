@@ -20,6 +20,8 @@ import Chat from './components/Chat/ChatNew copy';
 import BranchUpdateProfile from './components/BranchProfiles/BranchProfileUpdate';
 import firebaseConfig from './components/Chat/FireBase';
 import firebase from 'firebase';
+import ChatOld from './components/ChatOld';
+
 
 firebase.initializeApp(firebaseConfig);
 

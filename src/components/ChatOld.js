@@ -4,7 +4,7 @@ import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'reac
 import 'react-chat-widget/lib/styles.css';
 //import logo from './logo.svg';
 
-class App extends Component {
+class ChatOld extends Component {
   componentDidMount() {
     addResponseMessage("Welcome to this awesome chat!");
   }
@@ -28,4 +28,4 @@ class App extends Component {
   } 
 }
 
-export default App;
+export default ChatOld;

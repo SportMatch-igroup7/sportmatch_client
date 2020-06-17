@@ -65,7 +65,7 @@ export default function PersonalDetails({onDone = () => {}}) {
 
   const [emailFlag, setEmailFlag] = useState(false);
 
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState(trainerData.PricePerHour);
 
 
 
@@ -82,11 +82,12 @@ export default function PersonalDetails({onDone = () => {}}) {
       })
       .then((response)=>response.json())
       .then((res)=>
-      {console.log("data:",res);setTrainerData(res);
+      {console.log("data:",res);setTrainerData(res); 
       })
       .catch((error)=>console.log(error))
 
       },[]);
+
 
     const [flag, setFlag ] = useState(false);
 

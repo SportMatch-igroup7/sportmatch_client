@@ -79,7 +79,7 @@ import TextField from '@material-ui/core/TextField';
 
     const sendData =()=>{
 
-		setMessages([])
+		setMessages([]);
 		let photo="";
 		if(userType ==="branch")
 			photo = branchData.filter(val => val.BranchCode === userCode).map(val => val.Logo)
@@ -115,11 +115,11 @@ import TextField from '@material-ui/core/TextField';
 
 }
 
-	const getData= () =>{
+	const getData= (chat) =>{
 		var x = true;
 		setMessages([])
-		console.log(chatId);
-		firebase.database().ref(`/${chatId}`).on('child_added',  (snapshot) => {
+		console.log(chat);
+		firebase.database().ref(`/${chat}`).on('child_added',  (snapshot) => {
 					var message = snapshot.child("message").val();
 					var code = snapshot.child("code").val();
 					//var last = snapshot.child("date").val();
@@ -133,12 +133,12 @@ import TextField from '@material-ui/core/TextField';
 						let m = (<div className="d-flex justify-content-start mb-4"><div className="img_cont_msg">
 						<img src={image} className="rounded-circle user_img_msg"></img>
 						</div><div className="msg_cotainer">{message}</div></div>)
-						setMessages([...messages,m])
+						setMessages(prevState => [...prevState,m])
 					}
 					else if (parseInt(code) != parseInt(userCode)){
 						let m= (<div className="d-flex justify-content-end mb-4"><div className="msg_cotainer_send">{message}
 						</div><div className="img_cont_msg"></div><img src={chosenContact.Image} className="rounded-circle user_img_msg"></img></div>);
-						setMessages([...messages,m])
+						setMessages(prevState => [...prevState,m])
 					 }
 
 		
@@ -146,26 +146,26 @@ import TextField from '@material-ui/core/TextField';
 	}
 
 	
-	const setChatDeatails =(code, name, image) =>
+	const setChatDeatails =async (code, name, image) =>
 	{
 		console.log("messages:",messages)
 
-	setMessages([])
-		setChosenContact({Code:code, Name: name, Image:image});
+		await setMessages([]);
+		await setChosenContact({Code:code, Name: name, Image:image});
 		console.log("userCode:",userCode);
 		console.log("code:",code);
 		let x = (userCode.toString()+code.toString());
 		let xRev = (code.toString()+userCode.toString());
 
 
-		setChatId(x);
-		setChatIdRev(xRev);
+		await setChatId(x);
+		await setChatIdRev(xRev);
 		console.log(x);
 		console.log(xRev);
 
 
 		//check(x,xRev);
-		getData();
+		getData(x);
 	}
 
 	const check = (x, xRev) =>{

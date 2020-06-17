@@ -121,7 +121,7 @@ export default function PersistentDrawerRight() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const [comp, setComp] = React.useState(2);
+  const [comp, setComp] = React.useState(1);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -136,9 +136,9 @@ export default function PersistentDrawerRight() {
       case 1:
         return <BI/>;
       case 2:
-        return "";
+        return <iframe src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>;
       case 3:
-      return "";
+      return <iframe src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>;
     }
   };
 
@@ -194,7 +194,7 @@ export default function PersistentDrawerRight() {
           </IconButton>
         </div>
         <Divider />
-        <List>
+        <List onClick={handleDrawerClose}>
           <MenuItem className={classes.item} button onClick={(e) => setComp(1)}>
                 <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                 <ListItemText primary="דוח שימושיות" />

@@ -18,6 +18,7 @@ import '../../TrainerDashboard/cards.css';
 import Carousel from "react-elastic-carousel";
 import ReqTrainers from '../RequestTrainers';
 //import './CarStyle.css';
+import Rating from './ReplacementRating';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,12 +53,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-    position: 'absolute',
     width: 800,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    alignSelf:'center',
+    marginTop:'50px',
   },
 }));
 
@@ -73,6 +75,7 @@ export default function Album(props) {
   const requests = props.req;
   
   const [reqCode, setReqCode] = useState(0);
+  const [chosenTrainerCode, setChosenTrainerCode] = useState(0);
 
   const [open, setOpen] = React.useState(false);
 
@@ -84,6 +87,16 @@ export default function Album(props) {
     setOpen(false);
   };
 
+  const [open2, setOpen2] = React.useState(false);
+
+  const handleOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+
   const [index, setIndex] = useState(0);
 
   
@@ -92,19 +105,44 @@ export default function Album(props) {
     }; 
 
 
+  const btn = () => {
+  if(requests && requests.filter((card)=>(card.IsHistory===true && card.IsAprrovedByTrainer === "true" && card.RequestStatus === "approved" && card.IsRate === null )))
+    return(
+      <Grid style={{textAlign:'right',paddingRight: '1em'}}>    
+      <Button
+      type="submit"
+      variant="contained"
+      color="primary"
+      className={classes.submit}
+      style={{backgroundColor:"rgb(235, 135, 218)",margin:'2px'}}
+      onClick={() =>handleOpen2()}
+    >
+     דרג מאמן
+    </Button>
+    </Grid>);
+}
+
+
   return (
     <React.Fragment >
-
                   <Modal
                     show={open}
                     onHide={handleClose}
                   >
                     <div className={classes.paper}>
+                    {btn()}
                     <ChosenTrainer/>
                     </div>                  
                   </Modal>
 
-
+                   <Modal
+                    show={open2}
+                    onHide={handleClose2}
+                  >
+                    <div className={classes.paper}>
+                    <Rating requestCode = {reqCode} trainerCode={chosenTrainerCode} />
+                    </div>                  
+                  </Modal >
                   <main>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
@@ -141,6 +179,7 @@ export default function Album(props) {
                           setReqCode(card.ReplacementCode);
                           let fil=requests.filter((val)=>(val.IsHistory===true && val.ReplacmentCode === card.ReplacmentCode && val.RequestStatus === "approved" && val.IsAprrovedByTrainer ==="true"))
                           let trainerCode = {TrainerCode: fil[0].TrainerCode}
+                          setChosenTrainerCode(trainerCode);// new
                           console.log(trainerCode);
                           localStorage["trainer"] = JSON.stringify(trainerCode);
                           handleOpen();
