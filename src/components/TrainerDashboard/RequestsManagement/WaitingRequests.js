@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     height: '100%',
+    width: '80%',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -50,12 +51,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-    width: 800,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    alignSelf:'center',
+   // width: 800,
+    //backgroundColor: theme.palette.background.paper,
+    //border: '2px solid #000',
+    //boxShadow: theme.shadows[5],
+    padding: theme.spacing(1, 1, 1),
+    //alignSelf:'center',
     marginTop:'50px',
   },
 
@@ -72,6 +73,7 @@ export default function Album(props) {
   const [reqCode, setReqCode] = useState(0);
 
   const [open, setOpen] = React.useState(false);
+  const user = JSON.parse(localStorage["userDetails"]).Type;
 
   const handleOpen = () => {
     setOpen(true);
@@ -100,8 +102,8 @@ export default function Album(props) {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            <Grid item xs={12}><h3 style={{textAlign:'center'}}>בקשות ממתינות לאישור מועדון</h3></Grid>
-            {requests && requests.filter((card)=>(card.IsHistory===false && card.IsAprrovedByTrainer == "true" && card.RequestStatus == "open")).map((card) => (
+            <Grid item xs={12}><h4 style={{textAlign:'right'}}>בקשות ממתינות לאישור מועדון</h4></Grid>
+            {requests && requests.sort((a, b) => a.ReplacementDate > b.ReplacementDate ? 1 : -1).filter((card)=>(card.IsHistory===false && card.IsAprrovedByTrainer == "true" && card.RequestStatus == "open")).map((card) => (
               <Grid item key={card.ReplacmentCode} xs={6} sm={4} md={3} >
                 <Card className={classes.card}>
                   <CardMedia

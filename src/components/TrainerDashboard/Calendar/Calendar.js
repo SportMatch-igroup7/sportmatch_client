@@ -1,6 +1,8 @@
 import React, { Component, useState, useEffect } from 'react';
 import ContentWrapper from './ContentWeapper';
 import { Card, CardBody, CardHeader, CardTitle } from 'reactstrap';
+import Modal from 'react-bootstrap/Modal';
+import { makeStyles } from '@material-ui/core/styles';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -14,6 +16,9 @@ import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
 import '@fullcalendar/bootstrap/main.css';
+
+//import Req from './RequestForReplacementView';
+
 
 class Calendar extends Component {
 
@@ -59,6 +64,8 @@ class Calendar extends Component {
         ],
         requests: '',
         events: [],
+        eventCode:0,
+        open:false,
     };
 
 
@@ -219,10 +226,28 @@ class Calendar extends Component {
         });
     };
 
+        eventClicked = event => {
+        console.log("code:",event.event._def.extendedProps.code);
+        let code = event.event._def.extendedProps.code
+        this.setState({eventCode: code});
+        this.handleOpen();
+
+    };
+
     render() {
         const { externalEvents, selectedEvent } = this.state;
         return (
-            <ContentWrapper>
+        <ContentWrapper>
+        {/* <Modal
+          show={this.state.open}
+          onHide={this.handleClose}
+        >
+            <Modal.Body>
+            <div dir="rtl" style = {{textAlign:'right'}} >
+            <Req req={this.state.requests && this.state.requests.filter(val => val.ReplacmentCode === this.state.eventCode)}/>
+            </div>
+            </Modal.Body>               
+        </Modal> */}
                 <div className="calendar-app">
 
                      <div>

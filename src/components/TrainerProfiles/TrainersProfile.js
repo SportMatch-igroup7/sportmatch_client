@@ -27,6 +27,8 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import ChatIcon from '@material-ui/icons/Chat';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +38,8 @@ const useStyles = makeStyles((theme) => ({
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 0, 2),
-    border: 'dotted rgb(63, 81, 181)'
+    border: 'dotted rgb(63, 81, 181)',
+    textAlign:'center'
   },
   cardGrid: {
     paddingTop: theme.spacing(8),
@@ -61,12 +64,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-    width: 800,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    alignSelf:'center',
+   // width: 800,
+    //backgroundColor: theme.palette.background.paper,
+    //border: '2px solid #000',
+    //boxShadow: theme.shadows[5],
+    padding: theme.spacing(1, 1, 1),
+    //alignSelf:'center',
     marginTop:'50px',
   },
   formControl: {
@@ -79,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function Album() {
+export default function Album(props) {
   const classes = useStyles();
   const history = useHistory();
   const [search, setSearch] = useState("");
@@ -87,6 +90,7 @@ export default function Album() {
   const [areaData, setAreaData] = useState();
   const [qualName, setQualName] = React.useState([]);
   const [areaName, setAreaName] = React.useState([]);
+    const user = JSON.parse(localStorage["userDetails"]).Type;
 
   const [state, setState] = useState({
     trainersData:[]
@@ -227,7 +231,7 @@ export default function Album() {
                     aria-describedby="simple-modal-description"
                   >
                     <div className={classes.paper}>
-                    <TrainerProfile/>
+                    <TrainerProfile comp={props.comp}/>
                     </div>                  
                   </Modal>
 
@@ -294,7 +298,7 @@ export default function Album() {
           {/* End hero unit */}
           <Grid container spacing={4}>
             {state.trainersData.filter(filterArr).map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={3} >
+              <Grid item key={card.TrainerCode} xs={6} sm={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -318,6 +322,21 @@ export default function Album() {
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
+                    </Button>
+                    <Button onClick={()=>{
+                      let trainerChat = {
+                     Code: card.TrainerCode,
+                     Name:card.FirstName +" "+ card.LastName,
+                     Image:card.Image
+                      }
+                      localStorage["chat"] = JSON.stringify(trainerChat);
+                      localStorage["fromProfile"] = true;
+                      if(user === "Branch")
+                        props.comp(8);
+                      else
+                        props.comp(6);
+                    }} size="small" color="primary">
+                      שלח הודעה
                     </Button>
                   </CardActions>
                 </Card>

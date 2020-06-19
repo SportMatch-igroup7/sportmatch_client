@@ -21,6 +21,13 @@ import NewRequests from './RequestsManagement/NewRequests';
 import WaitingRequests from './RequestsManagement/WaitingRequests';
 import ApprovedRequests from './RequestsManagement/ApprovedRequests';
 import HistoricalRequests from './RequestsManagement/HistoricalRequests';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
 
 //import './CarStyle.css';
 
@@ -47,6 +54,8 @@ const useStyles = makeStyles((theme) => ({
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 0, 2),
+    border: 'dotted rgb(63, 81, 181)',
+    textAlign:'center'
   },
   cardGrid: {
     paddingTop: theme.spacing(1),
@@ -78,22 +87,28 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+      formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  },
 }));
 
 
 
-export default function Album() {
+export default function Album(props) {
   const classes = useStyles();
   const history = useHistory();
 
   const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
-
   const [requests, setRequests] = useState();
- 
   const [reqCode, setReqCode] = useState(0);
-
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [qualData, setQualData] = useState([]);
+  const [qualName, setQualName] = React.useState([]);
+  const [companyData, setCompanyData] = useState([]);
+  const [companyName, setCompanyName] = React.useState([]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -110,6 +125,26 @@ export default function Album() {
       setIndex(selectedIndex);
     };
 
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  function getStyles(qualName, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(qualName) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
   useEffect(() => {
 
     fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestDetails/getTrainerRequests/" + trainerCode + '/',{
@@ -124,6 +159,28 @@ export default function Album() {
    localStorage["trainerReq"] = JSON.stringify(res);
   })
   .catch((error)=>console.log(error))
+
+    .catch((error)=>console.log(error))
+
+        fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Qualification',{
+        method:'GET',
+        headers:{
+            Accept:'application/json','Content-Type':'application/json',
+        },
+    })
+    .then((response)=>response.json())
+    .then((res)=>{console.log(res); setQualData(res)})
+    .catch((error)=>console.log(error))
+
+        fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Company',{
+      method:'GET',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      })
+      .then((response)=>response.json())
+      .then((res)=>{console.log(res); setCompanyData(res)})
+      .catch((error)=>console.log(error))
   
   },[]);
 
@@ -177,12 +234,67 @@ export default function Album() {
     window.location.reload(false);
   }
 
+    const filterArr = (data) => {
+    const QualRes = qualName.length === 0 ? true : qualName.includes(data.TypeName); 
+    const CompanyRes = companyName.length === 0 ? true : companyName.includes(data.CompanyName); 
+    return QualRes && CompanyRes;
+  };
+
   return (
     <React.Fragment >
-        <NewRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
-        <WaitingRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
-        <ApprovedRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
-        <HistoricalRequests req={requests} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+            <div className={classes.heroContent}>
+            <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
+              ניהול הודעות החלפה
+            </Typography>
+
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-mutiple-checkbox-label">הכשרות</InputLabel>
+        <Select
+          labelId="demo-mutiple-checkbox-label"
+          id="demo-mutiple-checkbox"
+          multiple
+          value={qualName}
+          onChange={(e) => setQualName(e.target.value)}
+          input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {qualData && qualData.map((qual) => (
+            <MenuItem key={qual.TypeCode} value={qual.TypeName}>
+              <Checkbox checked={qualName.indexOf(qual.TypeName) > -1} />
+              <ListItemText primary={qual.TypeName} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-mutiple-checkbox-label">חברות</InputLabel>
+        <Select
+          labelId="demo-mutiple-checkbox-label"
+          id="demo-mutiple-checkbox"
+          multiple
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+          input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {companyData && companyData.map((company) => (
+            <MenuItem key={company.CompanyNo} value={company.Name}>
+              <Checkbox checked={companyName.indexOf(company.Name) > -1} />
+              <ListItemText primary={company.Name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+            </div>
+
+      
+        <NewRequests comp={props.comp} req={requests && requests.filter(filterArr)} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <WaitingRequests comp={props.comp} req={requests && requests.filter(filterArr)} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <ApprovedRequests comp={props.comp} req={requests && requests.filter(filterArr)} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
+        <HistoricalRequests comp={props.comp} req={requests && requests.filter(filterArr)} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
       
     </React.Fragment>
   );

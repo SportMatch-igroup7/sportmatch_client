@@ -49,12 +49,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-    width: 800,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    alignSelf:'center',
+   // width: 800,
+    //backgroundColor: theme.palette.background.paper,
+    //border: '2px solid #000',
+    //boxShadow: theme.shadows[5],
+    padding: theme.spacing(1, 1, 1),
+    //alignSelf:'center',
     marginTop:'50px',
   },
 }));
@@ -72,6 +72,8 @@ export default function Album(props) {
   const [open, setOpen] = React.useState(false);
 
   const requestData = props.req;
+
+  const user = JSON.parse(localStorage["userDetails"]).Type;
 
   const handleOpen = () => {
     setOpen(true);
@@ -174,7 +176,7 @@ export default function Album(props) {
           onHide={handleClose}
         >
           <div className={classes.paper}>
-          <TrainerProfile/>
+          <TrainerProfile comp={props.comp}/>
           </div>                  
         </Modal>
 
@@ -236,7 +238,21 @@ export default function Album(props) {
                   }} size="small" color="primary">
                     צפה
                   </Button>
-
+                  <Button onClick={()=>{
+                      let trainerChat = {
+                      Code: card.TrainerCode,
+                      Name:card.FirstName +" "+ card.LastName,
+                      Image:card.Image
+                      }
+                      localStorage["chat"] = JSON.stringify(trainerChat);
+                      localStorage["fromProfile"] = true;
+                      if(user === "Branch")
+                        props.comp(8);
+                      else
+                        props.comp(6);
+                    }} size="small" color="primary">
+                      שלח הודעה
+                </Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -252,6 +268,7 @@ export default function Album(props) {
           >
             שלח הודעת החלפה
           </Button>
+      
         </Grid>
       </Container>
     </main>

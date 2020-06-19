@@ -19,6 +19,7 @@ import {FaFacebookSquare} from 'react-icons/fa';
 import {FaChrome} from 'react-icons/fa';
 import {FaInstagram} from 'react-icons/fa';
 import {FaLinkedin} from 'react-icons/fa';
+import ChatIcon from '@material-ui/icons/Chat';
 
 
 
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-export default function TrainerProfile() {
+export default function TrainerProfile(props) {
 
     const classes = useStyles();
     
@@ -58,13 +59,14 @@ export default function TrainerProfile() {
     const [facebook, setFacebook] = useState();
     const [instagram, setInstagram] = useState();
     const [linkedin, setLinkedin] = useState();
+    const trainerCode = JSON.parse(localStorage["trainer"]).TrainerCode;
+    const user = JSON.parse(localStorage["userDetails"]).Type;
 
  
   
   
     useEffect(() => {
-  
-        const trainerCode = JSON.parse(localStorage["trainer"]).TrainerCode;
+         
         fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/getTrainer/'+trainerCode+"/",{
             method:'GET',
             headers:{
@@ -156,7 +158,24 @@ export default function TrainerProfile() {
                         />
 
                         <div className="banner-text">
-                        <h1> {trainerData.FirstName} {trainerData.LastName} </h1>
+                        <h1> 
+                        <ChatIcon style={{color:"white"}}
+                          onClick={()=>{
+                            let trainerChat = {
+                            Code: trainerCode,
+                            Name:trainerData.FirstName +" "+ trainerData.LastName,
+                            Image:trainerData.Image
+                            }
+                            localStorage["chat"] = JSON.stringify(trainerChat);
+                            localStorage["fromProfile"] = true;
+                            if(user === "Branch")
+                                props.comp(8);
+                            else
+                                props.comp(6);
+                             }}
+                        /> 
+                        {trainerData.FirstName} {trainerData.LastName}        
+                        </h1>
                         <p>גיל: {trainerData.Age}</p>      
                         <p>מייל: {trainerData.Email}</p> 
                         <p>מספר טלפון: {trainerData.Phone1}</p> 
@@ -170,7 +189,7 @@ export default function TrainerProfile() {
                                 {/* End hero unit */}
                                 <Grid2 container spacing={4} className="banner-text">
                                     {quals && quals.map((card) => (
-                                    <Grid2 item key={card.QualificationTypeCode} xs={6} md={4}>
+                                    <Grid2 item key={card.QualificationTypeCode} xs={12} md={6}>
                                         <Card className={classes.card}>
                                         <CardContent className={classes.cardContent}>
                                             <Typography gutterBottom variant="h5" component="h2">

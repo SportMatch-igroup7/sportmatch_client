@@ -15,11 +15,12 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Doc from '@material-ui/icons/Assignment';
-import TextField from '@material-ui/core/TextField';
 import {FaFacebookSquare} from 'react-icons/fa';
 import {FaChrome} from 'react-icons/fa';
 import {FaInstagram} from 'react-icons/fa';
 import {FaLinkedin} from 'react-icons/fa';
+import ChatIcon from '@material-ui/icons/Chat';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -45,23 +46,27 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-export default function TrainerProfile() {
+export default function TrainerProfile(props) {
 
     const classes = useStyles();
-    const history = useHistory();
     
     const [trainerData, setTrainerData] = useState([]);
     const [links, setLinks] = useState([]);
     const [areas, setAreas] = useState([]);
     const [quals, setQuals] = useState([]);
     const [lang, setLangs] = useState([]);
+    const [web, setWeb] = useState();
+    const [facebook, setFacebook] = useState();
+    const [instagram, setInstagram] = useState();
+    const [linkedin, setLinkedin] = useState();
+    const trainerCode = JSON.parse(localStorage["trainer"]).TrainerCode;
+    const user = JSON.parse(localStorage["userDetails"]).Type;
 
  
   
   
     useEffect(() => {
-  
-        const trainerCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
+         
         fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/getTrainer/'+trainerCode+"/",{
             method:'GET',
             headers:{
@@ -83,7 +88,7 @@ export default function TrainerProfile() {
         })
         .then((response)=>response.json())
         .then((res)=>
-        {console.log("links:",res);setLinks(res)})
+        {console.log("links:",res);setLinks(res);setLinksPath()})
         .catch((error)=>console.log(error))
         .finally(()=>console.log('got trainer links'))
 
@@ -129,30 +134,17 @@ export default function TrainerProfile() {
   
         },[]);
 
-  
-
-
-        console.log(links)
-        const web = links.filter((val)=>val.LinkCode === 1);
-        console.log(web)
-        const facebook = links.filter((val)=>val.LinkCode === 2);
-        const instagram = links.filter((val)=>val.LinkCode === 3);
-        const linkedin = links.filter((val)=>val.LinkCode === 4)
-
-        const changePersonalDetails = ()=>
-        {
-            history.push("/TrainerDetails");
+        const setLinksPath = () =>
+     {   
+        console.log(links);
+         if(links.length>0)
+       { 
+        setWeb(links.filter((val)=>val.LinkCode === 1));
+        setFacebook(links.filter((val)=>val.LinkCode === 2));
+        setInstagram (links.filter((val)=>val.LinkCode === 3));
+        setLinkedin (links.filter((val)=>val.LinkCode === 4));
         }
-
-        const updateQualifications = ()=>
-        {
-            history.push("/TrainerEditQual");
-        }
-
-        const updateAdditionalDetails = ()=>
-        {
-            history.push("/TrainerEditAdditional");
-        }
+    }
 
 
         return (
@@ -166,12 +158,28 @@ export default function TrainerProfile() {
                         />
 
                         <div className="banner-text">
-                        <h1> {trainerData.FirstName} {trainerData.LastName} </h1>
+                        <h1> {trainerData.FirstName} {trainerData.LastName} 
+                        <ChatIcon style={{color:"white"}}
+                          onClick={()=>{
+                            let trainerChat = {
+                            Code: trainerCode,
+                            Name:trainerData.FirstName +" "+ trainerData.LastName,
+                            Image:trainerData.Image
+                            }
+                            localStorage["chat"] = JSON.stringify(trainerChat);
+                            localStorage["fromProfile"] = true;
+                            if(user === "Branch")
+                                props.comp(8);
+                            else
+                                props.comp(6);
+                             }}
+                        />         
+                        </h1>
                         <p>גיל: {trainerData.Age}</p>      
                         <p>מייל: {trainerData.Email}</p> 
                         <p>מספר טלפון: {trainerData.Phone1}</p> 
-                        <p>אזורי עבודה: {areas.map((area)=>(`${area.AreaName}, `)) }</p> 
-                        <p>שפות: {lang.map((lang)=>(`${lang.LName}, `)) }</p>       
+                        <p>אזורי עבודה: {areas && areas.map((area)=>(`${area.AreaName}, `)) }</p> 
+                        <p>שפות: {lang && lang.map((lang)=>(`${lang.LName}, `)) }</p>            
                             <hr className="divider"/>
                         <h3>ההכשרות שלי</h3>
                         <React.Fragment   >
@@ -179,8 +187,8 @@ export default function TrainerProfile() {
                                 <Container className={classes.cardGrid} maxWidth="md">
                                 {/* End hero unit */}
                                 <Grid2 container spacing={4} className="banner-text">
-                                    {quals.map((card) => (
-                                    <Grid2 item key={card.QualificationTypeCode} xs={6} md={4}>
+                                    {quals && quals.map((card) => (
+                                    <Grid2 item key={card.QualificationTypeCode} xs={12} md={6}>
                                         <Card className={classes.card}>
                                         <CardContent className={classes.cardContent}>
                                             <Typography gutterBottom variant="h5" component="h2">
@@ -209,29 +217,21 @@ export default function TrainerProfile() {
                             </React.Fragment>
                             <hr className="divider"/>
     
-                        <div className="social-links">
-                        <a href={web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                            <div className="social-links">
+                        <a href={web && web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook && facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram && instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin && linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
-                        </div> 
-                        <hr className="divider"/>
-                        <div  style={{direction:"rtl",marginTop:'15px'}}>
-                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changePersonalDetails}>ערוך פרטים אישיים</Button> 
-                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateQualifications} >ערוך הכשרות</Button> 
-                        <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateAdditionalDetails} >ערוך נתונים נוספים</Button> 
-                        </div>
-                    
-                    </div>  
-                
+                        </div>   
+                    </div>                  
                 </Cell>
                 </Grid>        
             </div>
@@ -239,3 +239,27 @@ export default function TrainerProfile() {
         )
     }
 
+    // <React.Fragment >
+    //   <CssBaseline />
+    //   <main>
+    //     <Container className={classes.cardGrid} maxWidth="md">
+    //       {/* End hero unit */}
+    //       <Grid container spacing={4}>
+    //         {quals.map((card) => (
+    //           <Grid item key={card.QualificationTypeCode} xs={6} md={3}>
+    //             <Card className={classes.card}>
+    //               <CardContent className={classes.cardContent}>
+    //               <Typography gutterBottom variant="h5" component="h2">
+    //                   {card.TypeName} 
+    //                 </Typography>
+    //                 <Typography gutterBottom variant="h5" component="h2">
+    //                   שנות ניסיון: {card.YearsOfExperience} 
+    //                 </Typography>
+    //               </CardContent>
+    //             </Card>
+    //           </Grid>
+    //         ))}
+    //       </Grid>
+    //     </Container>
+    //   </main>
+    // </React.Fragment>

@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
   const history = useHistory();
   const [ mainState, dispatch]  = useContext(store);
@@ -403,5 +403,5 @@ if (nextFlag === false)
     </Container>
   );
   else
-  return (<TrainersMatches req={requestData}/>)
+  return (<TrainersMatches req={requestData} comp ={props.comp}/>)
 }

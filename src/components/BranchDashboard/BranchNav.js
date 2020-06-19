@@ -134,6 +134,10 @@ export default function PersistentDrawerRight() {
 
   const [comp, setComp] = React.useState(2);
 
+  const CompProps =(val)=>{
+    setComp(val);
+  }
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -145,23 +149,29 @@ export default function PersistentDrawerRight() {
   const getContent = (comp) => {
     switch (comp) {
       case 1:
-        return <BranchProfile/>;
+        return <BranchProfile comp={CompProps}/>;
       case 2:
-        return <BranchMain/>;
+        return <BranchMain />;
       case 3:
-      return <Calendar/>;
+      return <Calendar />;
       case 4:
-        return <BranchParameters />;
+        return <BranchParameters comp={CompProps} />;
       case 5:
-      return <RequestForReplacement />;
+      return <RequestForReplacement comp={CompProps} />;
       case 6:
-      return <TrainersProfile />;
+      return <TrainersProfile comp={CompProps} />;
       case 7:
-        return <BranchesProfile />;
+        return <BranchesProfile comp={CompProps} />;
       case 8:
-        return <Chat/>
+        return <Chat/>;
     }
   };
+
+  const chatDetails = () =>{
+    setComp(8);
+    localStorage["fromProfile"] = false;
+    
+  }
 
   return (
     <div className={classes.root}>
@@ -245,7 +255,7 @@ export default function PersistentDrawerRight() {
                 <ListItemIcon><PeopleIcon /></ListItemIcon>
                 <ListItemText primary="מאגר מועדונים"/>
             </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(8)}>
+            <MenuItem className={classes.item} button onClick={()=> chatDetails()}>
                 <ListItemIcon><MessageIcon /></ListItemIcon>
                 <ListItemText primary="צ'אט"/>
             </MenuItem>

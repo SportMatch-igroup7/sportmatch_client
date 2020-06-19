@@ -61,12 +61,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-    width: 800,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    alignSelf:'center',
+   // width: 800,
+    //backgroundColor: theme.palette.background.paper,
+    //border: '2px solid #000',
+    //boxShadow: theme.shadows[5],
+    padding: theme.spacing(1, 1, 1),
+    //alignSelf:'center',
     marginTop:'50px',
   },
   formControl: {
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Album() {
+export default function Album(props) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -87,6 +87,10 @@ export default function Album() {
   const [areaData, setAreaData] = useState();
   const [branchData,setBranchData]= useState([]);
   const [areaName, setAreaName] = React.useState([]);
+  const [companyData, setComapnyData] = useState();
+  const [companyName, setCompanyName] = React.useState([]);
+
+  const user = JSON.parse(localStorage["userDetails"]).Type;
 
   const [open, setOpen] = React.useState(false);
 
@@ -130,6 +134,16 @@ export default function Album() {
 .then((response)=>response.json())
 .then((res)=>{console.log("Areas:",res); setAreaData([...res])})
 .catch((error)=>console.log(error))
+
+    fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Company',{
+      method:'GET',
+      headers:{
+          Accept:'application/json','Content-Type':'application/json',
+      },
+      })
+      .then((response)=>response.json())
+      .then((res)=>{console.log(res); setComapnyData(res)})
+      .catch((error)=>console.log(error))
   
  
   },[]);
@@ -144,9 +158,10 @@ export default function Album() {
 
   const filterArr = (branch) => {
     const SerachRes = branch.Name.includes(search);
-    const AreaRes = areaName.length === 0 ? true : areaName.includes(branch.AreaName) 
+    const AreaRes = areaName.length === 0 ? true : areaName.includes(branch.AreaName);
+    const ComapnyRes = companyName.length === 0 ? true : companyName.includes(branch.CompanyName) 
 
-     return SerachRes && AreaRes;
+     return SerachRes && AreaRes && ComapnyRes;
   };
 
   return (
@@ -157,7 +172,7 @@ export default function Album() {
                     onHide={handleClose}
                   >
                     <div className={classes.paper}>
-                    <BranchProfile/>
+                    <BranchProfile comp={props.comp}/>
                     </div>                  
                   </Modal>
 
@@ -197,6 +212,27 @@ export default function Album() {
           ))}
         </Select>
       </FormControl>
+
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-mutiple-checkbox-label">חברות</InputLabel>
+        <Select
+          labelId="demo-mutiple-checkbox-label"
+          id="demo-mutiple-checkbox"
+          multiple
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+          input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {companyData && companyData.map((company) => (
+            <MenuItem key={company.CompanyNo} value={company.Name}>
+              <Checkbox checked={companyName.indexOf(company.Name) > -1} />
+              <ListItemText primary={company.Name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
             </Typography>
           </Container>
         </div>
@@ -205,7 +241,7 @@ export default function Album() {
         
           <Grid container spacing={4}>
             {branchData.filter(filterArr).map((card) => (
-              <Grid item key={card.BranchCode} xs={6} md={3}>
+              <Grid item key={card.BranchCode} xs={6} sm={3}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -229,6 +265,21 @@ export default function Album() {
                           handleOpen();
                     }} size="small" color="primary">
                       צפה
+                    </Button>
+                    <Button onClick={()=>{
+                     let branchChat = {
+                     Code: card.BranchCode,
+                     Name:card.Name,
+                     Image:card.Logo
+                      }
+                    localStorage["chat"] = JSON.stringify(branchChat);
+                    localStorage["fromProfile"] = true;
+                    if(user === "Branch")
+                        props.comp(8);
+                    else
+                        props.comp(6);
+                    }} size="small" color="primary">
+                      שלח הודעה
                     </Button>
                   </CardActions>
                 </Card>

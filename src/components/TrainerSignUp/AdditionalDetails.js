@@ -135,7 +135,7 @@ const addArea=(Item)=>{
   {
       newArea.push(Item);   
   }
-  setTrainerArea(newArea);
+  setTrainerArea([...newArea]);
   console.log(newArea);
  
 }
@@ -151,7 +151,7 @@ const addLanguage=(Item)=>{
   {
       newLang.push(Item);   
   }
-  setTrainerLang(newLang);
+  setTrainerLang([...newLang]);
   console.log(newLang);
  
 }

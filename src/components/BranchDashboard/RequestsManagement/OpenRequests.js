@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     height: '100%',
+    width: '80%',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -54,12 +55,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-    width: 800,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    alignSelf:'center',
+   // width: 800,
+    //backgroundColor: theme.palette.background.paper,
+    //border: '2px solid #000',
+    //boxShadow: theme.shadows[5],
+    padding: theme.spacing(1, 1, 1),
+    //alignSelf:'center',
     marginTop:'50px',
   },
 }));
@@ -119,7 +120,7 @@ export default function Album(props) {
         >
           מחק הודעת החלפה
         </Button>
-      <ReqTrainers approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode && val.RequestStatus === "open" && val.IsAprrovedByTrainer ==="true"))}/>
+      <ReqTrainers comp={props.comp} approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode && val.RequestStatus === "open" && val.IsAprrovedByTrainer ==="true"))}/>
       </div>                  
     </Modal>
 
@@ -130,8 +131,8 @@ export default function Album(props) {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            <Grid item xs={12}><h3 style={{textAlign:'center'}}>בקשות ממתינות לאישור:</h3></Grid>
-            {distinctReq && distinctReq.filter((card)=>(card.IsHistory===false )).map((card) => (
+            <Grid item xs={12}><h4 style={{textAlign:'right'}}>בקשות ממתינות לאישור</h4></Grid>
+            {distinctReq && distinctReq.sort((a, b) => a.ReplacementDate > b.ReplacementDate ? 1 : -1).filter((card)=>(card.IsHistory===false )).map((card) => (
               <Grid item key={card.ReplacmentCode} xs={6} sm={4} md={3} >
                 <Card className={classes.card}>
                   <CardMedia

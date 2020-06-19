@@ -17,6 +17,13 @@ import Carousel from "react-elastic-carousel";
 import OpenRequests from './RequestsManagement/OpenRequests';
 import ApprovedRequests from './RequestsManagement/ApprovedRequests';
 import HistoricalRequests from './RequestsManagement/HistoricalRequests';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 0, 2),
+    border: 'dotted rgb(63, 81, 181)',
+    textAlign:'center'
   },
   cardGrid: {
     paddingTop: theme.spacing(1),
@@ -57,11 +66,16 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+    formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  },
 }));
 
 
 
-export default function Album() {
+export default function Album(props) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -74,6 +88,10 @@ export default function Album() {
   const [reqCode, setReqCode] = useState(0);
 
   const [open, setOpen] = React.useState(false);
+
+  const [qualData, setQualData] = useState([]);
+
+  const [qualName, setQualName] = React.useState([]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -90,6 +108,26 @@ export default function Album() {
       setIndex(selectedIndex);
     };
 
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  function getStyles(qualName, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(qualName) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
   useEffect(() => {
 
     fetch("http://proj.ruppin.ac.il/igroup7/proj/api/RequestDetails/getBranchRequests/" + branchCode + '/',{
@@ -104,6 +142,16 @@ export default function Album() {
    setDistinctRequests(res);
   })
   .catch((error)=>console.log(error))
+
+        fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Qualification',{
+        method:'GET',
+        headers:{
+            Accept:'application/json','Content-Type':'application/json',
+        },
+    })
+    .then((response)=>response.json())
+    .then((res)=>{console.log(res); setQualData(res)})
+    .catch((error)=>console.log(error))
   
   },[]);
 
@@ -222,12 +270,44 @@ export default function Album() {
   .catch((error)=>console.log(error))
   }
 
+  const filterArr = (data) => {
+    const QualRes = qualName.length === 0 ? true : qualName.includes(data.TypeName); 
+    return QualRes;
+  };
+
 
   return (
     <React.Fragment >
-        <OpenRequests req={requests} distinctReq={distinctReq} approveTrainer={approveTrainer} declineTrainer={declineTrainer} deleteRequest={deleteRequest} />
-        <ApprovedRequests req={requests} reopenRequest={reopenRequest}/>
-        <HistoricalRequests req={requests}/>
+  <div className={classes.heroContent}>
+            <Typography component="h4" variant="h4" align="center" color="textPrimary" gutterBottom>
+              ניהול הודעות החלפה
+            </Typography>
+
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-mutiple-checkbox-label">הכשרות</InputLabel>
+        <Select
+          labelId="demo-mutiple-checkbox-label"
+          id="demo-mutiple-checkbox"
+          multiple
+          value={qualName}
+          onChange={(e) => setQualName(e.target.value)}
+          input={<Input />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {qualData && qualData.map((qual) => (
+            <MenuItem key={qual.TypeCode} value={qual.TypeName}>
+              <Checkbox checked={qualName.indexOf(qual.TypeName) > -1} />
+              <ListItemText primary={qual.TypeName} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+            </div>
+
+        <OpenRequests comp={props.comp} req={requests && requests.filter(filterArr)} distinctReq={distinctReq} approveTrainer={approveTrainer} declineTrainer={declineTrainer} deleteRequest={deleteRequest} />
+        <ApprovedRequests comp={props.comp} req={requests && requests.filter(filterArr)} reopenRequest={reopenRequest}/>
+        <HistoricalRequests comp={props.comp} req={requests && requests.filter(filterArr)}/>
     </React.Fragment>
   );
 }

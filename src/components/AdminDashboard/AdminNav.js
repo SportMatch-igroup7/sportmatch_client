@@ -23,6 +23,8 @@ import Exit from '@material-ui/icons/ExitToApp';
 import BusinessIcon from '@material-ui/icons/Business';
 import SportsIcon from '@material-ui/icons/Sports';
 import BI from './PowerBi';
+import Companies from './CompaniesUpdate';
+import Quals from './QualsUpdate';
 
 const drawerWidth = 240;
 
@@ -136,9 +138,9 @@ export default function PersistentDrawerRight() {
       case 1:
         return <BI/>;
       case 2:
-        return <iframe src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>;
+        return "";//<Companies/>;
       case 3:
-      return <iframe src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>;
+      return <Quals/>;
     }
   };
 

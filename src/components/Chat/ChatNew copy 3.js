@@ -31,9 +31,9 @@ import SendIcon from '@material-ui/icons/Send';
 
     useEffect(async () => {
 
-    //   $('#action_menu_btn').click(function(){
-	// 	$('.action_menu').toggle();
-	//   });
+      $('#action_menu_btn').click(function(){
+		$('.action_menu').toggle();
+	  });
 
 	  const user = JSON.parse(localStorage["userDetails"]);
       let code = 0;

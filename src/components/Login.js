@@ -191,6 +191,14 @@ const branchRegistration=()=>{
           >
             התחבר
           </Button>
+            <Grid container style={{textAlign:'right'}}>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                שכחת סיסמה?
+              </Link>
+            </Grid>
+          </Grid>
+          <br/>
           <Grid container>
             <Grid item>
 							<h6 style={{fontWeight:'bold'}}>עדיין לא רשום? הירשם כעת </h6>
@@ -206,7 +214,7 @@ const branchRegistration=()=>{
             <RI action={branchRegistration}  value="gym" image='images/gym.jpg' width="110" height="110" size="8" color='#6666ff' />
             </Grid>
           </Grid>
-          
+
         </form>
       </div>
     </Container>

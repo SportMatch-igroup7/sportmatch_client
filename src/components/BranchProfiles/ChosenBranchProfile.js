@@ -6,19 +6,21 @@ import {FaFacebookSquare} from 'react-icons/fa';
 import {FaChrome} from 'react-icons/fa';
 import {FaInstagram} from 'react-icons/fa';
 import {FaLinkedin} from 'react-icons/fa';
+import ChatIcon from '@material-ui/icons/Chat';
 
 
-export default function BranchProfile() {
+export default function BranchProfile(props) {
     
     const [branchData, setBranchData] = useState([]);
     const [branchLinks, setBranchLinks] = useState([]);
-
+    const user = JSON.parse(localStorage["userDetails"]).Type;
+    const branchCode = JSON.parse(localStorage["branch"]).BranchCode;
 
 
     useEffect(() => {
 
         //const branchCode = JSON.parse(localStorage["userDetails"]).BranchCode;
-        const branchCode = JSON.parse(localStorage["branch"]).BranchCode;
+        
         fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Branch/getBranch/'+branchCode+"/",{
             method:'GET',
             headers:{
@@ -58,7 +60,9 @@ export default function BranchProfile() {
         return (
             <div style ={{width: '100%', margin: 'auto'}}>
                 <Grid className="branch-grid" >
+                
                     <Cell col={12}>
+                        
                         <img
                         src={branchData.Logo}
                         alt="avatar"
@@ -66,7 +70,22 @@ export default function BranchProfile() {
                         />
 
                         <div className="banner-text">
-                        <h1>סניף {branchData.Name}</h1>
+                        <h1>סניף {branchData.Name} 
+                        <ChatIcon style={{color:"white"}}
+                          onClick={()=>{
+                            let branchChat = {
+                            Code: branchCode,
+                            Name:branchData.Name,
+                            Image:branchData.Logo
+                            }
+                            localStorage["chat"] = JSON.stringify(branchChat);
+                            localStorage["fromProfile"] = true;
+                            if(user === "Branch")
+                                props.comp(8);
+                            else
+                                props.comp(6);  }}
+                        /> 
+                        </h1> 
                         <p>אזור: {branchData.AreaName}</p>
                         <p>כתובת מלאה: {branchData.Address}</p>
                         <p>טלפון: {branchData.PhoneNo}</p>                   

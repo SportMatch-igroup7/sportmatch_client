@@ -132,6 +132,10 @@ export default function PersistentDrawerRight() {
 
   const [comp, setComp] = React.useState(2);
 
+  const CompProps =(val)=>{
+    setComp(val);
+  }
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -145,17 +149,23 @@ export default function PersistentDrawerRight() {
       case 1:
         return <TrainerProfile/>;
       case 2:
-        return <TrainerMain/>;
+        return <TrainerMain comp={CompProps}/>;
       case 3:
         return <Calendar/>;
       case 4:
-      return <TrainersProfile />;
+      return <TrainersProfile comp={CompProps} />;
       case 5:
-      return <BranchesProfile />;
+      return <BranchesProfile comp={CompProps} />;
       case 6:
         return <Chat />;
     }
   };
+
+    const chatDetails = () =>{
+    setComp(6);
+    localStorage["fromProfile"] = false;
+    
+  }
 
   return (
     <div className={classes.root}>
