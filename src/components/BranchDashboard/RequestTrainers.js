@@ -124,7 +124,7 @@ export default function Album(props) {
           onHide={handleClose}
         >
           <div className={classes.paper}>
-          <TrainerProfile/>
+          <TrainerProfile comp={props.comp}/>
           </div>                  
         </Modal>
 
@@ -142,7 +142,7 @@ export default function Album(props) {
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
             {trainers && trainers.map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} md={4} >
+              <Grid item key={card.TrainerCode} xs={6} md={6} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}

@@ -16,48 +16,48 @@ import './Chat.css';
 
     useEffect(() => {
 
-      fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Area',{
-              method:'GET',
-              headers:{
-                  Accept:'application/json','Content-Type':'application/json',
-              },
-          })
-          .then((response)=>response.json())
-          .then((res)=>{console.log(res); setAreaData({areaData,dataArea:res})})
-          .catch((error)=>console.log(error))
-          .finally(()=>console.log('got areas'))
+      // fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Area',{
+      //         method:'GET',
+      //         headers:{
+      //             Accept:'application/json','Content-Type':'application/json',
+      //         },
+      //     })
+      //     .then((response)=>response.json())
+      //     .then((res)=>{console.log(res); setAreaData({areaData,dataArea:res})})
+      //     .catch((error)=>console.log(error))
+      //     .finally(()=>console.log('got areas'))
   
-      fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Company',{
-        method:'GET',
-        headers:{
-            Accept:'application/json','Content-Type':'application/json',
-        },
-        })
-        .then((response)=>response.json())
-        .then((res)=>{console.log(res); setCompanyData({companyData,dataCompany:res})})
-        .catch((error)=>console.log(error))
-        .finally(()=>console.log('got companies'))
+      // fetch('http://proj.ruppin.ac.il/igroup7/proj/api/Company',{
+      //   method:'GET',
+      //   headers:{
+      //       Accept:'application/json','Content-Type':'application/json',
+      //   },
+      //   })
+      //   .then((response)=>response.json())
+      //   .then((res)=>{console.log(res); setCompanyData({companyData,dataCompany:res})})
+      //   .catch((error)=>console.log(error))
+      //   .finally(()=>console.log('got companies'))
   
-      fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Link",{
-          method:'GET',
-          headers:{
-              Accept:'application/json','Content-Type':'application/json',
-          },
-          })
-          .then((response)=>response.json())
-          .then((res)=>{console.log(res); setLinksData([...res])})
-          .catch((error)=>console.log(error))
-          .finally(()=>console.log('got links'))
+      // fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Link",{
+      //     method:'GET',
+      //     headers:{
+      //         Accept:'application/json','Content-Type':'application/json',
+      //     },
+      //     })
+      //     .then((response)=>response.json())
+      //     .then((res)=>{console.log(res); setLinksData([...res])})
+      //     .catch((error)=>console.log(error))
+      //     .finally(()=>console.log('got links'))
   
-          fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Parameter",{
-          method:'GET',
-          headers:{
-              Accept:'application/json','Content-Type':'application/json',
-          },
-          })
-          .then((response)=>response.json())
-          .then((res)=>{console.log("parameters:",res); setParams([...res])})
-          .catch((error)=>console.log(error))
+      //     fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Parameter",{
+      //     method:'GET',
+      //     headers:{
+      //         Accept:'application/json','Content-Type':'application/json',
+      //     },
+      //     })
+      //     .then((response)=>response.json())
+      //     .then((res)=>{console.log("parameters:",res); setParams([...res])})
+      //     .catch((error)=>console.log(error))
     },[]);
 
 

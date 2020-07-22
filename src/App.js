@@ -21,6 +21,7 @@ import BranchUpdateProfile from './components/BranchProfiles/BranchProfileUpdate
 import firebaseConfig from './components/Chat/FireBase';
 import firebase from 'firebase';
 import ChatOld from './components/ChatOld';
+import ContactUs from './components/ContactUs/ContactUS';
 
 
 firebase.initializeApp(firebaseConfig);
@@ -36,16 +37,11 @@ function App() {
         <Route path="/TrainerSignUp" component={TrainerSignUp} />
         <Route path="/BranchNav" component={BranchNav} />
         <Route path="/TrainerNav" component={TrainerNav} />
-        <Route path="/RequestForReplacement" component={RequestForReplacement} />
-        <Route path="/TrainersProfile" component={TrainersProfile} />
-        <Route path="/BranchesProfile" component={BranchesProfile} />
-        <Route path="/BranchParameters" component={BranchParameters} />
-        <Route path="/BranchProfile" component={BranchProfile} />
+        <Route path="/AdminNav" component={AdminNav} />
         <Route path="/TrainerDetails" component={TrainerDetails} />
         <Route path="/TrainerEditQual" component={TrainerEditQual} />
         <Route path="/TrainerEditAdditional" component={TrainerEditAdditional} />
-        <Route path="/AdminNav" component={AdminNav} />
-        <Route path = "/BranchUpdateProfile" component={BranchUpdateProfile}/>
+        <Route path="/BranchUpdateProfile" component={BranchUpdateProfile} />
       </Switch> 
       </div>
     </StateProvider>

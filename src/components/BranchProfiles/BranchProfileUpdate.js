@@ -56,7 +56,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    //margin: theme.spacing(3, 0, 2),
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -137,7 +139,7 @@ export default function SignUp() {
         },
         })
         .then((response)=>response.json())
-        .then((res)=>{console.log(res); setLinksData([...res])})
+        .then((res)=>{console.log(res); setLinks([...res])})
         .catch((error)=>console.log(error))
         .finally(()=>console.log('got links'))
 
@@ -302,7 +304,6 @@ fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
 }
 
 const successSignInBranch=(data)=> {
-  let links = links;
   let linksToDB = [];
    swal("success");
   console.log(data);
@@ -319,38 +320,42 @@ const successSignInBranch=(data)=> {
     linksToDB.push(branchLink)
   })
   console.log(linksToDB);
-  //aviya
-//   fetch("http://proj.ruppin.ac.il/igroup7/proj/api/LinksTo",{
-//     method:'POST',
-//     headers:{
-//         Accept:'application/json','Content-Type':'application/json',
-//     },
-//     body:JSON.stringify(linksToDB)
-// })
-// .then((response)=>response.json())
-// .then((res)=>console.log("success post branch links"))
-// .catch((error)=>console.log(error));
-
-console.log("params:",params);
-
-params.map(param => {
-  let branchParam = {
-    BranchCode: data.BranchCode,
-    ParameterCode: param.Pcode,
-    ParameterWeight: params.length
-  }
-  console.log("branchParam:", branchParam)
- /* fetch("http://proj.ruppin.ac.il/igroup7/proj/api/BranchParameter",{
-  method:'POST',
-  headers:{
-      Accept:'application/json','Content-Type':'application/json',
-  },
-  body:JSON.stringify(branchParam)
-})*/
-.then((response)=>response.json())
-.then((res)=>console.log("success post branch parameters"), history.push("/BranchNav"))
-.catch((error)=>console.log(error));
+  fetch("http://proj.ruppin.ac.il/igroup7/proj/api/LinksTo/UpdateLinksBranch",{
+    method:'PUT',
+    headers:{
+        Accept:'application/json','Content-Type':'application/json',
+    },
+    body:JSON.stringify(linksToDB)
 })
+.then((response)=>response.json())
+.then((res)=>console.log("success put Branch links"), history.push("/BranchNav"))
+.catch((error)=>console.log(error));
+
+// console.log("params:",params);
+
+// params.map(param => {
+//   let branchParam = {
+//     BranchCode: data.BranchCode,
+//     ParameterCode: param.Pcode,
+//     ParameterWeight: params.length
+//   }
+//   console.log("branchParam:", branchParam)
+//  /* fetch("http://proj.ruppin.ac.il/igroup7/proj/api/BranchParameter",{
+//   method:'POST',
+//   headers:{
+//       Accept:'application/json','Content-Type':'application/json',
+//   },
+//   body:JSON.stringify(branchParam)
+// })*/
+// .then((response)=>response.json())
+// .then((res)=>console.log("success post branch parameters"), history.push("/BranchNav"))
+// .catch((error)=>console.log(error));
+// })
+}
+
+
+const back = () =>{
+  history.goBack()
 }
 
 
@@ -493,15 +498,23 @@ params.map(param => {
                 </Grid>
               )}
           </Grid>
+          
           <Button
             type="submit"
-            fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
             onClick={handleSave}
           >
-            שמור
+            שמור שינויים
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={back}
+            className={classes.submit}
+          >
+            ביטול
           </Button>
           <Grid container justify="flex-end" style={{direction: "initial"}} >
             <Grid item >

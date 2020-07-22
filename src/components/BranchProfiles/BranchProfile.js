@@ -92,7 +92,9 @@ export default function BranchProfile() {
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div>
+                        <div  style={{direction:"rtl",marginTop:'15px'}}>
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changeBranchDetails}>ערוך פרופיל</Button> 
+                        </div>
                         </div>
                         
                     </Cell>

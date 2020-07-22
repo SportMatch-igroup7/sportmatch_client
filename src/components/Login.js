@@ -78,6 +78,27 @@ export default function SignIn({props = ""}) {
     }       
 }
 
+const forgotPassword =()=>{
+const email = state.email;
+let e = validateEmail(email);
+if(!e)
+  swal("הוכנס אימייל לא חוקי");
+else
+{
+  fetch('http://proj.ruppin.ac.il/igroup7/proj/api/User/getUser/'+email+"/",{
+            method:'GET',
+            headers:{
+                Accept:'application/json','Content-Type':'application/json',
+            },
+        })
+        .then((response)=>response.json())
+        .then((res)=>
+        successGetUserPassword(res))
+        .catch((error)=>console.log(error))
+}
+
+}
+
  const validateEmail=(email)=> {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
@@ -90,7 +111,6 @@ export default function SignIn({props = ""}) {
     return false;
 }
 
-
   const successGetUser=(data)=>{
     console.log(data);
     console.log("success");
@@ -98,6 +118,26 @@ export default function SignIn({props = ""}) {
         swal("האימייל לא קיים במערכת");
     else
         checkPassword(data);
+}
+
+const successGetUserPassword=(data)=>{
+  console.log(data);
+  console.log("success");
+  if (data.length < 1)
+      swal("האימייל לא קיים במערכת");
+  else
+      {
+        fetch("http://proj.ruppin.ac.il/igroup7/proj/api/User",{
+          method:'POST',
+          headers:{
+              Accept:'application/json','Content-Type':'application/json',
+          },
+          body:JSON.stringify(data.Email)
+      })
+      .then((response)=>response.json())
+      .then((res)=>{if (res === 1) swal("סיסמתך נשלחה לכתובת המייל")})
+      .catch((error)=>console.log(error))
+      }
 }
 
 
@@ -193,7 +233,7 @@ const branchRegistration=()=>{
           </Button>
             <Grid container style={{textAlign:'right'}}>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link onClick={forgotPassword} href="#" variant="body2">
                 שכחת סיסמה?
               </Link>
             </Grid>

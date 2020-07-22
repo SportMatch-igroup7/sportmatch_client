@@ -250,7 +250,7 @@ const successSignInBranch=(data)=> {
   let links = linksPath;
   let linksToDB = [];
   let paramsToDB = [];
-   swal("success");
+  // swal("");
   console.log(data);
   setState({...state,branchCodeFromDB : data.BranchCode})
   localStorage["userDetails"] = JSON.stringify(data);

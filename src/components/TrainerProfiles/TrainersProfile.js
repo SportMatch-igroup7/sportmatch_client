@@ -298,7 +298,7 @@ export default function Album(props) {
           {/* End hero unit */}
           <Grid container spacing={4}>
             {state.trainersData.filter(filterArr).map((card) => (
-              <Grid item key={card.TrainerCode} xs={6} sm={3} >
+              <Grid item key={card.TrainerCode} xs={6} sm={4} md={3} >
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}

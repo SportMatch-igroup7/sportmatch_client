@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button';
 import './Chat.css';
 import $ from 'jquery';
 import firebase from 'firebase';
+import TextField from '@material-ui/core/TextField';
+import SendIcon from '@material-ui/icons/Send';
 
 
   export default function Chat() {
@@ -24,163 +26,174 @@ import firebase from 'firebase';
 	const [chatIdRev, setChatIdRev] = useState(0);
 	const [radio, setRadio] = useState("trainer");
 	const [search, setSearch] = useState("");
-	const [flag, setFlag] = useState(true);
 	const [messages, setMessages] = useState([]);
+	const [userType, SetUserType] =useState("");
 
     useEffect(() => {
 
-      $('#action_menu_btn').click(function(){
-		$('.action_menu').toggle();
-	  });
-
 	  const user = JSON.parse(localStorage["userDetails"]);
       let code = 0;
-      if(user.Type === "Branch")
-                      code = user.BranchCode;
-                  else
-                      code = user.TrainerCode;
-	  setUserCode (code);
+	   if(user.Type === "Branch")
+		{
+			SetUserType("branch")
+			code = user.BranchCode;
+		}           
+		else
+		{
+			SetUserType("trainer")
+			code = user.TrainerCode;
+		}
+                      
+	   setUserCode (code);
 	  console.log("userCode",code);
 
-      fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
+       fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
         method:'GET',
         headers:{
             Accept:'application/json','Content-Type':'application/json',
         },
     })
     .then((response)=>response.json())
-    .then( (res)=> {console.log(res);
-    setBranchData(res)})
+    .then((res)=> {console.log(res);
+     setBranchData(res)})
     .catch((error)=>console.log(error))
 
 
-    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
+     fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
       method:'GET',
       headers:{
           Accept:'application/json','Content-Type':'application/json',
       },
   })
   .then((response)=>response.json())
-  .then( (res)=> {console.log(res);
-  setTrainerData(res);
+  .then((res)=> {console.log(res);
+   setTrainerData(res);
   })
   .catch((error)=>console.log(error))
 
+  const fromProfile = JSON.parse(localStorage["fromProfile"]);
+	if(fromProfile === true)
+		detailsFromProfile();
+
     },[]);
 
-
-    const sendData =()=>{
-
-		let a =  $("#message").val();
-      //const chatId = userCode + chosenContact.Code;
-      firebase.database().ref(`/${chatId}`).push().set({
-        //image: loginUser.FirstName,
-        message:a,
-        date: ((new Date()).getTime() / 1000),
-		code: userCode,
-		//image: "",
-	})
-
-	firebase.database().ref(`/${chatIdRev}`).push().set({
-        //image: loginUser.FirstName,
-        message:a,
-        date: ((new Date()).getTime() / 1000),
-		code: userCode,
-		//image: "",
-	})
-
-	$(`<div className="d-flex justify-content-start mb-4"><div className="img_cont_msg">
-	<img src="" className="rounded-circle user_img_msg"></img>
-	</div><div className="msg_cotainer">${a}</div></div>`).appendTo($('#hh'));
-	$("#message").val('');
-	
-	
-}
-
-	const getData= () =>{
-		var x = true;
-		console.log(chatId);
-		firebase.database().ref(`/${chatId}`).on('child_added',  (snapshot) => {
-			setInterval(() => {
-					var message = snapshot.child("message").val();
-					var code = snapshot.child("code").val();
-					var last = snapshot.child("date").val();
-					//var image = snapshot.child("image").val();
-					//var flag = true;
-					var lastDate = new Date(0);
-					
-
-					
-				//  if (last > lastDate)
-				//  {
-					if ((parseInt(code) === parseInt(userCode))&&(x === true)) {
-						//alert(code+"==="+userCode);
-
-						$(`<div className="d-flex justify-content-start mb-4"><div className="img_cont_msg">
-						<img src="" className="rounded-circle user_img_msg"></img>
-						</div><div className="msg_cotainer">${message}</div></div>`).appendTo($('#hh'));
-						// $('.message-input input').val(null);
-						// $('.msg_cotainer .rounded-circle.user_img_msg').html('<span>You: </span>' + message);
-						 //$(".messages").animate({ scrollTop: $(document).height() }, "fast");
-					}
-					else if (parseInt(code) != parseInt(userCode)){
-						console.log('my flag is false')
-						// if (name != loginUser.FirstName)
-						$(`<div className="d-flex justify-content-end mb-4"><div className="msg_cotainer_send">${message}
-						</div><div className="img_cont_msg"></div><img src=""></img></div>`).appendTo($('#hh'));
-						// $('.message-input input').val(null);
-						// $('.contact.active .preview').html('<span>You: </span>' + message);
-						// $(".messages").animate({ scrollTop: $(document).height() }, "fast");
-					 }
-
-					lastDate = last;
-					x = false;
-					setTimeout(()=> {x=false}, 5000);
-				//  }
-			}, 3000);
-		})
-	}
-
-
-  //   <div className="d-flex justify-content-end mb-4">
-  //   <div className="msg_cotainer_send">
-  //     ${message}
-  //     <span className="msg_time_send"></span>
-  //   </div>
-  //   <div className="img_cont_msg">
-  // </div>
-  // <img src=""></img>
-  // </div>
-
-
-
-
-  //   $('<li class="sent"><img src="img/chatSent.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
-  //   $('.message-input input').val(null);
-  //   $('.contact.active .preview').html('<span>You: </span>' + message);
-  //   $(".messages").animate({ scrollTop: $(document).height() }, "fast");
-
-	
-	const setChatDeatails =(code, name, image) =>
+		const detailsFromProfile = async () =>
 	{
+		const code = JSON.parse(localStorage["chat"]).Code;
+		const name = JSON.parse(localStorage["chat"]).Name;
+		const image = JSON.parse(localStorage["chat"]).Image;
 
-	$("#hh").html('');
-		setChosenContact({Code:code, Name: name, Image:image});
+		console.log(code,name,image);
+
+
+		await setMessages([]);
+		await setChosenContact({Code:code, Name: name, Image:image});
 		console.log("userCode:",userCode);
 		console.log("code:",code);
 		let x = (userCode.toString()+code.toString());
 		let xRev = (code.toString()+userCode.toString());
 
 
-		setChatId(x);
-		setChatIdRev(xRev);
+		await setChatId(x);
+		await setChatIdRev(xRev);
 		console.log(x);
 		console.log(xRev);
-		
-		getData();
-	
+
+		getData(x,image);
 	}
 
+
+    const sendData =()=>{
+
+		setMessages([]);
+		let photo="";
+		if(userType ==="branch")
+			photo = branchData.filter(val => val.BranchCode === userCode).map(val => val.Logo)
+		else
+			photo = trainerhData.filter(val => val.TrainerCode === userCode).map(val => val.Image)
+		
+		console.log(photo);
+
+
+		let mes =  $("#message").val();
+      firebase.database().ref(`/${chatId}`).push().set({
+        message:mes,
+        date: ((new Date()).getTime() / 1000),
+		code: userCode,
+		image: photo,
+	})
+
+	firebase.database().ref(`/${chatIdRev}`).push().set({
+        message:mes,
+        date: ((new Date()).getTime() / 1000),
+		code: userCode,
+		image: photo,
+	})
+
+	let m = (<div className="d-flex justify-content-start mb-4"><div className="img_cont_msg">
+	<img src={photo} className="rounded-circle user_img_msg"></img>
+	</div><div className="msg_cotainer">{mes}</div></div>);
+	setMessages([...messages,m])
+	$("#message").val('');
+
+}
+
+	const getData= (chat,im) =>{
+		var x = true;
+		setMessages([])
+		console.log(chat);
+		firebase.database().ref(`/${chat}`).on('child_added',  (snapshot) => {
+					var message = snapshot.child("message").val();
+					var code = snapshot.child("code").val();
+					var image = snapshot.child("image").val();
+
+
+									
+
+					if ((parseInt(code) === parseInt(userCode))){
+						let m = (<div className="d-flex justify-content-start mb-4"><div className="img_cont_msg">
+						<img src={image} className="rounded-circle user_img_msg"></img>
+						</div><div className="msg_cotainer">{message}</div></div>)
+						setMessages(prevState => [...prevState,m])
+					}
+					else if (parseInt(code) != parseInt(userCode)){
+						let m= (<div className="d-flex justify-content-end mb-4"><div className="msg_cotainer_send">{message}
+						</div><div className="img_cont_msg"></div><img src={im} className="rounded-circle user_img_msg"></img></div>);
+						setMessages(prevState => [...prevState,m])
+					 }
+		})
+	}
+
+	
+	const setChatDeatails =async (code, name, image) =>
+	{
+		console.log("messages:",messages)
+
+		await setMessages([]);
+		await setChosenContact({Code:code, Name: name, Image:image});
+		console.log("userCode:",userCode);
+		console.log("code:",code);
+		let x = (userCode.toString()+code.toString());
+		let xRev = (code.toString()+userCode.toString());
+
+
+		await setChatId(x);
+		await setChatIdRev(xRev);
+		console.log(x);
+		console.log(xRev);
+
+
+
+		getData(x,image);
+	}
+
+	const check = (x, xRev) =>{
+		if(x === chatId && xRev ===chatIdRev)
+			getData();
+		else
+		setTimeout(()=> {check()}, 1000);
+
+	}
 
 	const showList =()=>{
 		if(radio === "trainer")
@@ -224,10 +237,8 @@ import firebase from 'firebase';
           <div className="card mb-sm-3 mb-md-0 contacts_card">
 					<div className="card-header">
 						<div className="input-group">
-							<input type="text" placeholder="Search..." name="" className="form-control search" on onChange={(e) => setSearch(e.target.value)}   />
+							<input type="text" label='&#x1F50D;' placeholder="Search..." name="" className="form-control search" on onChange={(e) => setSearch(e.target.value)}   />
 							<div className="input-group-prepend">
-								<span className="input-group-text search_btn">
-                  			<i className="fas fa-search"></i></span>
 							</div>
 						</div>
 
@@ -260,90 +271,18 @@ import firebase from 'firebase';
 									<span className="online_icon"></span>
 								</div>
 								<div className="user_info">
-            				<span>Chat with {chosenContact.Name}</span>
+            				<span> {chosenContact.Name}</span>
 								</div>
-							</div>
-							<span id="action_menu_btn"><i className="fas fa-ellipsis-v"></i></span>
-							<div className="action_menu">
-								<ul>
-									<li><i className="fas fa-user-circle"></i> View profile</li>
-									<li><i className="fas fa-users"></i> Add to close friends</li>
-									<li><i className="fas fa-plus"></i> Add to group</li>
-									<li><i className="fas fa-ban"></i> Block</li>
-								</ul>
 							</div>
 						</div>
 						<div className="card-body msg_card_body" id="hh">
-							{/* <div className="d-flex justify-content-start mb-4">
-								<div className="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" className="rounded-circle user_img_msg"></img>
-								</div>
-								<div className="msg_cotainer">
-									Hi, how are you samim?
-									<span className="msg_time">8:40 AM, Today</span>
-								</div>
-							</div>
-							<div className="d-flex justify-content-end mb-4">
-								<div className="msg_cotainer_send">
-									Hi Khalid i am good tnx how about you?
-									<span className="msg_time_send">8:55 AM, Today</span>
-								</div>
-								<div className="img_cont_msg">
-							</div>
-              <img src=""></img>
-								</div>
-							</div>
-							<div className="d-flex justify-content-start mb-4">
-								<div className="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" className="rounded-circle user_img_msg"></img>
-								</div>
-								<div className="msg_cotainer">
-									I am good too, thank you for your chat template
-									<span className="msg_time">9:00 AM, Today</span>
-								</div>
-							</div>
-							<div className="d-flex justify-content-end mb-4">
-								<div className="msg_cotainer_send">
-									You are welcome
-									<span className="msg_time_send">9:05 AM, Today</span>
-								</div>
-								<div className="img_cont_msg">
-                <img src=""></img>
-								</div>
-							</div>
-							<div className="d-flex justify-content-start mb-4">
-								<div className="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" className="rounded-circle user_img_msg"></img>
-								</div>
-								<div className="msg_cotainer">
-									I am looking for your next templates
-									<span className="msg_time">9:07 AM, Today</span>
-								</div>
-							</div>
-							<div className="d-flex justify-content-end mb-4">
-								<div className="msg_cotainer_send">
-									Ok, thank you have a good day
-									<span className="msg_time_send">9:10 AM, Today</span>
-								</div>
-								<div className="img_cont_msg">
-                <img src=""></img>
-               </div>
-							</div>
-							<div className="d-flex justify-content-start mb-4">
-								<div className="img_cont_msg">
-									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" className="rounded-circle user_img_msg"></img>
-								</div>
-								<div className="msg_cotainer">
-									Bye, see you
-									<span className="msg_time">9:12 AM, Today</span>
-								</div>
-							</div> */}
+							{messages}
 						</div>
 						<div className="card-footer">
 							<div className="input-group">
-								<textarea id="message" name="" className="form-control type_msg" placeholder="Type your message..."></textarea>
+								<textarea id="message" name="" className="form-control type_msg" placeholder="רשום את ההודעה שלך כאן..."></textarea>
 								<div className="input-group-append">
-									<span onClick={()=>sendData()} className="input-group-text send_btn"><i className="fas fa-location-arrow"></i></span>
+									<span onClick={()=>sendData()} className="input-group-text send_btn"><SendIcon/></span>
 								</div>
 							</div>
 						</div>

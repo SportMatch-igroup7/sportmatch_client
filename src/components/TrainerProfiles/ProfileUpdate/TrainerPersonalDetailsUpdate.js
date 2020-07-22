@@ -82,9 +82,11 @@ export default function PersonalDetails({onDone = () => {}}) {
       })
       .then((response)=>response.json())
       .then((res)=>
-      {console.log("data:",res);setTrainerData(res); 
+      {console.log("data:",res);setTrainerData(res);
       })
       .catch((error)=>console.log(error))
+
+      console.log(trainerData.PricePerHour);
 
       },[]);
 
@@ -312,9 +314,9 @@ export default function PersonalDetails({onDone = () => {}}) {
                 fullWidth
                 name="password"
                 label="סיסמה"
-                type="password"
+                type="text"
                 id="password"
-                placeholder={trainerData.Password}
+                value={trainerData.Password}
                 autoComplete="current-password"
                 onChange={(e) => setTrainerData({...trainerData,Password:e.target.value})}
               />
@@ -332,7 +334,7 @@ export default function PersonalDetails({onDone = () => {}}) {
                 fullWidth
                 id="firstName"
                 label="שם פרטי" 
-                placeholder={trainerData.FirstName}         
+                value={trainerData.FirstName}         
                 onChange={(e) => setTrainerData({...trainerData,FirstName:e.target.value})}
               />
             </Grid>
@@ -345,7 +347,7 @@ export default function PersonalDetails({onDone = () => {}}) {
                 label="שם משפחה"
                 name="lastName"
                 autoComplete="lname"
-                placeholder={trainerData.LastName}
+                value={trainerData.LastName}
                 onChange={(e) => setTrainerData({...trainerData,LastName:e.target.value})}
               />
             </Grid>
@@ -355,7 +357,7 @@ export default function PersonalDetails({onDone = () => {}}) {
             label="תאריך לידה"
             fullWidth
             type="date"
-            defaultValue={trainerData.DateOfBirth}
+            value={trainerData.DateOfBirth}
             onChange={(e) => setTrainerData({...trainerData,DateOfBirth:e.target.value})}
             InputLabelProps={{
             shrink: true,
@@ -379,7 +381,7 @@ export default function PersonalDetails({onDone = () => {}}) {
                 label="טלפון1"
                 name="phone1"
                 autoComplete="phone1"
-                placeholder={trainerData.Phone1}
+                value={trainerData.Phone1}
                 onChange={(e) => setTrainerData({...trainerData,Phone1:e.target.value})}
               />
             </Grid>
@@ -391,14 +393,14 @@ export default function PersonalDetails({onDone = () => {}}) {
                 label="טלפון2"
                 name="phone2"
                 autoComplete="phone2"
-                placeholder={trainerData.Phone2}
+                value={trainerData.Phone2}
                 onChange={(e) => setTrainerData({...trainerData,Phone2:e.target.value})}
               />
             </Grid>
             <Grid item xs={12}style={{textAlign:'right'}}>
                 מחיר לשעה
             <Slider
-            defaultValue={trainerData.PricePerHour}
+            value={trainerData.PricePerHour || 50}
             getAriaValueText={valuetext}
             aria-labelledby="discrete-slivaluetextder-custom"
              step={10}
@@ -417,7 +419,7 @@ export default function PersonalDetails({onDone = () => {}}) {
                 label="קצת עליי"
                 name="aboutMe"
                 autoComplete="aboutMe"
-                placeholder={trainerData.AboutMe}
+                value={trainerData.AboutMe}
                 onChange={(e) => setTrainerData({...trainerData,AboutMe:e.target.value})}
               />
             </Grid>   

@@ -29,11 +29,7 @@ import SendIcon from '@material-ui/icons/Send';
 	const [messages, setMessages] = useState([]);
 	const [userType, SetUserType] =useState("");
 
-    useEffect(async () => {
-
-    //   $('#action_menu_btn').click(function(){
-	// 	$('.action_menu').toggle();
-	//   });
+    useEffect(() => {
 
 	  const user = JSON.parse(localStorage["userDetails"]);
       let code = 0;
@@ -48,38 +44,44 @@ import SendIcon from '@material-ui/icons/Send';
 			code = user.TrainerCode;
 		}
                       
-	  await setUserCode (code);
+	   setUserCode (code);
 	  console.log("userCode",code);
 
-      await fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
+       fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
         method:'GET',
         headers:{
             Accept:'application/json','Content-Type':'application/json',
         },
     })
     .then((response)=>response.json())
-    .then( (res)=> {console.log(res);
-    setBranchData(res)})
+    .then((res)=> {console.log(res);
+     setBranchData(res)})
     .catch((error)=>console.log(error))
 
 
-    await fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
+     fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer",{
       method:'GET',
       headers:{
           Accept:'application/json','Content-Type':'application/json',
       },
   })
   .then((response)=>response.json())
-  .then( (res)=> {console.log(res);
-  setTrainerData(res);
+  .then((res)=> {console.log(res);
+   setTrainerData(res);
   })
   .catch((error)=>console.log(error))
+	},[]);
+	
+	useEffect(() => {
+		if (userCode === 0) {
+			return;
+		}
+		const fromProfile = JSON.parse(localStorage["fromProfile"]);
+		if(fromProfile === true)
+			detailsFromProfile();
+	}, [userCode]);
 
-  const fromProfile = JSON.parse(localStorage["fromProfile"]);
-	if(fromProfile === true)
-		detailsFromProfile();
-
-    },[]);
+	
 
 		const detailsFromProfile = async () =>
 	{
@@ -114,7 +116,7 @@ import SendIcon from '@material-ui/icons/Send';
 		if(userType ==="branch")
 			photo = branchData.filter(val => val.BranchCode === userCode).map(val => val.Logo)
 		else
-		photo = trainerhData.filter(val => val.TrainerCode === userCode).map(val => val.Image)
+			photo = trainerhData.filter(val => val.TrainerCode === userCode).map(val => val.Image)
 		
 		console.log(photo);
 
@@ -199,10 +201,6 @@ import SendIcon from '@material-ui/icons/Send';
 
 	}
 
-
-
-
-
 	const showList =()=>{
 		if(radio === "trainer")
 			{
@@ -241,7 +239,7 @@ import SendIcon from '@material-ui/icons/Send';
     return (
       <div className="container-fluid h-100" className="main">
 			<div className="row justify-content-center h-100">
-				<div className="col-md-4 col-xl-3 chat">
+				<div className=" col-xs-4 col-md-4 col-xl-3 chat">
           <div className="card mb-sm-3 mb-md-0 contacts_card">
 					<div className="card-header">
 						<div className="input-group">
@@ -270,7 +268,7 @@ import SendIcon from '@material-ui/icons/Send';
 					</div>
 					<div className="card-footer"></div>
 				</div></div>
-				<div className="col-md-8 col-xl-6 chat">
+				<div className=" col-xs-8 col-md-8 col-xl-6 chat">
 					<div className="card">
 						<div className="card-header msg_head">
 							<div className="d-flex bd-highlight">

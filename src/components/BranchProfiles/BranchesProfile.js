@@ -241,7 +241,7 @@ export default function Album(props) {
         
           <Grid container spacing={4}>
             {branchData.filter(filterArr).map((card) => (
-              <Grid item key={card.BranchCode} xs={6} sm={3}>
+              <Grid item key={card.BranchCode}  xs={6} sm={4} md={3}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}

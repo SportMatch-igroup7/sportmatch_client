@@ -17,7 +17,7 @@ import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
 import '@fullcalendar/bootstrap/main.css';
 
-//import Req from './RequestForReplacementView';
+import Req from '../RequestForReplacementView';
 
 
 class Calendar extends Component {
@@ -68,6 +68,13 @@ class Calendar extends Component {
         open:false,
     };
 
+    handleOpen = () => {
+        this.setState({open: true});
+      };
+
+      handleClose = () => {
+        this.setState({open: false});
+      };
 
 
     componentDidMount() {
@@ -99,6 +106,7 @@ class Calendar extends Component {
             end: event.ReplacementDate,
             backgroundColor: '#f56954',
             borderColor: '#f56954',
+            code: event.ReplacmentCode
         }
         events.push(e);
         });
@@ -111,6 +119,7 @@ class Calendar extends Component {
                 end: event.ReplacementDate,
                 backgroundColor: '#f39c12',
                 borderColor: '#f39c12',
+                code: event.ReplacmentCode
             }
             events.push(e);
             });
@@ -122,7 +131,8 @@ class Calendar extends Component {
                 start: event.ReplacementDate,
                 end: event.ReplacementDate,
                 backgroundColor:'#00a65a',
-                borderColor: '#00a65a'
+                borderColor: '#00a65a',
+                code: event.ReplacmentCode
             }
             events.push(e);
         });
@@ -134,7 +144,8 @@ class Calendar extends Component {
                 start: event.ReplacementDate,
                 end: event.ReplacementDate,
                 backgroundColor: '#0073b7', 
-                borderColor: '#0073b7'
+                borderColor: '#0073b7',
+                code: event.ReplacmentCode
             }
             events.push(e);
 
@@ -226,19 +237,20 @@ class Calendar extends Component {
         });
     };
 
-        eventClicked = event => {
+    eventClicked = event => {
+        console.log(event);
         console.log("code:",event.event._def.extendedProps.code);
         let code = event.event._def.extendedProps.code
         this.setState({eventCode: code});
         this.handleOpen();
 
-    };
+    };;
 
     render() {
         const { externalEvents, selectedEvent } = this.state;
         return (
         <ContentWrapper>
-        {/* <Modal
+        <Modal
           show={this.state.open}
           onHide={this.handleClose}
         >
@@ -247,7 +259,7 @@ class Calendar extends Component {
             <Req req={this.state.requests && this.state.requests.filter(val => val.ReplacmentCode === this.state.eventCode)}/>
             </div>
             </Modal.Body>               
-        </Modal> */}
+        </Modal>
                 <div className="calendar-app">
 
                      <div>
@@ -275,6 +287,7 @@ class Calendar extends Component {
                                         deepChangeDetection={true}
                                         dateClick={this.dayClick}
                                         eventReceive={this.handleEventReceive}
+                                        eventClick={this.eventClicked}
                                         >
                                     </FullCalendar>
                                 </CardBody>

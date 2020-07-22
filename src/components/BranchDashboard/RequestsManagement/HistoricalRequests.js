@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     height: '100%',
-    width: '80%',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -186,10 +185,10 @@ export default function Album(props) {
                   </CardContent>
                   <CardActions>
                   <Button onClick={()=>{
-                          setReqCode(card.ReplacementCode);
+                          setReqCode(card.ReplacmentCode);
                           let fil=requests.filter((val)=>(val.IsHistory===true && val.ReplacmentCode === card.ReplacmentCode && val.RequestStatus === "approved" && val.IsAprrovedByTrainer ==="true"))
                           let trainerCode = {TrainerCode: fil[0].TrainerCode}
-                          setChosenTrainerCode(trainerCode);// new
+                          setChosenTrainerCode(fil[0].TrainerCode);// new
                           console.log(trainerCode);
                           localStorage["trainer"] = JSON.stringify(trainerCode);
                           handleOpen();
