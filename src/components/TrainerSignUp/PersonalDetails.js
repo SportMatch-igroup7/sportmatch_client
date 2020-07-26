@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 import { store } from '../../store/MainStore';
 import '../TrainerProfiles/Profiles.css';
 
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',

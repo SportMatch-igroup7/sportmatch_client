@@ -20,6 +20,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import swal from 'sweetalert';
 import Slider from '@material-ui/core/Slider';
 import TrainersMatches from './TrainersMatch';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 function Copyright() {
   return (
@@ -262,6 +263,7 @@ function price(value){
 
 if (nextFlag === false)
   return (
+    <div>
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
       <div className={classes.paper}>
@@ -401,6 +403,12 @@ if (nextFlag === false)
         </form>
       </div>
     </Container>
+    <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
+    </div>
   );
   else
   return (<TrainersMatches req={requestData} comp ={props.comp}/>)

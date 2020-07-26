@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import PersonalDetails from './PersonalDetails';
 import AdditionalDetails from './AdditionalDetails';
 import Qualifications from './Qualifications';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+
 
 
 function Copyright() {
@@ -136,6 +138,11 @@ export default function Checkout() {
           </React.Fragment>
         </Paper>
       </main>
+      <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
     </React.Fragment>
   );
 }

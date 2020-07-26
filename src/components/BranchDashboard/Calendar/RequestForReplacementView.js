@@ -105,7 +105,7 @@ export default function RequestForReplacementView(props) {
           הודעת החלפה
         </Typography>
         <form className={classes.form} noValidate dir="rtl">
-          <Grid container spacing={2} className={classes.text}>
+          <Grid container spacing={1} className={classes.text}>
           <Grid item xs={12}>
           <p>שם איש קשר: {data.ContactName}</p>
             </Grid>

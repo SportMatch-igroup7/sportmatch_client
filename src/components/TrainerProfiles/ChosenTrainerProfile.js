@@ -21,6 +21,7 @@ import {FaInstagram} from 'react-icons/fa';
 import {FaLinkedin} from 'react-icons/fa';
 import ChatIcon from '@material-ui/icons/Chat';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import TrainerRate from '../TrainerProfiles/TrainerRate';
 
 
 
@@ -56,10 +57,6 @@ export default function TrainerProfile(props) {
     const [areas, setAreas] = useState([]);
     const [quals, setQuals] = useState([]);
     const [lang, setLangs] = useState([]);
-    const [web, setWeb] = useState();
-    const [facebook, setFacebook] = useState();
-    const [instagram, setInstagram] = useState();
-    const [linkedin, setLinkedin] = useState();
     const trainerCode = JSON.parse(localStorage["trainer"]).TrainerCode;
     const user = JSON.parse(localStorage["userDetails"]).Type;
 
@@ -89,7 +86,7 @@ export default function TrainerProfile(props) {
         })
         .then((response)=>response.json())
         .then((res)=>
-        {console.log("links:",res);setLinks(res);setLinksPath()})
+        {console.log("links:",res);setLinks(res);})
         .catch((error)=>console.log(error))
         .finally(()=>console.log('got trainer links'))
 
@@ -135,17 +132,18 @@ export default function TrainerProfile(props) {
   
         },[]);
 
-        const setLinksPath = () =>
-     {   
-        console.log(links);
-         if(links.length>0)
-       { 
-        setWeb(links.filter((val)=>val.LinkCode === 1));
-        setFacebook(links.filter((val)=>val.LinkCode === 2));
-        setInstagram (links.filter((val)=>val.LinkCode === 3));
-        setLinkedin (links.filter((val)=>val.LinkCode === 4));
+        const onLinkClick = href => e => {
+            if (!href) {
+                e.preventDefault();
+            }
         }
-    }
+
+  
+
+        const web = (links.find((val)=>val.LinkCode === 1) || {}).Link;
+        const facebook = (links.find((val)=>val.LinkCode === 2) || {}).Link;
+        const instagram = (links.find((val)=>val.LinkCode === 3) || {}).Link;
+        const linkedin = (links.find((val)=>val.LinkCode === 4) || {}).Link;
 
 
         return (
@@ -178,7 +176,8 @@ export default function TrainerProfile(props) {
                                 props.comp(6);
                              }}
                         /> 
-                        {trainerData.FirstName} {trainerData.LastName}        
+                        {trainerData.FirstName} {trainerData.LastName}
+                        {trainerData.Rate ? <TrainerRate Rate={trainerData.Rate}/> : null}         
                         </h1>
                         <p>גיל: {trainerData.Age}</p>      
                         <p>מייל: {trainerData.Email}</p> 
@@ -223,19 +222,19 @@ export default function TrainerProfile(props) {
                             <hr className="divider"/>
     
                             <div className="social-links">
-                        <a href={web && web.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={web} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(web)} >
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook && facebook.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(facebook)}>
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram && instagram.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(instagram)}>
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin && linkedin.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(linkedin)}>
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
-                        </div>   
+                        </div>  
                     </div>                  
                 </Cell>
                 </Grid>        

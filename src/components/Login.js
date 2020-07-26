@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import swal from 'sweetalert';
 import RI from '../commons/RoundedImage';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -186,6 +187,7 @@ const branchRegistration=()=>{
 }
 
   return (
+    <div>
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
       <div className={classes.paper}>
@@ -258,5 +260,11 @@ const branchRegistration=()=>{
         </form>
       </div>
     </Container>
+   <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
+    </div>
   );
 }

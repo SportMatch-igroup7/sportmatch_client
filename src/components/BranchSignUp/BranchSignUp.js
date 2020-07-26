@@ -21,6 +21,7 @@ import RI from '../../commons/RoundedImage';
 import swal from 'sweetalert';
 import Popper from '@material-ui/core/Popper';
 import '../TrainerProfiles/Profiles.css';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 function Copyright() {
   return (
@@ -302,6 +303,7 @@ console.log("branchParam:", paramsToDB)
 
 
   return (
+    <div>
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
       <div className={classes.paper}>
@@ -455,5 +457,11 @@ console.log("branchParam:", paramsToDB)
         </form>
       </div>
     </Container>
+    <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
+    </div>
   );
 }

@@ -20,6 +20,8 @@ import {FaFacebookSquare} from 'react-icons/fa';
 import {FaChrome} from 'react-icons/fa';
 import {FaInstagram} from 'react-icons/fa';
 import {FaLinkedin} from 'react-icons/fa';
+import TrainerRate from '../TrainerProfiles/TrainerRate';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -129,12 +131,18 @@ export default function TrainerProfile() {
   
         },[]);
 
+        const onLinkClick = href => e => {
+            if (!href) {
+                e.preventDefault();
+            }
+        }
+
   
 
-        const web = links.filter((val)=>val.LinkCode === 1);
-        const facebook = links.filter((val)=>val.LinkCode === 2);
-        const instagram = links.filter((val)=>val.LinkCode === 3);
-        const linkedin = links.filter((val)=>val.LinkCode === 4)
+        const web = (links.find((val)=>val.LinkCode === 1) || {}).Link;
+        const facebook = (links.find((val)=>val.LinkCode === 2) || {}).Link;
+        const instagram = (links.find((val)=>val.LinkCode === 3) || {}).Link;
+        const linkedin = (links.find((val)=>val.LinkCode === 4) || {}).Link;
 
         const changePersonalDetails = ()=>
         {
@@ -164,6 +172,7 @@ export default function TrainerProfile() {
 
                         <div className="banner-text">
                         <h1> {trainerData.FirstName} {trainerData.LastName} </h1>
+                        <TrainerRate Rate={trainerData.Rate}/> 
                         <p>גיל: {trainerData.Age}</p>      
                         <p>מייל: {trainerData.Email}</p> 
                         <p>מספר טלפון: {trainerData.Phone1}</p> 
@@ -206,20 +215,20 @@ export default function TrainerProfile() {
                             </React.Fragment>
                             <hr className="divider"/>
     
-                        <div className="social-links">
-                        <a href={web.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                            <div className="social-links">
+                        <a href={web} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(web)} >
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(facebook)}>
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(instagram)}>
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(linkedin)}>
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
-                        </div> 
+                        </div>
                         <hr className="divider"/>
                         <div  style={{direction:"rtl",marginTop:'15px'}}>
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changePersonalDetails}>ערוך פרטים אישיים</Button> 
@@ -232,7 +241,12 @@ export default function TrainerProfile() {
                     </div>  
                 
                 </Cell>
-                </Grid>        
+                </Grid> 
+                    <footer className="footer">
+                    <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+                    sportmatch8@gmail.com <MailOutlineIcon/>
+                    </Typography>
+                </footer>       
             </div>
 
         )

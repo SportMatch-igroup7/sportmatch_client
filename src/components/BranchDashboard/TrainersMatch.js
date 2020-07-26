@@ -17,6 +17,7 @@ import Link from '@material-ui/core/Link';
 import swal from 'sweetalert'
 import Modal from 'react-bootstrap/Modal';
 import TrainerProfile from '../TrainerProfiles/ChosenTrainerProfile';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -49,12 +50,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   paper: {
-   // width: 800,
-    //backgroundColor: theme.palette.background.paper,
-    //border: '2px solid #000',
-    //boxShadow: theme.shadows[5],
     padding: theme.spacing(1, 1, 1),
-    //alignSelf:'center',
     marginTop:'50px',
   },
 }));
@@ -274,6 +270,11 @@ export default function Album(props) {
         </Grid>
       </Container>
     </main>
+    <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
   </React.Fragment>
   );
 }

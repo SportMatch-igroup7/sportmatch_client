@@ -9,6 +9,7 @@ import RI from '../../commons/RoundedImage';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 
 
@@ -283,6 +284,11 @@ history.push("/TrainerNav");
                     סיום
                   </Button>
                   </div>
+                  <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
     </React.Fragment>
   );
 }

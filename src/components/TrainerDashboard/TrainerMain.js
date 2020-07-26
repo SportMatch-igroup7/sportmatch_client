@@ -28,6 +28,7 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 //import './CarStyle.css';
 
@@ -296,6 +297,12 @@ export default function Album(props) {
         <ApprovedRequests comp={props.comp} req={requests && requests.filter(filterArr)} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
         <HistoricalRequests comp={props.comp} req={requests && requests.filter(filterArr)} approveTrainer={approveTrainer} declineTrainer={declineTrainer}/>
       
+       <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
+
     </React.Fragment>
   );
 }

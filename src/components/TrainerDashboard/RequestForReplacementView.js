@@ -163,7 +163,7 @@ const btn = () => {
           הודעת החלפה
         </Typography>
         <form className={classes.form} noValidate dir="rtl">
-          <Grid container spacing={2} className={classes.text}>
+          <Grid container spacing={1} className={classes.text}>
           <Grid item xs={12}>
           <p>שם הסניף: {branchData && branchData.Name}</p>
             </Grid>

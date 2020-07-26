@@ -54,14 +54,9 @@ export default class FileUpload extends React.Component{
     }
     render(){
         return(
-            <div style={divStyle}>
+            <div >
                 <FilePond allowMultiple={false} onaddfile={this.AddPDF} labelIdlE='PDF UPLOAD'/>
             </div>
         )
     }
 }
-
-const divStyle = {
-} 
-
-// {(this.state.pic && (<RI width="150" height="150" size="8" image={this.state.pic}/>))}

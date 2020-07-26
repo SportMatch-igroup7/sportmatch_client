@@ -3,6 +3,9 @@ import './Chat.css';
 import $ from 'jquery';
 import firebase from 'firebase';
 import SendIcon from '@material-ui/icons/Send';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import Typography from '@material-ui/core/Typography';
+
 
 
   export default function Chat() {
@@ -234,6 +237,7 @@ import SendIcon from '@material-ui/icons/Send';
 	}
 
     return (
+	<div>
       <div className="container-fluid h-100" className="main">
 			<div className="row justify-content-center h-100">
 				<div className=" col-xs-4 col-md-4 col-xl-3 chat">
@@ -293,6 +297,12 @@ import SendIcon from '@material-ui/icons/Send';
 				</div>
 			</div>
       </div>
+	  <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
+	  </div>
 	);
 }
   

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import Box from '@material-ui/core/Box';
@@ -18,8 +18,8 @@ const labels = {
   5: 'מצויין',
 };
 
-let trainerCode = 333;
-let requestCode = 333;
+// let trainerCode;
+// let requestCode;
 let RateValue;
 
 
@@ -37,25 +37,64 @@ const useStyles = makeStyles({
 export default function HoverRating(props) {
     const [value, setValue] = React.useState(0);
     const [hover, setHover] = React.useState(-1);
+    const [getTrainer, setTrainer] = useState([]); 
     const classes = useStyles();
     const history = useHistory();
-    console.log(props.requestCode);
-    console.log(props.trainerCode);
+    console.log("מספר בקשה: "+props.requestCode);
+    console.log("מספר מאמן: "+props.trainerCode);
+    const trainerCode = props.trainerCode;
 
 const handleSave = async (e) => {
     console.log("שמור");    
     RateValue=value;
     console.log(RateValue);
-     let RequestTrainer={
-      RequestCode : requestCode,
-      TrainerCode : trainerCode,
-      IsRated : "true"
+
+    let Trainer = {      
+    };
+
+      let RequestTrainer={
+       RequestCode : props.requestCode,
+       TrainerCode : props.trainerCode,
+       IsRated : "true"
+      };
+ //שליחה לקונטרולר
+
+
+ fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/getTrainer/" + trainerCode + '/',{
+  method:'GET',
+  headers:{
+      Accept:'application/json','Content-Type':'application/json',
+  },
+})
+.then((response)=>response.json())
+.then((res)=> {console.log("trainer details:",res);
+setTrainer(res);
+  Trainer = {
+  TrainerCode:  props.trainerCode,
+  //add from props
+  SumOfRating: res.SumOfRating,
+  NumOfRating: res.NumOfRating,
+  //done add from props
+  Rate:RateValue  
 };
+console.log(Trainer);
 
+})
+.catch((error)=>console.log(error))
+ 
+    fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Trainer/PutTrainerRate",{
+     method:'PUT',
+     headers:{
+         Accept:'application/json','Content-Type':'application/json',
+     },
+     body:JSON.stringify(Trainer)
+ })
+ .then((response)=>response.json())
+ .then((res)=> console.log(res),
+   )
+ .catch((error)=>console.log(error))
 
-   //שליחה לקונטרולר
-   //await ajaxCall("Put", "../api/RequestTrainer/PutRequestTrainerRate", JSON.stringify(RequestTrainer), successSignInBranch, errorSignInBranch);
-    props.close();
+   props.close();
   }
 
   const handleCancel = async (e) => {
@@ -63,8 +102,8 @@ const handleSave = async (e) => {
     setValue(0);
     //history.push("/BranchesProfile");
     let RequestTrainer={
-      RequestCode : requestCode,
-      TrainerCode : trainerCode,
+      RequestCode : props.requestCode,
+      TrainerCode : props.trainerCode,
       IsRated : "false"
 };
   }
@@ -95,4 +134,4 @@ const handleSave = async (e) => {
     </div>
     </div>
   );
-}
+  }

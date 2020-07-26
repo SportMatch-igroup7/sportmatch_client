@@ -50,12 +50,18 @@ export default function BranchProfile(props) {
 
         },[]);
 
+        const onLinkClick = href => e => {
+            if (!href) {
+                e.preventDefault();
+            }
+        }
+
 
         console.log("links:",branchLinks)
-        const web = branchLinks.filter((val)=>val.LinkCode === 1)
-        const facebook = branchLinks.filter((val)=>val.LinkCode === 2)
-        const instagram = branchLinks.filter((val)=>val.LinkCode === 3);
-        const linkedin = branchLinks.filter((val)=>val.LinkCode === 4)
+        const web = (branchLinks.find((val)=>val.LinkCode === 1) || {}).LinkName;
+        const facebook = (branchLinks.find((val)=>val.LinkCode === 2) || {}).LinkName;
+        const instagram = (branchLinks.find((val)=>val.LinkCode === 3) || {}).LinkName;
+        const linkedin = (branchLinks.find((val)=>val.LinkCode === 4) || {}).LinkName;
 
 
         return (
@@ -95,16 +101,16 @@ export default function BranchProfile(props) {
                         <hr className="divider"/>
 
                         <div className="social-links">
-                        <a href={web.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={web} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(web)} >
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(facebook)}>
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(instagram)}>
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin} target="_blank" rel="noopener noreferrer" onClick={onLinkClick(linkedin)}>
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div>

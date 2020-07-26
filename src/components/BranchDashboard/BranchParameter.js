@@ -19,6 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import swal from 'sweetalert';
 import Slider from '@material-ui/core/Slider';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 function Copyright() {
   return (
@@ -144,6 +145,7 @@ export default function SignUp() {
 }
 
   return (
+    <div>
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
       <div className={classes.paper}>
@@ -190,5 +192,13 @@ export default function SignUp() {
         </form>
       </div>
     </Container>
+    <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
+      </div>
+
+    
   );
 }
