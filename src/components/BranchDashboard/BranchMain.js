@@ -266,7 +266,9 @@ export default function Album(props) {
   })
   .then((response)=>response.json())
   .then((res)=> console.log(res),
-    )
+    setTimeout(() => {
+      refreshPage()
+    }, 2000))
   .catch((error)=>console.log(error))
   }
 

@@ -139,7 +139,7 @@ export default function SignUp() {
         },
         })
         .then((response)=>response.json())
-        .then((res)=>{console.log(res); setLinks([...res])})
+        .then((res)=>{console.log(res); setLinksData([...res])})
         .catch((error)=>console.log(error))
         .finally(()=>console.log('got links'))
 
@@ -208,14 +208,14 @@ export default function SignUp() {
     let check = links;
     let isExists = false;
     if(check.length == 0)
-      setLinks([...links,{linkCode:linkCode, path: e.target.value}])
+      setLinks([...links,{LinkCode:linkCode, LinkName: e.target.value}])
     else
-  {  check.map(val => {if (val.linkCode == linkCode){
-      val.path = e.target.value
+  {  check.map(val => {if (val.LinkCode == linkCode){
+      val.LinkName = e.target.value
       isExists = true;
       }
     else
-    setLinks([...links,{linkCode:linkCode, path: e.target.value}])
+    setLinks([...links,{LinkCode:linkCode, LinkName: e.target.value}])
   })}
   if ( isExists ===true)
   setLinks([...check]);
@@ -305,17 +305,15 @@ fetch("http://proj.ruppin.ac.il/igroup7/proj/api/Branch",{
 
 const successSignInBranch=(data)=> {
   let linksToDB = [];
-   swal("success");
+   swal("העדכון בוצע בהצלחה");
   console.log(data);
-  setState({...state,branchCodeFromDB : data.BranchCode})
-  
-  //localStorage["userDetails"] = JSON.stringify(data);
+
 
   links.map(link =>{
     let branchLink = {
-      BranchCode: data.BranchCode,
-      LinkName: link.path,
-      LinkCode: link.linkCode
+      BranchCode: branchCode,
+      LinkName: link.LinkName,
+      LinkCode: link.LinkCode
     }
     linksToDB.push(branchLink)
   })
@@ -489,7 +487,7 @@ const back = () =>{
                 label="הכנס קישור"
                 name="link"
                 autoComplete="link"
-                value={links[linkCode-1] && links[linkCode-1].path}
+                value={links[linkCode-1] && links[linkCode-1].LinkName}
                 onChange={(e) => changePath(e,val.LinkCode)}
               />
             </Grid>

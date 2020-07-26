@@ -140,7 +140,7 @@ export default function Album(props) {
                   >
                     <div className={classes.paper}>
                     {btn()}
-                    <ChosenTrainer comp={props.comp}/>
+                    <ChosenTrainer comp={props.comp} close={handleClose}/>
                     </div>                  
                   </Modal>
 

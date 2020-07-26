@@ -131,10 +131,7 @@ export default function TrainerProfile() {
 
   
 
-
-        console.log(links)
         const web = links.filter((val)=>val.LinkCode === 1);
-        console.log(web)
         const facebook = links.filter((val)=>val.LinkCode === 2);
         const instagram = links.filter((val)=>val.LinkCode === 3);
         const linkedin = links.filter((val)=>val.LinkCode === 4)
@@ -210,23 +207,25 @@ export default function TrainerProfile() {
                             <hr className="divider"/>
     
                         <div className="social-links">
-                        <a href={web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={web.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div> 
                         <hr className="divider"/>
                         <div  style={{direction:"rtl",marginTop:'15px'}}>
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={changePersonalDetails}>ערוך פרטים אישיים</Button> 
+                        <div className="space"/>
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateQualifications} >ערוך הכשרות</Button> 
+                        <div className="space"/>
                         <Button size="small" style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}} onClick={updateAdditionalDetails} >ערוך נתונים נוספים</Button> 
                         </div>
                     

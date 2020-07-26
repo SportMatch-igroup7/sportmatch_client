@@ -20,6 +20,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import swal from 'sweetalert';
 import Slider from '@material-ui/core/Slider';
 import TrainersMatches from '../BranchDashboard/TrainersMatch';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 function Copyright() {
   return (
@@ -151,6 +152,9 @@ const btn = () => {
   return (
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
+      <div style={{float:"right"}}>
+          <HighlightOffIcon onClick={props.close}/>
+      </div> 
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

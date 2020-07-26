@@ -79,16 +79,16 @@ export default function BranchProfile() {
                             <hr className="divider"/>
 
                         <div className="social-links">
-                        <a href={web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={web.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div>

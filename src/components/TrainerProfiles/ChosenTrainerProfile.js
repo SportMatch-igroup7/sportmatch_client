@@ -20,6 +20,7 @@ import {FaChrome} from 'react-icons/fa';
 import {FaInstagram} from 'react-icons/fa';
 import {FaLinkedin} from 'react-icons/fa';
 import ChatIcon from '@material-ui/icons/Chat';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 
 
@@ -150,6 +151,9 @@ export default function TrainerProfile(props) {
         return (
             <div style ={{width: '100%', margin: 'auto'}}>
                 <Grid className="branch-grid" >
+                    <Cell col={12} style={{float:"right"}}>
+                    <HighlightOffIcon onClick={props.close}/>
+                    </Cell>  
                     <Cell col={12}>
                         <img
                         src={trainerData.Image}
@@ -219,16 +223,16 @@ export default function TrainerProfile(props) {
                             <hr className="divider"/>
     
                             <div className="social-links">
-                        <a href={web && web.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={web && web.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaChrome size={30} style={{color:"white"}}/> 
                         </a>
-                        <a href={facebook && facebook.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={facebook && facebook.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaFacebookSquare size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={instagram && instagram.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={instagram && instagram.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaInstagram size={30} style={{color:"white"}}/>
                         </a>
-                        <a href={linkedin && linkedin.map((val)=>val.LinkName)} target="_blank" rel="noopener noreferrer">
+                        <a href={linkedin && linkedin.map((val)=>val.Link)} target="_blank" rel="noopener noreferrer">
                             <FaLinkedin size={30} style={{color:"white"}}/>
                         </a>
                         </div>   

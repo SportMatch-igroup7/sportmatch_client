@@ -18,6 +18,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import swal from 'sweetalert';
 import Slider from '@material-ui/core/Slider';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 
 function Copyright() {
@@ -93,7 +94,10 @@ export default function RequestForReplacementView(props) {
   return (
     <Container component="main" maxWidth="xs" dir="rtl">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div style={{float:"right"}}>
+          <HighlightOffIcon onClick={props.close}/>
+        </div> 
+      <div className={classes.paper}>   
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>

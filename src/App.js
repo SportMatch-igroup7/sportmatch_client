@@ -1,6 +1,8 @@
 import React from 'react';
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import './App.css';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import Typography from '@material-ui/core/Typography';
 import Login from './components/Login';
 import TrainersProfile from './components/TrainerProfiles/TrainersProfile';
 import BranchSignUp from './components/BranchSignUp/BranchSignUp';
@@ -16,12 +18,12 @@ import TrainerDetails from './components/TrainerProfiles/ProfileUpdate/TrainerPe
 import TrainerEditQual from './components/TrainerProfiles/ProfileUpdate/TrainerEditQualifications';
 import TrainerEditAdditional from './components/TrainerProfiles/ProfileUpdate/TrainerAdditionalDetailsUpdate';
 import AdminNav from './components/AdminDashboard/AdminNav';
-import Chat from './components/Chat/ChatNew copy';
+import Chat from './components/Chat/Chat';
 import BranchUpdateProfile from './components/BranchProfiles/BranchProfileUpdate';
 import firebaseConfig from './components/Chat/FireBase';
 import firebase from 'firebase';
-import ChatOld from './components/ChatOld';
 import ContactUs from './components/ContactUs/ContactUS';
+import Add from './components/TrainerSignUp/AdditionalDetails';
 
 
 firebase.initializeApp(firebaseConfig);
@@ -29,7 +31,8 @@ firebase.initializeApp(firebaseConfig);
 
 function App() {
   return (
-    <StateProvider>
+    <div>
+<StateProvider>
       <div className="App">
         <Switch>
         <Route exact path='/' component={Login} />
@@ -45,6 +48,13 @@ function App() {
       </Switch> 
       </div>
     </StateProvider>
+         <footer className="footer">
+         <Typography variant="subtitle1" align="center" color="textSecondary" style={{fontWeight:'bold'}} component="p">
+          sportmatch8@gmail.com <MailOutlineIcon/>
+         </Typography>
+       </footer>
+    </div>
+    
   );
 }
 

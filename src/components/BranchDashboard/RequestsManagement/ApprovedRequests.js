@@ -110,7 +110,7 @@ export default function Album(props) {
         >
           שלח מחדש את הודעת ההחלפה
         </Button>
-        <ChosenTrainer comp={props.comp}/>
+        <ChosenTrainer comp={props.comp} close={handleClose}/>
         </div>                  
         </Modal>
 

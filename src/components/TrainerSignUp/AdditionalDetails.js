@@ -237,13 +237,13 @@ history.push("/TrainerNav");
         <hr/>
       </Typography>
       <Grid container spacing={2} style={{direction:'rtl',textAlign:'right'}}>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
               <p style={{textAlign:'center'}}>שפות</p>
               {
                 langData && langData.map(val => <Button variant="outlined" color="primary" style={{margin:'2px'}} value = {val.LanCode} key = {val.LanCode} onClick={(e)=>addLanguage(val.LanCode)} style={{margin:'2px', backgroundColor: trainerLang.includes(val.LanCode) ? 'rgb(235, 135, 218)': ''}}>{val.LanName} </Button> )
               }
             </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
               <p style={{textAlign:'center'}}>אזורי עבודה</p>
               {
                 areaData && areaData.map(val => <Button variant="outlined" color="primary" style={{margin:'2px'}} value = {val.AreaCode} key = {val.AreaCode} onClick={(e)=>addArea(val.AreaCode)} style={{margin:'2px', backgroundColor: trainerArea.includes(val.AreaCode) ? 'rgb(235, 135, 218)': ''}}>{val.AreaName} </Button> )

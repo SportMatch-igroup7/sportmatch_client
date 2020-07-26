@@ -91,7 +91,7 @@ export default function Album(props) {
               onHide={handleClose}
             >
               <div className={classes.paper}>
-              <Req approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode))} stage="2"/>
+              <Req close={handleClose} approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode))} stage="2"/>
               </div>                  
             </Modal>
 

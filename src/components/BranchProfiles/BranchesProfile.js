@@ -157,11 +157,16 @@ export default function Album(props) {
   }
 
   const filterArr = (branch) => {
+    let bCode = 0;
+    if(user === "Branch")
+      bCode = JSON.parse(localStorage["userDetails"]).BranchCode;
+      
+    const removeMe = branch.BranchCode !== bCode;
     const SerachRes = branch.Name.includes(search);
     const AreaRes = areaName.length === 0 ? true : areaName.includes(branch.AreaName);
     const ComapnyRes = companyName.length === 0 ? true : companyName.includes(branch.CompanyName) 
 
-     return SerachRes && AreaRes && ComapnyRes;
+     return removeMe && SerachRes && AreaRes && ComapnyRes;
   };
 
   return (
@@ -172,7 +177,7 @@ export default function Album(props) {
                     onHide={handleClose}
                   >
                     <div className={classes.paper}>
-                    <BranchProfile comp={props.comp}/>
+                    <BranchProfile comp={props.comp} close={handleClose}/>
                     </div>                  
                   </Modal>
 

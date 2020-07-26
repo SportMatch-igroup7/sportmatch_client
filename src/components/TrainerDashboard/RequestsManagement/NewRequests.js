@@ -99,7 +99,7 @@ export default function Album(props) {
           onHide={handleClose}
         >
           <div className={classes.paper}>
-          <Req approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode))} stage="1"/>
+          <Req close={handleClose} approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode))} stage="1"/>
           </div>                  
         </Modal>
 
@@ -148,9 +148,10 @@ export default function Album(props) {
                         <Button onClick={()=>{
                         let branchChat = {
                         Code: card.BranchCode,
-                        Name:card.Name,
+                        Name:card.BranchName,
                         Image:card.Logo
                           }
+                          console.log(branchChat);
                         localStorage["chat"] = JSON.stringify(branchChat);
                         localStorage["fromProfile"] = true;
                         if(user === "Branch")

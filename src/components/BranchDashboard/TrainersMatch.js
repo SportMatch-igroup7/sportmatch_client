@@ -159,8 +159,10 @@ export default function Album(props) {
 
   const allTrainers = () => {
     let trainers = trainersData && trainersData.map((card) => (card.TrainerCode));
-    console.log(trainers);
-    setChosenTrainers(trainers);
+    if(chosenTrainers.length === trainers)
+      setChosenTrainers([]);
+    else
+      setChosenTrainers(trainers);
   }
 
   const refreshPage= () => {

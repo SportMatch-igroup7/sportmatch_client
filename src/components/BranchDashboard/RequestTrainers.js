@@ -124,7 +124,7 @@ export default function Album(props) {
           onHide={handleClose}
         >
           <div className={classes.paper}>
-          <TrainerProfile comp={props.comp}/>
+          <TrainerProfile close={props.close} comp={props.comp}/>
           </div>                  
         </Modal>
 

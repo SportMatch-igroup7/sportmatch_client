@@ -15,7 +15,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import $ from 'jquery';
-import {ajaxCall} from '../../commons/ajaxCall';
 import swal from 'sweetalert'
 import Modal from 'react-bootstrap/Modal';
 import TrainerProfile from '../../components/TrainerProfiles/ChosenTrainerProfile';
@@ -90,7 +89,7 @@ export default function Album(props) {
   const [areaData, setAreaData] = useState();
   const [qualName, setQualName] = React.useState([]);
   const [areaName, setAreaName] = React.useState([]);
-    const user = JSON.parse(localStorage["userDetails"]).Type;
+  const user = JSON.parse(localStorage["userDetails"]).Type;
 
   const [state, setState] = useState({
     trainersData:[]
@@ -133,11 +132,16 @@ export default function Album(props) {
   };
 
   const filterArr = (trainerData) => {
+    let tCode = 0;
+    if(user === "Trainer")
+      tCode = JSON.parse(localStorage["userDetails"]).TrainerCode;
+      
+    const removeMe = trainerData.TrainerCode !== tCode;
     const SerachRes = trainerData.FirstName.includes(search) || trainerData.LastName.includes(search);
     const QualRes = qualName.length === 0 ? true : trainerData.TrainerQuals.some(qual => qualName.includes(qual.TypeName)); 
     const AreaRes = areaName.length === 0 ? true : trainerData.TrainerArea.some(area => areaName.includes(area.AreaName)); 
 
-    return SerachRes && QualRes && AreaRes;
+    return removeMe && SerachRes && QualRes && AreaRes;
   };
 
 
@@ -231,7 +235,7 @@ export default function Album(props) {
                     aria-describedby="simple-modal-description"
                   >
                     <div className={classes.paper}>
-                    <TrainerProfile comp={props.comp}/>
+                    <TrainerProfile comp={props.comp} close={handleClose}/>
                     </div>                  
                   </Modal>
 

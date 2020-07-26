@@ -31,9 +31,8 @@ import TrainerMain from './TrainerMain';
 import Exit from '@material-ui/icons/ExitToApp';
 import Calendar from './Calendar/Calendar';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import Chat from '../Chat/ChatNew copy';
+import Chat from '../Chat/Chat';
 import MailIcon from '@material-ui/icons/Mail';
-import ContactUs from '../ContactUs/ContactUS';
 
 const drawerWidth = 240;
 
@@ -160,8 +159,7 @@ export default function PersistentDrawerRight() {
       return <BranchesProfile comp={CompProps} />;
       case 6:
         return <Chat />;
-      case 7:
-        return <ContactUs />;
+
     }
   };
 
@@ -247,10 +245,6 @@ export default function PersistentDrawerRight() {
             <MenuItem className={classes.item} button onClick={() => chatDetails()}>
                 <ListItemIcon><MessageIcon /></ListItemIcon>
                 <ListItemText primary="צ'אט"/>
-            </MenuItem>
-            <MenuItem className={classes.item} button onClick={(e) => setComp(7)}>
-                <ListItemIcon><MailIcon /></ListItemIcon>
-                <ListItemText primary="צור קשר"/>
             </MenuItem>
             <Divider />
             <MenuItem className={classes.item} button onClick={() => history.push("/")}>

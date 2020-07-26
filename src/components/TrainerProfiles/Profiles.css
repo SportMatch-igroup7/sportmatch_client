@@ -4,9 +4,10 @@
     background: linear-gradient(to top, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   top: 0;
   left: 0;
-  width: 100%;
+  max-width: 1024px;
   height: 100%;
   text-align: center;
+  margin: auto;
   }
 /*
   body{
@@ -100,5 +101,11 @@
     margin: auto;
     border-radius: 10px;
   }
+
+  .space{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}
 
 

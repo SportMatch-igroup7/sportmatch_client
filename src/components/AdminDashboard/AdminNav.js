@@ -138,7 +138,7 @@ export default function PersistentDrawerRight() {
       case 1:
         return <BI/>;
       case 2:
-        return "";//<Companies/>;
+        return <Companies/>;
       case 3:
       return <Quals/>;
     }

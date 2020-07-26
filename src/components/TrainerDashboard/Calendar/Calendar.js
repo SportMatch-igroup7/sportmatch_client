@@ -253,10 +253,11 @@ class Calendar extends Component {
         <Modal
           show={this.state.open}
           onHide={this.handleClose}
+          style={{marginTop:'50px'}}
         >
             <Modal.Body>
             <div dir="rtl" style = {{textAlign:'right'}} >
-            <Req req={this.state.requests && this.state.requests.filter(val => val.ReplacmentCode === this.state.eventCode)}/>
+            <Req close={this.handleClose} req={this.state.requests && this.state.requests.filter(val => val.ReplacmentCode === this.state.eventCode)}/>
             </div>
             </Modal.Body>               
         </Modal>

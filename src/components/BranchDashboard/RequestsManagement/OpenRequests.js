@@ -81,6 +81,7 @@ export default function Album(props) {
 
   const [open, setOpen] = React.useState(false);
 
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -115,11 +116,46 @@ export default function Album(props) {
           size="medium"
           variant="contained"
           style={{backgroundColor:'rgb(235, 135, 218)', color:'white',marginBottom:'15px'}}
-          onClick={()=>props.deleteRequest(reqCode)}
+          onClick={()=>
+            swal({
+              title: "האם אתה בטוח שברצונך למחוק את הודעת ההחלפה?",
+              text: "לאחר מחיקה לא יתאפשר שחזור של ההודעה",
+              icon: "warning",
+              buttons: {
+                cancel: {
+                    text: 'בטל מחיקה',
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: 'אשר',
+                    value: true,
+                    visible: true,
+                    className: "bg-danger",
+                    closeModal: false,
+                }
+            },
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                console.log(reqCode);
+                props.deleteRequest(reqCode);
+                swal("ההודעה נמחקה בהצלחה", {
+                  icon: "success",
+                });
+              } else {
+                swal("לא בוצעה מחיקה");
+              }
+            })
+          }
+          //onClick={()=>props.deleteRequest(reqCode)}
         >
           מחק הודעת החלפה
         </Button>
-      <ReqTrainers comp={props.comp} approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode && val.RequestStatus === "open" && val.IsAprrovedByTrainer ==="true"))}/>
+      <ReqTrainers close={handleClose} comp={props.comp} approveTrainer={props.approveTrainer} declineTrainer={props.declineTrainer} req={requests && requests.filter((val)=>(val.ReplacmentCode === reqCode && val.RequestStatus === "open" && val.IsAprrovedByTrainer ==="true"))}/>
       </div>                  
     </Modal>
 
