@@ -1,0 +1,18 @@
+
+Branch:
+Email: lidorva2@gmail.com
+Password: 123456
+
+Branch Option2 (with historic requests - to see trainer rate)
+Email: avi@gmail.com
+Password: 123456
+
+Trainer:
+Email: lidorva@gmail.com
+Password: 123456
+
+Admin:
+Email: sportmatch8@gmail.com 
+Password: 123456
+
+In order to check the Power BI report, you have to let me (Lidor) know before you test it (I need to sign in to my MS user).
